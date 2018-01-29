@@ -424,6 +424,7 @@ a retinal diffraction pattern.
 			//------------------------------------------------------------------
 			{
 				var canvas = document.getElementById (id.figure1a.canvas);
+				console.log(e);
 				var x = e.clientX
 					- Math.round (canvas.getBoundingClientRect().left)
 					- x0
@@ -471,7 +472,7 @@ a retinal diffraction pattern.
 			} // movable
 
 			//------------------------------------------------------------------
-			function move ()
+			function move (event)
 			//------------------------------------------------------------------
 			{
 				eMove (event);
@@ -1163,7 +1164,7 @@ class Airy(object):
 		<table class="center"><tr><td>
 			<h3>Current Scenario:</h3>
 			<canvas id="figure 1a canvas"
-				onmousemove="move()"
+				onmousemove="move(event)"
 				onclick="movable()"
 			></canvas>
 		</td><td>
