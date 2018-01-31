@@ -251,7 +251,7 @@ a retinal diffraction pattern.
 			var session = {
 				indent    : 0,
 				verbose   : false,
-				axes      : false,
+				axes      : 0,
 				timeout   : null,
 				converge  : true,
 				mouse     : {x:0,y:0},
@@ -411,7 +411,8 @@ a retinal diffraction pattern.
 			function toggleAxes ()
 			//------------------------------------------------------------------
 			{
-				session.axes = !session.axes;
+				session.axes = (session.axes + 1) % 3;
+				//session.axes = !session.axes;
 				call ("display");
 			} // toggleAxes
 
@@ -544,11 +545,12 @@ a retinal diffraction pattern.
 			{
 				if (session.axes)
 				{
+					var offset = (session.axes == 2) ? column - 10 : 0;
 					var len = 8;
 					var adjust = 3;
 					var hor = pane[i][2].axes[0], ver = pane[i][2].axes[1];
-					var y = i * edge + y0;
-					var x = x0;
+					var y = i * edge + y0 + offset;
+					var x = x0 - offset;
 					var color = '#ffff00';
 					// display axis lines
 					line (x-len,y,x+len,y,color);
