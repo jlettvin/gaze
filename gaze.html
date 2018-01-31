@@ -56,6 +56,7 @@ a.button {
 					{
 						corner:{x:0,y:0},
 						center:{x:0,y:0},
+						axes:['x','z'],
 						text:HERE(function() {/*
 				<h5>Pane 1 (<span id="frame1">scene</span>)</h5>
 A RED point source is shown (if visible) from above (Y axis normal).
@@ -74,6 +75,7 @@ Clicking it again starts it again.
 					{
 						corner:{x:0,y:0},
 						center:{x:0,y:0},
+						axes:['x','z'],
 						text:HERE(function() {/*
 			<h5>Pane 2 (<span id="frame2">eyeball</span>)</h5>
 A pair of eyeballs is shown from above (Y axis normal)
@@ -88,6 +90,7 @@ to rotate the associated eyeball.
 					{
 						corner:{x:0,y:0},
 						center:{x:0,y:0},
+						axes:['x','y'],
 						text:HERE(function() {/*
 			<h5>Pane 3 (<span id="frame3">image</span>)</h5>
 Overlapping fake diffraction pattern incident on retina
@@ -102,6 +105,7 @@ Watch them lose registration when the mouse moves in the Z direction.
 					{
 						corner:{x:0,y:0},
 						center:{x:0,y:0},
+						axes:['x','y'],
 						text:HERE(function() {/*
 			<h5>Pane 4 (<span id="frame4">hyperacute</span>)</h5>
 CYAN diffraction pattern zeros show a Z axis view of
@@ -118,6 +122,7 @@ represented by the CYAN zeros, aka hyperacute center data.
 					{
 						corner:{x:0,y:0},
 						center:{x:0,y:0},
+						axes:['x','z'],
 						text:HERE(function() {/*
 			<h5>Pane 5 (<span id="frame5">crossover</span>)</h5>
 Signals from the optic nerve are delivered to the midbrain as a map.
@@ -246,6 +251,7 @@ a retinal diffraction pattern.
 			var session = {
 				indent    : 0,
 				verbose   : false,
+				axes      : false,
 				timeout   : null,
 				converge  : true,
 				mouse     : {x:0,y:0},
@@ -402,6 +408,14 @@ a retinal diffraction pattern.
 			} // save
 
 			//------------------------------------------------------------------
+			function toggleAxes ()
+			//------------------------------------------------------------------
+			{
+				session.axes = !session.axes;
+				call ("display");
+			} // toggleAxes
+
+			//------------------------------------------------------------------
 			function verbosity ()
 			//------------------------------------------------------------------
 			{
@@ -523,6 +537,29 @@ a retinal diffraction pattern.
 				session.context.ellipse (x,y-2*length/3,width,length,0,tau,false);
 				session.context.fill ();
 			}
+
+			//------------------------------------------------------------------
+			var iaxes = function (i)
+			//------------------------------------------------------------------
+			{
+				if (session.axes)
+				{
+					var len = 8;
+					var adjust = 3;
+					var hor = pane[i][2].axes[0], ver = pane[i][2].axes[1];
+					var y = i * edge + y0;
+					var x = x0;
+					var color = '#ffff00';
+					// display axis lines
+					line (x-len,y,x+len,y,color);
+					line (x,y-len,x,y+len,color);
+					session.context.fillStyle = color;
+					// display axis labels
+					session.context.fillText (hor, x+adjust+len, y+adjust);
+					session.context.fillText (ver, x-adjust, y-adjust-len);
+				}
+			} // iaxes
+
 
 			//------------------------------------------------------------------
 			var ipane = function (i,h1,h2)
@@ -761,6 +798,8 @@ class Airy(object):
 				line (x0,y0+yf,px,py,color.vector);
 				disk (x0,y0+yf,2,color.actual);
 
+				iaxes(index.crossover);
+
 				session.context.lineWidth = lw;
 			} // crossover
 
@@ -916,6 +955,16 @@ class Airy(object):
 					}
 				}
 			} // points
+
+			//------------------------------------------------------------------
+			var axes = function ()
+			//------------------------------------------------------------------
+			{
+				for (var i=0; i<panes ; ++i)
+				{
+					iaxes (i);
+				}
+			} // axes
 
 			//------------------------------------------------------------------
 			var patterns = function ()
@@ -1079,6 +1128,7 @@ class Airy(object):
 				var funs = [
 					'canvas',
 					'ambient',
+					'axes',
 					'eyeballs',
 					'patterns',
 					'info',
@@ -1174,6 +1224,8 @@ class Airy(object):
 					<table id="figure 1a menu" class="center"></table>
 					<h3>Action Buttons:</h3>
 					<hr />
+					<a href="#" id="axes" onclick="toggleAxes()"
+						class="button">axes</a>
 					<a href="#" id="verbosity" onclick="verbosity()"
 						class="button">debug</a>
 					<a href="#" id="converge" onclick="tracking()"
