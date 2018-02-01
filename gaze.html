@@ -506,6 +506,24 @@ a retinal diffraction pattern.
 
 
 			//------------------------------------------------------------------
+			function enter (event)
+			//------------------------------------------------------------------
+			{
+				var element = event.target;
+				element.style.color = "white";
+				element.style.backgroundColor = "black";
+			}
+
+			//------------------------------------------------------------------
+			function leave (event)
+			//------------------------------------------------------------------
+			{
+				var element = event.target;
+				element.style.color = "black";
+				element.style.backgroundColor = "#ffffcc";
+			}
+
+			//------------------------------------------------------------------
 			function clickPupil (d)
 			//------------------------------------------------------------------
 			{
@@ -770,21 +788,29 @@ class Airy(object):
 				//       (x1-x2)*(y3-y4)-(y1-y2)*(x3-x4))
 				//         ]
 
-				var yf = index.crossover * session.pane.y;
+				// Store lineWidth temporarily to restore before return
 				var lw    = session.context.linewidth;
 				session.context.lineWidth = 1;
 
-				// Point offsets from eye point of view
+				// Calculate offset to upper left corner
+				var panely = index.crossover * session.pane.y;
+
+				// Extract eye-relative point source offsets
+				// Expect these to be in center coordinates
 				var Sxy = axys[0];    // left  eye point offset
 				var Dxy = axys[1];    // right eye point offset
 
+				// Calculate corner offsets for eye-relative point source offsets
 				var Sx = Sxy[0] + x0;
 				var Dx = Dxy[0] + x0;
 				var Sy = Sxy[1] + y0;
 				var Dy = Dxy[1] + y0;
+
+				// yn is top of crossover pane relative to center
 				var yn = y0 - column;
 				var yp = y0 + column;
 
+				// sign determines direction from center to each eye
 				var Ssign = -1;
 				var Dsign = 1;
 
@@ -794,11 +820,13 @@ class Airy(object):
 				var x3 = Dx-Dsign*column;
 				var x4 = Dx+Dsign*column;
 
+				// y1->y2 is one line's vertical, y3-y4 is the other line's
 				var y1 = yn; //Sy-Ssign*column; //yn;
 				var y2 = yp; //Sy+Ssign*column; //yp;
 				var y3 = yn; //Dy-Dsign*column; //yn;
 				var y4 = yp; //Dy+Dsign*column; //yp;
 
+				// Calculate location of fixation relative to point source
 				var x1y2 = x1*y2, x3y4 = x3*y4;
 				var x2y1 = x2*y1, x4y3 = x4*y3;
 
@@ -810,42 +838,42 @@ class Airy(object):
 
 				var denom = x1mx2*y3my4-y1my2*x3mx4;
 
+				// (px,py) are the fixation point coordinates
 				var px = parseInt((x1y2mx2y1*x3mx4 - x3y4mx4y3*x1mx2)/denom);
 				var py = parseInt((x1y2mx2y1*y3my4 - x3y4mx4y3*y1my2)/denom);
 
-				y1 += yf;
-				y2 += yf;
-				y3 += yf;
-				y4 += yf;
-				py += yf;
+				// Offset local coordinates to canvas coordinates
+				y1 += panely;
+				y2 += panely;
+				y3 += panely;
+				y4 += panely;
+				py += panely;
 
 				// TODO why are these fudge factors needed?
 				//py = (py - y0) * 3 + y0;
 				//px = (px - x0) * 3 / 8 + x0;
 
-				// data lines to display the crossover region
+				// Generate the crossover background grid
 				for (var i=-edge;i<=edge;i+=10)
 				{
-					line (i,yf,i+edge,yf+edge,color.grid);
-					line (i+edge,yf,i,yf+edge,color.grid);
+					line (i,panely,i+edge,panely+edge,color.grid);
+					line (i+edge,panely,i,panely+edge,color.grid);
 				}
 
-				// data lines from hyperacute PSF transform of actual point
-				//line (x1,y1,x2,y2,color.actual);
-				//line (x3,y3,x4,y4,color.actual);
-				line (0, yf     , edge, yf+edge, color.actual);
-				line (0, yf+edge, edge, yf     , color.actual);
+				// Display RED diagonal reticle for the hyperacute point image
+				line (0, panely     , edge, panely+edge, color.actual);
+				line (0, panely+edge, edge, panely     , color.actual);
 
-				// data lines for current fixation point
-				//console.log(px,py);
+				// Display GREEN reticle for fixation point
 				line (x0-edge,py,x0+edge,py, color.fixation);
-				line (px,y0+yf-column,px,y0+yf+column, color.fixation);
-				disk (px,py+yf,2,color.fixation);
+				line (px,y0+panely-column,px,y0+panely+column, color.fixation);
+				disk (px,py+panely,2,color.fixation);
 
-				// data lines for vector between actual and fixation point
-				line (x0,y0+yf,px,py,color.vector);
-				disk (x0,y0+yf,2,color.actual);
+				// Display vector from hyperacute point image to fixation point
+				line (x0,y0+panely,px,py,color.vector);
+				disk (x0,y0+panely,2,color.actual);
 
+				// Restore the lineWidth
 				session.context.lineWidth = lw;
 			} // crossover
 
@@ -1305,14 +1333,33 @@ class Airy(object):
 					</button>
 				</form>
 				Pupil:
-				<b onclick="clickPupil(1)">1</b>
-				<b onclick="clickPupil(2)">2</b>
-				<b onclick="clickPupil(3)">3</b>
-				<b onclick="clickPupil(4)">4</b>
-				<b onclick="clickPupil(5)">5</b>
-				<b onclick="clickPupil(6)">6</b>
-				<b onclick="clickPupil(7)">7</b>
-				<b onclick="clickPupil(8)">8</b>
+				<table style="display:inline-block;"><tr>
+						<td      onmouseover="enter(event)"
+								 onmouseout="leave(event)"
+								 onclick="clickPupil(1)">1
+						</td><td onmouseover="enter(event)"
+								 onmouseout="leave(event)"
+								 onclick="clickPupil(2)">2
+						</td><td onmouseover="enter(event)"
+								 onmouseout="leave(event)"
+								 onclick="clickPupil(3)">3
+						</td><td onmouseover="enter(event)"
+								 onmouseout="leave(event)"
+								 onclick="clickPupil(4)">4
+						</td><td onmouseover="enter(event)"
+								 onmouseout="leave(event)"
+								 onclick="clickPupil(5)">5
+						</td><td onmouseover="enter(event)"
+								 onmouseout="leave(event)"
+								 onclick="clickPupil(6)">6
+						</td><td onmouseover="enter(event)"
+								 onmouseout="leave(event)"
+								 onclick="clickPupil(7)">7
+						</td><td onmouseover="enter(event)"
+								 onmouseout="leave(event)"
+								 onclick="clickPupil(8)">8
+						</td>
+				</tr><table>
 			</td></tr><tr><td class="info">
 				<big><b>Scenario</b></big>
 				<select id="figure 1a menu" onchange="selectScenario()">
