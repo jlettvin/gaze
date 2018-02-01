@@ -275,6 +275,7 @@ a retinal diffraction pattern.
 				verbose   : false,
 				axes      : 0,
 				pupil     : 1,
+				coeff     : 12.0,
 				timeout   : null,
 				converge  : true,
 				mouse     : {x:0,y:0},
@@ -616,20 +617,19 @@ a retinal diffraction pattern.
 				var paney = index.image * session.pane.y;
 				//var paney = pane[index.image][2].corner.y;
 				var lw = session.context.lineWidth;
-				var coeff = 12.0;
+				var coeff = session.coeff;
 				var coeff2 = (7 * coeff) / 8;
 				session.context.lineWidth = coeff2 / session.pupil; //parseInt (
 					//10 * coeff * session.context.linewidth / session.pupil);
 				var half = session.context.lineWidth / 2;
-				console.log(half);
 
 				for (axy of axys)
 				{
 					var x = axy[0] + x0;
 					var y = axy[1] + y0 + paney;
 					var r1 = parseInt (1.219 * coeff / session.pupil);
-					var r2 = parseInt (2.219 * coeff / session.pupil) - half;
-					var r3 = parseInt (3.219 * coeff / session.pupil) - half;
+					var r2 = parseInt ((2.219 * coeff / session.pupil) - half);
+					var r3 = parseInt ((3.219 * coeff / session.pupil) - half);
 					disk   (x, y, r1, '#ff000077');
 					circle (x, y, r2, '#77000077');
 					circle (x, y, r3, '#33000077');
@@ -743,12 +743,11 @@ class Airy(object):
 					*/
 					if (show)
 					{
-						var coeff = 12.0;
-						var r1 = parseInt (1.219 * coeff / session.pupil);
-						var r2 = parseInt (2.219 * coeff / session.pupil);
-						var r3 = parseInt (3.219 * coeff / session.pupil);
-						circle (x, y, r3, '#00ffff77');
-						circle (x, y, r2, '#0077ff77');
+						var r1 = parseInt (1.219 * session.coeff / session.pupil);
+						var r2 = parseInt (2.219 * session.coeff / session.pupil);
+						var r3 = parseInt (3.219 * session.coeff / session.pupil);
+						circle (x, y, r1, '#00ffff77');
+						circle (x, y, r2, '#00777777');
 						disk   (x, y,  2, '#ff000077');
 					}
 				}
