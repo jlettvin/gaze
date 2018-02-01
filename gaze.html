@@ -1082,8 +1082,17 @@ class Airy(object):
 						);
 					}
 					// Draw the eyeball circle
+					var rx = (radius * Math.sin (axial));
+					var ry = (radius * Math.cos (axial));
+					var dy = (radius * 1) / 8;
+					var cornx = (eyex     ) - rx;
+					var corny = (eyey + dy) - ry;
+					var cornr = radius / 2;
+					disk   (cornx, corny, cornr, '#000000');
+					circle (cornx, corny, cornr, '#ffffff');
 					disk   (eyex, eyey, radius, '#000000');
 					circle (eyex, eyey, radius, '#ffffff');
+					disk   (cornx, corny, cornr-2, '#000000');
 					/* experiments with making a cornea
 					session.context.fillstyle = '#ffffff';
 					session.context.beginPath ();
