@@ -13,6 +13,7 @@ table.center { margin-left:auto; margin-right:auto; }
 tr { height:20%; }
 td { border: 1px solid black; text-align: center; vertical-align: top; }
 h1,h2,h3,h4,h6 {text-align: center; padding: 0px; margin: 0px; }
+li {text-align: left;}
 h5 {text-align: left; }
 p {text-indent: 1em; }
 .info { text-align:left; }
@@ -506,19 +507,19 @@ a retinal diffraction pattern.
 
 
 			//------------------------------------------------------------------
-			function enter (event)
+			function enter (e)
 			//------------------------------------------------------------------
 			{
-				var element = event.target;
+				var element = e.target;
 				element.style.color = "white";
 				element.style.backgroundColor = "black";
 			}
 
 			//------------------------------------------------------------------
-			function leave (event)
+			function leave (e)
 			//------------------------------------------------------------------
 			{
-				var element = event.target;
+				var element = e.target;
 				element.style.color = "black";
 				element.style.backgroundColor = "#ffffcc";
 			}
@@ -1317,24 +1318,23 @@ class Airy(object):
 				onmousemove="mouseMove(event)"
 				onclick="buttonMovable()"
 			></canvas>
-		</td><td width="100%">
-			<table>
-			<tr><td class="info" valign="top">
-				<big><b>Controls</b></big>
-				<form style="display:inline-block;">
-					<button id="axes" onclick="buttonAxes()">
-						axes center
-					</button>
-					<button id="converge" onclick="buttonVerge()">
-						verge off
-					</button>
-					<button id="debug" onclick="buttonDebug()">
-						debug on
-					</button>
-				</form>
-				Pupil:
-				<big>
-				<table style="display:inline-block;"><tr>
+			</td><td width="100%">
+				<table>
+				<tr><td class="info" valign="top">
+					<big><b>Controls</b></big>
+					<form style="display:inline-block;">
+						<button id="axes" onclick="buttonAxes()">
+							axes center
+						</button>
+						<button id="converge" onclick="buttonVerge()">
+							verge off
+						</button>
+						<button id="debug" onclick="buttonDebug()">
+							debug on
+						</button>
+					</form>
+					Pupil:
+					<table style="display:inline-block;"><tr>
 						<td      onmouseover="enter(event)"
 								 onmouseout="leave(event)"
 								 onclick="clickPupil(1)">1
@@ -1360,22 +1360,23 @@ class Airy(object):
 								 onmouseout="leave(event)"
 								 onclick="clickPupil(8)">8
 						</td>
-				</tr><table>
-				</big>
-			</td></tr><tr><td class="info">
-				<big><b>Scenario</b></big>
-				<select id="figure 1a menu" onchange="selectScenario()">
-					<!-- a selected option is needed to prime the pump -->
-					<option selected>None</option>
-				</select>
-			</td></tr><tr><td class="info" bgcolor="#ffffff">
-				<span id="figure 1a text"></span>
-			</td></tr><tr><td class="info" bgcolor="#ffffff">
-				<span id="pane"></span>
+					</tr>
+					</table>
+				</td></tr><tr><td class="info">
+					<big><b>Scenario</b></big>
+					<select id="figure 1a menu" onchange="selectScenario()">
+						<!-- a selected option is needed to prime the pump -->
+						<option selected>None</option>
+					</select>
+				</td></tr><tr><td class="info" bgcolor="#ffffff">
+					<span id="figure 1a text"></span>
+				</td></tr><tr><td class="info" bgcolor="#ffffff">
+					<span id="pane"></span>
+				</td></tr>
+				</table>
 			</td></tr>
-			</table>
-		</td></tr></table>
-<p align="left">
+		</table>
+<p style="text-align:left">
 <small>
 	<ul>
 <li>https://medicine.yale.edu/cranialnerves/nerves/oculomotornerve.aspx</li>
