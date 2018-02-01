@@ -854,7 +854,7 @@ class Airy(object):
 				{
 					var option = document.createElement ('option');
 					//option.setAttribute ('id', s);
-					option.setAttribute ('onchange', 'choose()');
+					option.setAttribute ('onchange', 'selectScenario()');
 					if (selected == s) option.setAttribute ('selected', true);
 					option.innerHTML=''+(s+1)+'. '+viewable[s].title;
 					select.appendChild (option);
@@ -1158,7 +1158,7 @@ class Airy(object):
 			// MAIN FUNCTION
 
 			//------------------------------------------------------------------
-			var choose = function ()
+			var selectScenario = function ()
 			//------------------------------------------------------------------
 			{
 				var element = document.getElementById ("figure 1a menu");
@@ -1167,7 +1167,7 @@ class Airy(object):
 				scenario = viewable[value];
 				scenario.number = value;
 				call('main');
-			} // choose
+			} // selectScenario
 
 			//------------------------------------------------------------------
 			var main = function ()
@@ -1222,7 +1222,7 @@ class Airy(object):
 			<tr>
 				<td>
 					<h3>Available Scenarios:</h3>
-					<select id="figure 1a menu" onchange="choose()">
+					<select id="figure 1a menu" onchange="selectScenario()">
 						<!-- a selected option is needed to prime the pump -->
 						<option selected>None</option>
 					</select>
