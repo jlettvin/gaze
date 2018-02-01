@@ -64,17 +64,16 @@ a.button {
 						text:HERE(function() {/*
 				<h3>Pane 1 (<span id="frame1">scene</span>)</h3>
 <p>
-A RED point source is shown (if visible) from above (Y axis normal).
-Two CYAN lines are shown where lines from the foveola are projected.
-A CYAN point is shown where lines intersect.
+A RED point source is shown from above (if not off-screen).
+Two CYAN lines join the optic axes of both eyes to their convergence point 
+A CYAN point is shown at the convergence point.
 </p><p>
-The mouse hoevering moves the point source along the X and Z axes.
-When the RED point moves, the CYAN intersection follows behind.
-When they coincide, microsaccades become obvious.
-</p><p>
+When the mouse is in Pane 1 and movement is enabled,
+the RED point stays with the mouse.
+If verge is enabled, the CYAN convergence point follows the RED point.
+When the two points coincide, the convergence point exhibits saccades.
+Clicking the mouse in Pane 1 toggles tracking.
 Active following is only enabled for Scenario 2.
-Clicking the mouse in the top frame stops mouse following.
-Clicking it again starts it again.
 </p>
 					*/})
 					}
@@ -88,16 +87,19 @@ Clicking it again starts it again.
 			<h3>Pane 2 (<span id="frame2">eyeball</span>)</h3>
 <p>
 A pair of eyeballs is shown from above (Y axis normal)
-with associated lateral and medial rectus muscles
-for horizontal rotation.
-Muscles change length and width to illustrate contraction
-to rotate the associated eyeball.
+with associated lateral and medial rectus muscles for horizontal rotation.
+The eyes are labelled S (Sinister == Left) and D (Dexter == Right).
+The cornea and pupil are shown.
 </p><p>
-Lines of sight extend from the optic axis in this pane (CYAN)
-to the fixation point in pane 1 (CYAN).
+To rotate the associated eyeball
+muscles change length and width as they contract and relax.
+Lines of sight extend from the retinal location of
+the optic axis in this pane (CYAN)
+to the scene convergence point in pane 1 (CYAN).
+</p><p>
 The visible point in pane 1 (RED)
-appears as a projected image in this pane (RED).
-When the fixation point and projected image are coincident
+projects to images on both retinas (RED).
+When the optic axis and projected image are coincident
 the projected image takes precedence.
 </p>
 					*/})
@@ -116,6 +118,14 @@ are shown with relative displacement from center when
 the X and Z displacement of the point source
 are not the X and Z displacement of the fixation point.
 Watch them lose registration when the mouse moves in the Z direction.
+</p><p>
+Pupil size may be set to any integer value in the range 1-8 inclusive.
+The diffraction pattern in this pane, and the Airy zeros in Pane 4
+adjust in size to represent diffraction pattern size changes
+arising from changes in pupil size.
+</p><p>
+The patterns from both retinas are projected onto a common image
+having the optic axis at its center.
 </p>
 					*/})
 					}
@@ -128,13 +138,17 @@ Watch them lose registration when the mouse moves in the Z direction.
 						text:HERE(function() {/*
 			<h3>Pane 4 (<span id="frame4">hyperacute</span>)</h3>
 <p>
-CYAN diffraction pattern zeros show a Z axis view of
-photoreceptor transient differencing
-as if seen with overlapping retinas both centered on the foveola
-to show relative displacement of the pattern from the foveola.
-These are parallel to the above frame.
+Airy diffraction patterns of point sources have "zeros"
+between rings and between the central disk and first ring.
+These zeros, adjacent to bright areas, generate rings of
+radial difference signals around the center of the projected pattern.
+These rings are shown in CYAN.
+</p><p>
 The RED center point is convolved from the radial transient signals
 represented by the CYAN zeros, aka hyperacute center data.
+</p><p>
+The patterns from both retinas are projected onto a common image
+having the optic axis at its center.
 </p>
 					*/})
 					}
