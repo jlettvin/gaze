@@ -408,34 +408,41 @@ a retinal diffraction pattern.
 			} // save
 
 			//------------------------------------------------------------------
-			function toggleAxes ()
+			function buttonAxes ()
 			//------------------------------------------------------------------
 			{
+				const label = [
+					'axes absent',
+					'axes center',
+					'axes corner'
+				];
 				session.axes = (session.axes + 1) % 3;
-				//session.axes = !session.axes;
+				var next = (session.axes + 1) % 3;
+				var element = document.getElementById("axes");
+				element.innerHTML = label[next];
 				call ("display");
-			} // toggleAxes
+			} // buttonAxes
 
 			//------------------------------------------------------------------
-			function verbosity ()
+			function buttonDebug ()
 			//------------------------------------------------------------------
 			{
-				var element = document.getElementById("verbosity");
-				element.innerHTML = session.verbose ? "debug" : "silent";
+				var element = document.getElementById("debug");
+				element.innerHTML = session.verbose ? "debug on" : "debug off";
 				session.verbose = !session.verbose;
-			} // verbosity
+			} // buttonDebug
 
 			//------------------------------------------------------------------
-			function tracking ()
+			function buttonVerge ()
 			//------------------------------------------------------------------
 			{
 				var element = document.getElementById("converge");
-				element.innerHTML = session.converge ? "track" : "fixed";
+				element.innerHTML = session.converge ? "verge on" : "verge off";
 				session.converge = !session.converge;
-			} // tracking
+			} // buttonVerge
 
 			//------------------------------------------------------------------
-			function eMove (e)
+			function mouseMove (e)
 			//------------------------------------------------------------------
 			{
 				var canvas = document.getElementById (id.figure1a.canvas);
@@ -470,27 +477,20 @@ a retinal diffraction pattern.
 						call ("display");
 					}
 				}
-			} // eMove
+			} // mouseMove
 
 
 			//------------------------------------------------------------------
-			function movable ()
+			function buttonMovable ()
 			//------------------------------------------------------------------
 			{
 				if (scenario.visible && !scenario.permanent)
 				{
 					scenario.movable = !scenario.movable;
-					eMove (event);
+					mouseMove (event);
 					call ("display");
 				}
-			} // movable
-
-			//------------------------------------------------------------------
-			function move (event)
-			//------------------------------------------------------------------
-			{
-				eMove (event);
-			} // move
+			} // buttonMovable
 
 			//##################################################################
 			// DRAWING PRIMITIVE FUNCTIONS
@@ -800,8 +800,6 @@ class Airy(object):
 				line (x0,y0+yf,px,py,color.vector);
 				disk (x0,y0+yf,2,color.actual);
 
-				iaxes(index.crossover);
-
 				session.context.lineWidth = lw;
 			} // crossover
 
@@ -838,30 +836,28 @@ class Airy(object):
 			var menu = function ()
 			//------------------------------------------------------------------
 			{
-				var table = document.getElementById (id.figure1a.menu);
+				var select = document.getElementById (id.figure1a.menu);
+				var value = select.selectedOptions[0].value;
+				var selected = 0;
+				if (value !== undefined) selected = parseInt (value) - 1;
 
-				// Empty the current menu table
-				var fc = table.firstChild;
+				// Empty the current menu select
+				var fc = select.firstChild;
 				while (fc)
 				{
-					table.removeChild (fc);
-					fc = table.firstChild;
+					select.removeChild (fc);
+					fc = select.firstChild;
 				}
 
-				// Refill the table
+				// Refill the select
 				for (var s=0; s<scenarios; ++s)
 				{
-					var a  = document.createElement ( 'a');
-					a.setAttribute ('href', '#');
-					a.setAttribute ('id'  , s);
-					a.setAttribute ('onclick'  , 'choose('+s+')');
-					a.setAttribute ('class', 'button');
-					a.innerHTML=''+(s+1)+'. '+viewable[s].title;
-					var td = document.createElement ('td');
-					var tr = document.createElement ('tr');
-					td.appendChild (a);
-					tr.appendChild (td);
-					table.appendChild (tr);
+					var option = document.createElement ('option');
+					//option.setAttribute ('id', s);
+					option.setAttribute ('onchange', 'choose()');
+					if (selected == s) option.setAttribute ('selected', true);
+					option.innerHTML=''+(s+1)+'. '+viewable[s].title;
+					select.appendChild (option);
 				}
 			} // menu
 
@@ -1130,14 +1126,14 @@ class Airy(object):
 				var funs = [
 					'canvas',
 					'ambient',
-					'axes',
 					'eyeballs',
 					'patterns',
 					'info',
 					'lines',
 					'verge',
-					'points',    // last to keep point above other content
 					'experiment',
+					'axes',
+					'points',    // last to keep point above other content
 				];
 				call (funs);
 				scenario.interval += interval.increment;
@@ -1162,11 +1158,14 @@ class Airy(object):
 			// MAIN FUNCTION
 
 			//------------------------------------------------------------------
-			var choose = function (number)
+			var choose = function ()
 			//------------------------------------------------------------------
 			{
-				scenario = viewable[number];
-				//scenario.number = number;
+				var element = document.getElementById ("figure 1a menu");
+				var value = parseInt (element.selectedOptions[0].value) - 1;
+				//console.log ("chose", value);
+				scenario = viewable[value];
+				scenario.number = value;
 				call('main');
 			} // choose
 
@@ -1215,26 +1214,34 @@ class Airy(object):
 		<table class="center"><tr><td>
 			<h3>Current Scenario:</h3>
 			<canvas id="figure 1a canvas"
-				onmousemove="move(event)"
-				onclick="movable()"
+				onmousemove="mouseMove(event)"
+				onclick="buttonMovable()"
 			></canvas>
 		</td><td>
 			<table>
 			<tr>
 				<td>
 					<h3>Available Scenarios:</h3>
-					<table id="figure 1a menu" class="center"></table>
-					<h3>Action Buttons:</h3>
+					<select id="figure 1a menu" onchange="choose()">
+						<!-- a selected option is needed to prime the pump -->
+						<option selected>None</option>
+					</select>
 					<hr />
-					<a href="#" id="axes" onclick="toggleAxes()"
-						class="button">axes</a>
-					<a href="#" id="verbosity" onclick="verbosity()"
-						class="button">debug</a>
-					<a href="#" id="converge" onclick="tracking()"
-						class="button">ignore</a>
-					<a href="#" class="button" id="saver" onclick="save()"
-						download="image.png">Download</a>
-					<br />
+					<h3>Controls:</h3>
+					<form>
+						<button id="axes" onclick="buttonAxes()">
+							axes center
+						</button>
+						<button id="converge" onclick="buttonVerge()">
+							verge off
+						</button>
+						<button id="debug" onclick="buttonDebug()">
+							debug on
+						</button>
+						<button id="saver" onclick="save()"
+								download="image.png">
+						</button>
+					</form>
 				</td>
 			</tr>
 				<tr><td>
@@ -1248,10 +1255,12 @@ class Airy(object):
 		</td></tr></table>
 <p align="left">
 <small>
-https://medicine.yale.edu/cranialnerves/nerves/oculomotornerve.aspx
-https://medicine.yale.edu/cranialnerves/nerves/trochlearnerve.aspx
-https://bmc.med.utoronto.ca/cranialnerves/illustrations-by-chapter/oculomotor
-http://rodsncones.blogspot.com/2014/05/anatomy-nerves-of-eye.html
+	<ul>
+<li>https://medicine.yale.edu/cranialnerves/nerves/oculomotornerve.aspx</li>
+<li>https://medicine.yale.edu/cranialnerves/nerves/trochlearnerve.aspx</li>
+<li>https://bmc.med.utoronto.ca/cranialnerves/illustrations-by-chapter/oculomotor</li>
+<li>http://rodsncones.blogspot.com/2014/05/anatomy-nerves-of-eye.html</li>
+	</ul>
 </small>
 </p>
 	</body>
