@@ -617,16 +617,19 @@ a retinal diffraction pattern.
 				//var paney = pane[index.image][2].corner.y;
 				var lw = session.context.lineWidth;
 				var coeff = 12.0;
-				session.context.lineWidth = coeff / session.pupil; //parseInt (
+				var coeff2 = (7 * coeff) / 8;
+				session.context.lineWidth = coeff2 / session.pupil; //parseInt (
 					//10 * coeff * session.context.linewidth / session.pupil);
+				var half = session.context.lineWidth / 2;
+				console.log(half);
 
 				for (axy of axys)
 				{
 					var x = axy[0] + x0;
 					var y = axy[1] + y0 + paney;
 					var r1 = parseInt (1.219 * coeff / session.pupil);
-					var r2 = parseInt (1.900 * coeff / session.pupil);
-					var r3 = parseInt (2.900 * coeff / session.pupil);
+					var r2 = parseInt (2.219 * coeff / session.pupil) - half;
+					var r3 = parseInt (3.219 * coeff / session.pupil) - half;
 					disk   (x, y, r1, '#ff000077');
 					circle (x, y, r2, '#77000077');
 					circle (x, y, r3, '#33000077');
@@ -740,9 +743,13 @@ class Airy(object):
 					*/
 					if (show)
 					{
-						circle (x, y, 12, '#00ffff77');
-						circle (x, y, 22, '#0077ff77');
-						disk   (x, y,  2, '#ff0000');
+						var coeff = 12.0;
+						var r1 = parseInt (1.219 * coeff / session.pupil);
+						var r2 = parseInt (2.219 * coeff / session.pupil);
+						var r3 = parseInt (3.219 * coeff / session.pupil);
+						circle (x, y, r3, '#00ffff77');
+						circle (x, y, r2, '#0077ff77');
+						disk   (x, y,  2, '#ff000077');
 					}
 				}
 				session.context.lineWidth = lw;
@@ -767,6 +774,8 @@ class Airy(object):
 				var yf = index.crossover * session.pane.y;
 				var lw    = session.context.linewidth;
 				session.context.lineWidth = 1;
+
+				// Point offsets from eye point of view
 				var Sxy = axys[0];    // left  eye point offset
 				var Dxy = axys[1];    // right eye point offset
 
