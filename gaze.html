@@ -505,6 +505,14 @@ a retinal diffraction pattern.
 
 
 			//------------------------------------------------------------------
+			function clickPupil (d)
+			//------------------------------------------------------------------
+			{
+				session.pupil = d;
+				call ("display");
+			}
+
+			//------------------------------------------------------------------
 			function buttonMovable ()
 			//------------------------------------------------------------------
 			{
@@ -607,12 +615,10 @@ a retinal diffraction pattern.
 
 				var paney = index.image * session.pane.y;
 				//var paney = pane[index.image][2].corner.y;
-				console.log (session.context.lineWidth);
 				var lw = session.context.lineWidth;
-				var coeff = 8;
-				session.context.lineWidth = 7 / session.pupil; //parseInt (
+				var coeff = 12.0;
+				session.context.lineWidth = coeff / session.pupil; //parseInt (
 					//10 * coeff * session.context.linewidth / session.pupil);
-				console.log (session.context.lineWidth);
 
 				for (axy of axys)
 				{
@@ -1290,6 +1296,15 @@ class Airy(object):
 						debug on
 					</button>
 				</form>
+				Pupil:
+				<b onclick="clickPupil(1)">1</b>
+				<b onclick="clickPupil(2)">2</b>
+				<b onclick="clickPupil(3)">3</b>
+				<b onclick="clickPupil(4)">4</b>
+				<b onclick="clickPupil(5)">5</b>
+				<b onclick="clickPupil(6)">6</b>
+				<b onclick="clickPupil(7)">7</b>
+				<b onclick="clickPupil(8)">8</b>
 			</td></tr><tr><td class="info">
 				<big><b>Scenario</b></big>
 				<select id="figure 1a menu" onchange="selectScenario()">
