@@ -752,8 +752,8 @@ class Airy(object):
 				var yf = index.crossover * session.pane.y;
 				var lw    = session.context.linewidth;
 				session.context.lineWidth = 1;
-				var Sxy = axys[0];
-				var Dxy = axys[1];
+				var Sxy = axys[0];    // left  eye point offset
+				var Dxy = axys[1];    // right eye point offset
 
 				var Sx = Sxy[0] + x0;
 				var Dx = Dxy[0] + x0;
@@ -1236,7 +1236,7 @@ class Airy(object):
 		</script>
 	</head>
 
-	<body>
+	<body bgcolor="#ffffcc">
 		<h1>Verging on Hyperacuity</h1>
 		<h6>
 			Copyright&copy; 2018 Jonathan D. Lettvin, All Rights Reserved
@@ -1271,9 +1271,9 @@ class Airy(object):
 					<!-- a selected option is needed to prime the pump -->
 					<option selected>None</option>
 				</select>
-			</td></tr><tr><td class="info">
+			</td></tr><tr><td class="info" bgcolor="#ffffff">
 				<span id="figure 1a text"></span>
-			</td></tr><tr><td class="info">
+			</td></tr><tr><td class="info" bgcolor="#ffffff">
 				<span id="pane"></span>
 			</td></tr>
 			</table>
