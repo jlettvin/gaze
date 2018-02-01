@@ -85,6 +85,13 @@ with associated lateral and medial rectus muscles
 for horizontal rotation.
 Muscles change length and width to illustrate contraction
 to rotate the associated eyeball.
+<p />
+Lines of sight extend from the optic axis in this pane (CYAN)
+to the fixation point in pane 1 (CYAN).
+The visible point in pane 1 (RED)
+appears as a projected image in this pane (RED).
+When the fixation point and projected image are coincident
+the projected image takes precedence.
 					*/})
 					}
 				],
@@ -1081,25 +1088,22 @@ class Airy(object):
 							letter + ': ' + prefix + eye[letter].axial
 						);
 					}
-					// Draw the eyeball circle
+					// Calculate parameters for eyeball circle
 					var dr = (radius * 1) / 4;
 					var rx = (radius - dr ) * Math.sin (axial);
 					var ry = (radius - dr ) * Math.cos (axial);
 					var cornx = eyex - rx;
 					var corny = eyey - ry;
 					var cornr = radius / 2;
+					var pupr  = 9 * cornr / 16;
+					// Draw cornea first (black inside, white edge)
 					disk   (cornx, corny, cornr, '#000000');
 					circle (cornx, corny, cornr, '#ffffff');
+					// Draw eyeball second (black inside, white edge)
 					disk   (eyex, eyey, radius, '#000000');
 					circle (eyex, eyey, radius, '#ffffff');
-					//disk   (cornx, corny, cornr-2, '#000000');
-					/* experiments with making a cornea
-					session.context.fillstyle = '#ffffff';
-					session.context.beginPath ();
-					session.context.arc (x, y, r, -0.2, +0.2);
-					session.context.closePath ();
-					session.context.fill ();
-					*/
+					// Draw pupil
+					disk   (cornx, corny, pupr, '#000000');
 
 					// Construct muscles having appropriate length/diameter.
 					var medianLength = 10 * axial;
@@ -1222,6 +1226,10 @@ class Airy(object):
 	</head>
 
 	<body>
+		<h1>Verging on Hyperacuity</h1>
+		<h6>
+			Copyright&copy; 2018 Jonathan D. Lettvin, All Rights Reserved
+		</h6>
 		<hr />
 		<!-- <canvas id="canvas"></canvas> -->
 		<table class="center"><tr><td>
@@ -1231,37 +1239,38 @@ class Airy(object):
 				onmousemove="mouseMove(event)"
 				onclick="buttonMovable()"
 			></canvas>
-		</td><td>
+		</td><td width="100%">
 			<table>
-			<tr>
-				<td>
-					<h3>Available Scenarios:</h3>
-					<select id="figure 1a menu" onchange="selectScenario()">
-						<!-- a selected option is needed to prime the pump -->
-						<option selected>None</option>
-					</select>
-					<hr />
-					<h3>Controls:</h3>
-					<form>
-						<button id="axes" onclick="buttonAxes()">
-							axes center
-						</button>
-						<button id="converge" onclick="buttonVerge()">
-							verge off
-						</button>
-						<button id="debug" onclick="buttonDebug()">
-							debug on
-						</button>
-					</form>
-				</td>
-			</tr>
-				<tr><td>
-					<h3>About this Scenario:</h3>
-					<h5><span id="figure 1a title"></span></h5>
-					<span id="figure 1a text"></span>
-				</td></tr>
-				<tr><td class="info"><h3>About this Pane</h3></td></tr>
-				<tr><td id="pane"></td></tr>
+			<tr><td>
+				<h3>Available Scenarios</h3>
+			</td></tr><tr><td class="info">
+				<select id="figure 1a menu" onchange="selectScenario()">
+					<!-- a selected option is needed to prime the pump -->
+					<option selected>None</option>
+				</select>
+			</td></tr><tr><td class="info">
+				<h3>Controls</h3>
+			</td></tr><tr><td class="info">
+				<form>
+					<button id="axes" onclick="buttonAxes()">
+						axes center
+					</button>
+					<button id="converge" onclick="buttonVerge()">
+						verge off
+					</button>
+					<button id="debug" onclick="buttonDebug()">
+						debug on
+					</button>
+				</form>
+			</td></tr><tr><td class="info">
+				<h3><u>Scenario Description</u></h3>
+			</td></tr><tr><td class="info">
+				<h4><span id="figure 1a title"></span></h4>
+				<span id="figure 1a text"></span>
+			</td></tr><tr>
+				<td class="info"><h3><u>Pane Description</u></h3>
+			</td></tr><tr><td class="info" id="pane">
+			</td></tr>
 			</table>
 		</td></tr></table>
 <p align="left">
