@@ -274,6 +274,7 @@ a retinal diffraction pattern.
 				indent    : 0,
 				verbose   : false,
 				axes      : 0,
+				pupil     : 1,
 				timeout   : null,
 				converge  : true,
 				mouse     : {x:0,y:0},
@@ -606,15 +607,23 @@ a retinal diffraction pattern.
 
 				var paney = index.image * session.pane.y;
 				//var paney = pane[index.image][2].corner.y;
-				var lw    = session.context.linewidth;
-				session.context.lineWidth = 8;
+				console.log (session.context.lineWidth);
+				var lw = session.context.lineWidth;
+				var coeff = 8;
+				session.context.lineWidth = 7 / session.pupil; //parseInt (
+					//10 * coeff * session.context.linewidth / session.pupil);
+				console.log (session.context.lineWidth);
+
 				for (axy of axys)
 				{
 					var x = axy[0] + x0;
 					var y = axy[1] + y0 + paney;
-					disk   (x, y, 12, '#ff000077');
-					circle (x, y, 19, '#77000077');
-					circle (x, y, 29, '#33000077');
+					var r1 = parseInt (1.219 * coeff / session.pupil);
+					var r2 = parseInt (1.900 * coeff / session.pupil);
+					var r3 = parseInt (2.900 * coeff / session.pupil);
+					disk   (x, y, r1, '#ff000077');
+					circle (x, y, r2, '#77000077');
+					circle (x, y, r3, '#33000077');
 				}
 				session.context.lineWidth = 1;
 				line (x0,paney+y0-column,x0,paney+y0+column,'#333333');
@@ -1101,21 +1110,37 @@ class Airy(object):
 							letter + ': ' + prefix + eye[letter].axial
 						);
 					}
-					// Calculate parameters for eyeball circle
+					// Calculate parameters for corneal circle
 					var dr = (radius * 1) / 4;
 					var rx = (radius - dr ) * Math.sin (axial);
 					var ry = (radius - dr ) * Math.cos (axial);
+
+					// Draw cornea first (black inside, white edge)
 					var cornx = eyex - rx;
 					var corny = eyey - ry;
 					var cornr = radius / 2;
-					var pupr  = 9 * cornr / 16;
-					// Draw cornea first (black inside, white edge)
 					disk   (cornx, corny, cornr, '#000000');
 					circle (cornx, corny, cornr, '#ffffff');
+
 					// Draw eyeball second (black inside, white edge)
 					disk   (eyex, eyey, radius, '#000000');
 					circle (eyex, eyey, radius, '#ffffff');
+
 					// Draw pupil
+					const pupils = {
+						1:[17,32],
+						2:[18,32],
+						3:[19,32],
+						4:[20,32],
+						5:[21,32],
+						6:[22,32],
+						7:[23,32],
+						8:[24,32],
+					};
+					var pupil = pupils[session.pupil];
+					var numer = pupil[0];
+					var denom = pupil[1];
+					var pupr  = numer * cornr / denom;
 					disk   (cornx, corny, pupr, '#000000');
 
 					// Construct muscles having appropriate length/diameter.
