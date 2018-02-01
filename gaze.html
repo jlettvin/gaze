@@ -393,9 +393,10 @@ a retinal diffraction pattern.
 			// EVENT FUNCTIONS
 
 			//------------------------------------------------------------------
-			function save ()  // has to be function not var for onclick to work.
+			function buttonSave ()  // has to be function not var for onclick to work.
 			//------------------------------------------------------------------
 			{
+				console.log ("Saving as:", scenario.filename);
 				var element = document.getElementById("saver");
 				element.download = scenario.filename;
     			element.href = document.
@@ -405,7 +406,7 @@ a retinal diffraction pattern.
 						///^data:image\/[^;]/,
 						//'data:application/octet-stream')
 					;
-			} // save
+			} // buttonSave
 
 			//------------------------------------------------------------------
 			function buttonAxes ()
@@ -829,7 +830,7 @@ class Airy(object):
 				// reverse index labels to indices
 
 				var saver = document.getElementById("saver");
-				saver.innerHTML = "Save as " + viewable[scenario.number].filename;
+				saver.innerHTML = viewable[scenario.number].filename;
 			} // initialize
 
 			//------------------------------------------------------------------
@@ -1079,6 +1080,7 @@ class Airy(object):
 						);
 					}
 					// Draw the eyeball circle
+					disk   (eyex, eyey, radius, '#000000');
 					circle (eyex, eyey, radius, '#ffffff');
 					/* experiments with making a cornea
 					session.context.fillstyle = '#ffffff';
@@ -1212,7 +1214,8 @@ class Airy(object):
 		<hr />
 		<!-- <canvas id="canvas"></canvas> -->
 		<table class="center"><tr><td>
-			<h3>Current Scenario:</h3>
+			Save as: 
+			<a href="" id="saver" onclick="buttonSave()" download="no.png"></a>
 			<canvas id="figure 1a canvas"
 				onmousemove="mouseMove(event)"
 				onclick="buttonMovable()"
@@ -1237,9 +1240,6 @@ class Airy(object):
 						</button>
 						<button id="debug" onclick="buttonDebug()">
 							debug on
-						</button>
-						<button id="saver" onclick="save()"
-								download="image.png">
 						</button>
 					</form>
 				</td>
