@@ -14,6 +14,7 @@ tr { height:20%; }
 td { border: 1px solid black; text-align: center; vertical-align: top; }
 h1,h2,h3,h4,h6 {text-align: center; padding: 0px; margin: 0px; }
 h5 {text-align: left; }
+p {text-indent: 1em; }
 .info { text-align:left; }
 a.button {
   -webkit-appearance: button;
@@ -60,16 +61,20 @@ a.button {
 						center:{x:0,y:0},
 						axes:['x','z'],
 						text:HERE(function() {/*
-				<h5>Pane 1 (<span id="frame1">scene</span>)</h5>
+				<h3>Pane 1 (<span id="frame1">scene</span>)</h3>
+<p>
 A RED point source is shown (if visible) from above (Y axis normal).
 Two CYAN lines are shown where lines from the foveola are projected.
 A CYAN point is shown where lines intersect.
+</p><p>
 The mouse hoevering moves the point source along the X and Z axes.
 When the RED point moves, the CYAN intersection follows behind.
 When they coincide, microsaccades become obvious.
+</p><p>
 Active following is only enabled for Scenario 2.
 Clicking the mouse in the top frame stops mouse following.
 Clicking it again starts it again.
+</p>
 					*/})
 					}
 				],
@@ -79,19 +84,21 @@ Clicking it again starts it again.
 						center:{x:0,y:0},
 						axes:['x','z'],
 						text:HERE(function() {/*
-			<h5>Pane 2 (<span id="frame2">eyeball</span>)</h5>
+			<h3>Pane 2 (<span id="frame2">eyeball</span>)</h3>
+<p>
 A pair of eyeballs is shown from above (Y axis normal)
 with associated lateral and medial rectus muscles
 for horizontal rotation.
 Muscles change length and width to illustrate contraction
 to rotate the associated eyeball.
-<p />
+</p><p>
 Lines of sight extend from the optic axis in this pane (CYAN)
 to the fixation point in pane 1 (CYAN).
 The visible point in pane 1 (RED)
 appears as a projected image in this pane (RED).
 When the fixation point and projected image are coincident
 the projected image takes precedence.
+</p>
 					*/})
 					}
 				],
@@ -101,12 +108,14 @@ the projected image takes precedence.
 						center:{x:0,y:0},
 						axes:['x','y'],
 						text:HERE(function() {/*
-			<h5>Pane 3 (<span id="frame3">image</span>)</h5>
+			<h3>Pane 3 (<span id="frame3">image</span>)</h3>
+<p>
 Overlapping fake diffraction pattern incident on retina
 are shown with relative displacement from center when
 the X and Z displacement of the point source
 are not the X and Z displacement of the fixation point.
 Watch them lose registration when the mouse moves in the Z direction.
+</p>
 					*/})
 					}
 				],
@@ -116,7 +125,8 @@ Watch them lose registration when the mouse moves in the Z direction.
 						center:{x:0,y:0},
 						axes:['x','y'],
 						text:HERE(function() {/*
-			<h5>Pane 4 (<span id="frame4">hyperacute</span>)</h5>
+			<h3>Pane 4 (<span id="frame4">hyperacute</span>)</h3>
+<p>
 CYAN diffraction pattern zeros show a Z axis view of
 photoreceptor transient differencing
 as if seen with overlapping retinas both centered on the foveola
@@ -124,6 +134,7 @@ to show relative displacement of the pattern from the foveola.
 These are parallel to the above frame.
 The RED center point is convolved from the radial transient signals
 represented by the CYAN zeros, aka hyperacute center data.
+</p>
 					*/})
 					}
 				],
@@ -133,7 +144,8 @@ represented by the CYAN zeros, aka hyperacute center data.
 						center:{x:0,y:0},
 						axes:['x','z'],
 						text:HERE(function() {/*
-			<h5>Pane 5 (<span id="frame5">crossover</span>)</h5>
+			<h3>Pane 5 (<span id="frame5">crossover</span>)</h3>
+<p>
 Signals from the optic nerve are delivered to the midbrain as a map.
 Locations where features move in the scene map to activity locations.
 The map from the left and right eyes are delivered to
@@ -144,13 +156,14 @@ We propose that a decussation performs a crossover transform
 where the decussation volume supports a model of the scene.
 Decussations are present throughout the spinal cord
 and we propose that proprioception depends on these 3D maps.
-<p />
+</p><p>
 The crossover transform operating on
 hyperacute center data is projected
 through crossing axons which project a 3D map
 of point location relative to the fixation point.
 A vector shows the direction which must be traversed
 to bring the two into registration.
+</p>
 					*/})
 					}
 				],
@@ -1130,8 +1143,6 @@ class Airy(object):
 			var info = function ()
 			//------------------------------------------------------------------
 			{
-				var title = document.getElementById (id.figure1a.title);
-				title.innerHTML = scenario.title;
 				var text = document.getElementById (id.figure1a.text);
 				text.innerHTML = scenario.text;
 			} // info
@@ -1241,17 +1252,9 @@ class Airy(object):
 			></canvas>
 		</td><td width="100%">
 			<table>
-			<tr><td>
-				<h3>Available Scenarios</h3>
-			</td></tr><tr><td class="info">
-				<select id="figure 1a menu" onchange="selectScenario()">
-					<!-- a selected option is needed to prime the pump -->
-					<option selected>None</option>
-				</select>
-			</td></tr><tr><td class="info">
-				<h3>Controls</h3>
-			</td></tr><tr><td class="info">
-				<form>
+			<tr><td class="info">
+				<big><b>Controls</b></big>
+				<form style="display:inline-block;">
 					<button id="axes" onclick="buttonAxes()">
 						axes center
 					</button>
@@ -1263,13 +1266,15 @@ class Airy(object):
 					</button>
 				</form>
 			</td></tr><tr><td class="info">
-				<h3><u>Scenario Description</u></h3>
+				<big><b>Scenario</b></big>
+				<select id="figure 1a menu" onchange="selectScenario()">
+					<!-- a selected option is needed to prime the pump -->
+					<option selected>None</option>
+				</select>
 			</td></tr><tr><td class="info">
-				<h4><span id="figure 1a title"></span></h4>
 				<span id="figure 1a text"></span>
-			</td></tr><tr>
-				<td class="info"><h3><u>Pane Description</u></h3>
-			</td></tr><tr><td class="info" id="pane">
+			</td></tr><tr><td class="info">
+				<span id="pane"></span>
 			</td></tr>
 			</table>
 		</td></tr></table>
