@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
+
+	<!-- HEAD HEAD HEAD HEAD HEAD HEAD HEAD HEAD HEAD HEAD HEAD HEAD HEAD -->
 	<head>
 		<meta charset="utf-8" />
 		<script type="text/javascript" src="bessel.js"></script>
@@ -11,11 +13,12 @@
 table { border: 1px solid black; border-collapse: collapse; align: center;}
 table.center { margin-left:auto; margin-right:auto; }
 tr { height:20%; }
-td { border: 1px solid black; text-align: center; vertical-align: top; }
+td { border:1px solid black; text-align:center; vertical-align:top; }
 h1,h2,h3,h4,h6 {text-align: center; padding: 0px; margin: 0px; }
 li {text-align: left;}
 h5 {text-align: left; }
 p {text-indent: 1em; }
+.pad { padding:10px; }
 .info { text-align:left; }
 a.button {
   -webkit-appearance: button;
@@ -40,7 +43,7 @@ a.button {
 			// GLOBAL CONSTANTS
 			const tab = 8;
 			const tau = Math.PI * 2;
-			const radius = 20;
+			const radius = 23;
 			const diameter = radius * 2 + 1;
 			const column = diameter * 2;
 			const edge = column * 2;
@@ -286,21 +289,21 @@ a retinal diffraction pattern.
 
 			// Current session control states
 			var session = {
-				indent    : 0,
-				verbose   : false,
-				axes      : 0,
-				pupil     : 1,
-				coeff     : 12.0,
-				timeout   : null,
-				converge  : true,
-				mouse     : {x:0,y:0},
-				storage   : sessionStorage,  //window.localStorage;
-				frame     : {x:width,y:height*panes},
-				pane      : {x:width,y:height},
-				pixels    : null,
 				amplitude : new Float32Array (area),
+				axes      : 0,
 				blinkdown : 0,
 				blinkon   : true,
+				coeff     : 12.0,
+				converge  : true,
+				frame     : {x:width,y:height*panes},
+				indent    : 0,
+				mouse     : {x:0,y:0},
+				pane      : {x:width,y:height},
+				pixels    : null,
+				pupil     : 1,
+				storage   : sessionStorage,  //window.localStorage;
+				timeout   : null,
+				verbose   : false,
 			};
 
 			// optician S(inister) = left, D(exter) = right
@@ -432,11 +435,11 @@ a retinal diffraction pattern.
 			// EVENT FUNCTIONS
 
 			//------------------------------------------------------------------
-			function buttonSave ()  // has to be function not var for onclick to work.
+			function saveFunction ()  // has to be function not var for onclick to work.
 			//------------------------------------------------------------------
 			{
 				console.log ("Saving as:", scenario.filename);
-				var element = document.getElementById("saver");
+				var element = document.getElementById("saveButton");
 				element.download = scenario.filename;
     			element.href = document.
 					getElementById(id.figure1a.canvas).
@@ -445,10 +448,10 @@ a retinal diffraction pattern.
 						///^data:image\/[^;]/,
 						//'data:application/octet-stream')
 					;
-			} // buttonSave
+			} // saveFunction
 
 			//------------------------------------------------------------------
-			function buttonAxes ()
+			function axesFunction ()
 			//------------------------------------------------------------------
 			{
 				const label = [
@@ -458,28 +461,28 @@ a retinal diffraction pattern.
 				];
 				session.axes = (session.axes + 1) % 3;
 				var next = (session.axes + 1) % 3;
-				var element = document.getElementById("axes");
+				var element = document.getElementById("axesButton");
 				element.innerHTML = label[next];
 				call ("display");
-			} // buttonAxes
+			} // axesFunction
 
 			//------------------------------------------------------------------
-			function buttonDebug ()
+			function debugFunction ()
 			//------------------------------------------------------------------
 			{
-				var element = document.getElementById("debug");
+				var element = document.getElementById("debugButton");
 				element.innerHTML = session.verbose ? "debug on" : "debug off";
 				session.verbose = !session.verbose;
-			} // buttonDebug
+			} // debugFunction
 
 			//------------------------------------------------------------------
-			function buttonVerge ()
+			function vergeFunction ()
 			//------------------------------------------------------------------
 			{
-				var element = document.getElementById("converge");
+				var element = document.getElementById("vergeButton");
 				element.innerHTML = session.converge ? "verge on" : "verge off";
 				session.converge = !session.converge;
-			} // buttonVerge
+			} // vergeFunction
 
 			//------------------------------------------------------------------
 			function mouseMove (e)
@@ -495,7 +498,7 @@ a retinal diffraction pattern.
 				;
 				var which = parseInt (y / edge);
 
-				var about = document.getElementById ("pane");
+				var about = document.getElementById ("paneInfo");
 				about.innerHTML = pane[which][2].text;
 
 				if (scenario.visible && scenario.movable)
@@ -521,33 +524,33 @@ a retinal diffraction pattern.
 
 
 			//------------------------------------------------------------------
-			function enter (e)
+			function pupilEnter (e)
 			//------------------------------------------------------------------
 			{
 				var element = e.target;
 				element.style.color = "white";
 				element.style.backgroundColor = "black";
-			}
+			} // pupilEnter
 
 			//------------------------------------------------------------------
-			function leave (e)
+			function pupilLeave (e)
 			//------------------------------------------------------------------
 			{
 				var element = e.target;
 				element.style.color = "black";
 				element.style.backgroundColor = "#ffffcc";
-			}
+			} // pupilLeave
 
 			//------------------------------------------------------------------
-			function clickPupil (d)
+			function pupilClick (d)
 			//------------------------------------------------------------------
 			{
 				session.pupil = d;
 				call ("display");
-			}
+			} // pupilClick
 
 			//------------------------------------------------------------------
-			function buttonMovable ()
+			function moveFunction ()
 			//------------------------------------------------------------------
 			{
 				if (scenario.visible && !scenario.permanent)
@@ -556,7 +559,7 @@ a retinal diffraction pattern.
 					mouseMove (event);
 					call ("display");
 				}
-			} // buttonMovable
+			} // moveFunction
 
 			//##################################################################
 			// DRAWING PRIMITIVE FUNCTIONS
@@ -801,14 +804,14 @@ class Airy(object):
 				//       ((x1-x2)*(y3-y4)-(y1-y2)*(x3-x4))),
 				//      (((x1*y2-y1*x2)*(y3-y4)-(y10y2)*(x3*y4-y3*x4))/
 				//       (x1-x2)*(y3-y4)-(y1-y2)*(x3-x4))
-				//         ]
+				// ]
 
 				// Store lineWidth temporarily to restore before return
 				var lw    = session.context.linewidth;
 				session.context.lineWidth = 1;
 
 				// Calculate offset to upper left corner
-				var panely = index.crossover * session.pane.y;
+				var paney = index.crossover * session.pane.y;
 
 				// Extract eye-relative point source offsets
 				// Expect these to be in center coordinates
@@ -858,11 +861,11 @@ class Airy(object):
 				var py = parseInt((x1y2mx2y1*y3my4 - x3y4mx4y3*y1my2)/denom);
 
 				// Offset local coordinates to canvas coordinates
-				y1 += panely;
-				y2 += panely;
-				y3 += panely;
-				y4 += panely;
-				py += panely;
+				y1 += paney;
+				y2 += paney;
+				y3 += paney;
+				y4 += paney;
+				py += paney;
 
 				// TODO why are these fudge factors needed?
 				//py = (py - y0) * 3 + y0;
@@ -871,22 +874,54 @@ class Airy(object):
 				// Generate the crossover background grid
 				for (var i=-edge;i<=edge;i+=10)
 				{
-					line (i,panely,i+edge,panely+edge,color.grid);
-					line (i+edge,panely,i,panely+edge,color.grid);
+					line (i,paney,i+edge,paney+edge,color.grid);
+					line (i+edge,paney,i,paney+edge,color.grid);
 				}
 
-				// Display RED diagonal reticle for the hyperacute point image
-				line (0, panely     , edge, panely+edge, color.actual);
-				line (0, panely+edge, edge, panely     , color.actual);
+				if (false)
+				{
+					// Display RED diagonal reticle for the hyperacute point image
+					line (0, paney     , edge, paney+edge, color.actual);
+					line (0, paney+edge, edge, paney     , color.actual);
 
-				// Display GREEN reticle for fixation point
-				line (x0-edge,py,x0+edge,py, color.fixation);
-				line (px,y0+panely-column,px,y0+panely+column, color.fixation);
-				disk (px,py+panely,2,color.fixation);
+					// Display GREEN reticle for fixation point
+					line (x0-edge,py,x0+edge,py, color.fixation);
+					line (px,y0+paney-column,px,y0+paney+column, color.fixation);
+					disk (px,py+paney,2,color.fixation);
 
-				// Display vector from hyperacute point image to fixation point
-				line (x0,y0+panely,px,py,color.vector);
-				disk (x0,y0+panely,2,color.actual);
+					// Display vector from hyperacute point image to fixation point
+					line (x0,y0+paney,px,py,color.vector);
+					disk (x0,y0+paney,2,color.actual);
+				}
+				else
+				{
+					// Display optic axis with reticle
+					line (x0,paney+yn,x0,paney+yp,color.fixation);
+					line ( 0,paney+y0,edge,paney+y0);
+					disk (x0,y0+paney,2,color.fixation);
+
+					// Display 3D point offset in crossover
+					var Sx = Sxy[0], Sy = Sxy[1];
+					var Dx = Dxy[0], Dy = Dxy[1];
+
+					var x1 = Sx - edge, x2 = Sx + edge;
+					var y1 = Sy - edge, y2 = Sy + edge;
+
+					var x3 = Dx - edge, x4 = Dx + edge;
+					var y3 = Dy + edge, y4 = Dy - edge;
+
+					//y1 += paney;
+					//y2 += paney;
+					//y3 += paney;
+					//y4 += paney;
+
+					var pSx = Sx+x0, pSy = Sy+paney+y0;
+					var pDx = Dx+x0, pDy = Dy+paney+y0;
+					line (pSx-edge,pSy-edge,pSx+edge,pSy+edge,'#ff0000');
+					line (pSx+edge,pSy-edge,pSx-edge,pSy+edge,'#ff0000');
+					line (pDx-edge,pDy-edge,pDx+edge,pDy+edge,'#00ffff');
+					line (pDx+edge,pDy-edge,pDx-edge,pDy+edge,'#00ffff');
+				}
 
 				// Restore the lineWidth
 				session.context.lineWidth = lw;
@@ -917,8 +952,8 @@ class Airy(object):
 			{
 				// reverse index labels to indices
 
-				var saver = document.getElementById("saver");
-				saver.innerHTML = viewable[scenario.number].filename;
+				var saveButton = document.getElementById("saveButton");
+				saveButton.innerHTML = viewable[scenario.number].filename;
 			} // initialize
 
 			//------------------------------------------------------------------
@@ -1230,6 +1265,15 @@ class Airy(object):
 			} // info
 
 			//------------------------------------------------------------------
+			var internals = function ()
+			//------------------------------------------------------------------
+			{
+				//document.getElementById ("key.id").innerHTML = 'scenario.number';
+				//document.getElementById ("val.id").innerHTML = scenario.number;
+			} // internals
+
+
+			//------------------------------------------------------------------
 			var display = function ()
 			//------------------------------------------------------------------
 			{
@@ -1244,8 +1288,10 @@ class Airy(object):
 					'experiment',
 					'axes',
 					'points',    // last to keep point above other content
+					'internals',
 				];
 				call (funs);
+
 				scenario.interval += interval.increment;
 				if (scenario.interval > scenario.maximum)
 				{
@@ -1273,7 +1319,6 @@ class Airy(object):
 			{
 				var element = document.getElementById ("figure 1a menu");
 				var value = parseInt (element.selectedOptions[0].value) - 1;
-				//console.log ("chose", value);
 				scenario = viewable[value];
 				scenario.number = value;
 				call('main');
@@ -1295,7 +1340,7 @@ class Airy(object):
 					pane[s][2].corner.y = s * edge;
 					pane[s][2].center.y = s * edge + y0;
 				}
-				var about = document.getElementById ("pane");
+				var about = document.getElementById ("paneInfo");
 				about.innerHTML = pane[0][2].text;
 				var funs = [
 					'menu',
@@ -1317,7 +1362,9 @@ class Airy(object):
 
 		</script>
 	</head>
+	<!-- HEAD HEAD HEAD HEAD HEAD HEAD HEAD HEAD HEAD HEAD HEAD HEAD HEAD -->
 
+	<!-- BODY BODY BODY BODY BODY BODY BODY BODY BODY BODY BODY BODY BODY -->
 	<body bgcolor="#ffffcc">
 		<h1>Verging on Hyperacuity</h1>
 		<h6>
@@ -1327,52 +1374,50 @@ class Airy(object):
 		<!-- <canvas id="canvas"></canvas> -->
 		<table class="center"><tr><td>
 			Save as: 
-			<a href="" id="saver" onclick="buttonSave()" download="no.png"></a>
+			<a href="" id="saveButton" onclick="saveFunction()" download="no.png"></a>
 			<canvas id="figure 1a canvas"
 				onmousemove="mouseMove(event)"
-				onclick="buttonMovable()"
+				onclick="moveFunction()"
 			></canvas>
 			</td><td width="100%">
-				<table>
+				<table cellpadding="10">
 				<tr><td class="info" valign="top">
 					<big><b>Controls</b></big>
-					<form style="display:inline-block;">
-						<button id="axes" onclick="buttonAxes()">
-							axes center
-						</button>
-						<button id="converge" onclick="buttonVerge()">
-							verge off
-						</button>
-						<button id="debug" onclick="buttonDebug()">
-							debug on
-						</button>
-					</form>
-					Pupil:
+					<button id="axesButton" onclick="axesFunction()">
+						axes center
+					</button>
+					<button id="vergeButton" onclick="vergeFunction()">
+						verge off
+					</button>
+					<button id="debugButton" onclick="debugFunction()">
+						debug on
+					</button>
 					<table style="display:inline-block;"><tr>
-						<td      onmouseover="enter(event)"
-								 onmouseout="leave(event)"
-								 onclick="clickPupil(1)">1
-						</td><td onmouseover="enter(event)"
-								 onmouseout="leave(event)"
-								 onclick="clickPupil(2)">2
-						</td><td onmouseover="enter(event)"
-								 onmouseout="leave(event)"
-								 onclick="clickPupil(3)">3
-						</td><td onmouseover="enter(event)"
-								 onmouseout="leave(event)"
-								 onclick="clickPupil(4)">4
-						</td><td onmouseover="enter(event)"
-								 onmouseout="leave(event)"
-								 onclick="clickPupil(5)">5
-						</td><td onmouseover="enter(event)"
-								 onmouseout="leave(event)"
-								 onclick="clickPupil(6)">6
-						</td><td onmouseover="enter(event)"
-								 onmouseout="leave(event)"
-								 onclick="clickPupil(7)">7
-						</td><td onmouseover="enter(event)"
-								 onmouseout="leave(event)"
-								 onclick="clickPupil(8)">8
+						<td>Pupil:
+						</td><td      onmouseover="pupilEnter(event)"
+								 onmouseout ="pupilLeave(event)"
+								 onclick    ="pupilClick(1)">1
+						</td><td onmouseover="pupilEnter(event)"
+								 onmouseout ="pupilLeave(event)"
+								 onclick    ="pupilClick(2)">2
+						</td><td onmouseover="pupilEnter(event)"
+								 onmouseout ="pupilLeave(event)"
+								 onclick    ="pupilClick(3)">3
+						</td><td onmouseover="pupilEnter(event)"
+								 onmouseout ="pupilLeave(event)"
+								 onclick    ="pupilClick(4)">4
+						</td><td onmouseover="pupilEnter(event)"
+								 onmouseout ="pupilLeave(event)"
+								 onclick    ="pupilClick(5)">5
+						</td><td onmouseover="pupilEnter(event)"
+								 onmouseout ="pupilLeave(event)"
+								 onclick    ="pupilClick(6)">6
+						</td><td onmouseover="pupilEnter(event)"
+								 onmouseout ="pupilLeave(event)"
+								 onclick    ="pupilClick(7)">7
+						</td><td onmouseover="pupilEnter(event)"
+								 onmouseout ="pupilLeave(event)"
+								 onclick    ="pupilClick(8)">8
 						</td>
 					</tr>
 					</table>
@@ -1385,7 +1430,7 @@ class Airy(object):
 				</td></tr><tr><td class="info" bgcolor="#ffffff">
 					<span id="figure 1a text"></span>
 				</td></tr><tr><td class="info" bgcolor="#ffffff">
-					<span id="pane"></span>
+					<span id="paneInfo"></span>
 				</td></tr>
 				</table>
 			</td></tr>
@@ -1401,5 +1446,6 @@ class Airy(object):
 </small>
 </p>
 	</body>
+	<!-- BODY BODY BODY BODY BODY BODY BODY BODY BODY BODY BODY BODY BODY -->
 
 </html>
