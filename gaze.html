@@ -29,8 +29,21 @@ a.button {
 
 		<script type="text/javascript">
 
+			//------------------------------------------------------------------
+			function newFilledArray(len, val) {
+			//------------------------------------------------------------------
+				var a = [];
+				while(len--){
+					a.push(val);
+				}
+				return a;
+			} // newFilledArray
+
+			//------------------------------------------------------------------
 			// PHP style HEREDOC
-			var HERE = function (f) {
+			var HERE = function (f)
+			//------------------------------------------------------------------
+			{
 				return f.
 					toString().
 					split('\n').
@@ -181,6 +194,31 @@ through crossing axons which project a 3D map
 of point location relative to the fixation point.
 A vector shows the direction which must be traversed
 to bring the two into registration.
+</p>
+					*/})
+					}
+				],
+				[[  0,  0,  0],'motor', 
+					{
+						corner:{x:0,y:0},
+						center:{x:0,y:0},
+						axes:['x','z'],
+						start:0,
+						SL: newFilledArray (edge, 0),
+						SM: newFilledArray (edge, 0),
+						DM: newFilledArray (edge, 0),
+						DL: newFilledArray (edge, 0),
+						text:HERE(function() {/*
+			<h3>Pane 6 (<span id="frame5">motor</span>)</h3>
+<p>
+Midbrain delivers signals to rectus muscles.
+Equilibrium signals are delivered at a steady rate
+distributed spatially to avoid exhausting muscle twitch units.
+To cause rotation,
+the rate is temporarily increased to the ipsilateral rectus muscle
+and the rate is temporarily decreased to the contralateral rectus muscle.
+To terminate the rotation, the rates are reversed after which
+the rates return to equilibrium.
 </p>
 					*/})
 					}
@@ -1164,6 +1202,60 @@ class Airy(object):
 			} // verge
 
 			//------------------------------------------------------------------
+			var motor = function ()
+			//------------------------------------------------------------------
+			{
+				var paney = index.motor * session.pane.y;
+
+				// Calculate the midlines for vertical plotting
+				var xSL = parseInt (x0 - 3 * x0 / 4);  // Left  Lateral Rectus
+				var xSM = parseInt (x0 - 1 * x0 / 4);  // Left  Medial  Rectus
+				var xDM = parseInt (x0 + 1 * x0 / 4);  // Right Medial  Rectus
+				var xDL = parseInt (x0 + 3 * x0 / 4);  // Right Lateral Rectus
+
+				// Graph dividers
+				line (     x0,paney,     x0,paney+edge,'#007700');
+				line (x0-x0/2,paney,x0-x0/2,paney+edge,'#007700');
+				line (x0+x0/2,paney,x0+x0/2,paney+edge,'#007700');
+
+				// Get local references to data
+				var SL = pane[index.motor][2].SL;
+				var SM = pane[index.motor][2].SM;
+				var DM = pane[index.motor][2].DM;
+				var DL = pane[index.motor][2].DL;
+
+				// Create a loopable map
+				var data = [
+					[xSL, SL, 'SL'],
+					[xSM, SM, 'SM'],
+					[xDM, DM, 'DM'],
+					[xDL, DL, 'DL'],
+				];
+
+				var x8 = x0 / 8;
+				for (var datum of data)
+				{
+					var zero = datum[0];
+					var arr  = datum[1];
+					var lbl  = datum[2];
+					var off = pane[index.motor][2].start;
+					for (var j=0; j<edge; ++j)
+					{
+						var x = zero + x8 * arr[off];
+						var y = paney + off;
+						disk (x,y,0.4,'#ff7777');
+						off = (off - 1 + edge) % edge;
+					}
+					session.context.fillStyle = '#ffffff';
+					session.context.fillText (lbl, zero-10, paney + edge - 10);
+				}
+				pane[index.motor][2].start = (
+					pane[index.motor][2].start + 1
+				) % edge;
+
+			} // motor
+
+			//------------------------------------------------------------------
 			var eyeballs = function ()
 			//------------------------------------------------------------------
 			{
@@ -1285,6 +1377,7 @@ class Airy(object):
 					'info',
 					'lines',
 					'verge',
+					'motor',
 					'experiment',
 					'axes',
 					'points',    // last to keep point above other content
@@ -1383,9 +1476,19 @@ class Airy(object):
 				<table cellpadding="10">
 				<tr><td class="info" valign="top" bgcolor="#ffff00">
 						<h3>Purpose</h3>
+						<h5>
+What are the elements of the reflex
+that draws focus to tiny moving features?
+						</h5>
+						<ol>
+							<li>A tiny contrasty object moves</li>
+							<li>An eccentric image appears on the retina</ul>
+							<li>Signal is sent to the midbrain</li>
+							<li>Midbrain signals rectus muscles</li>
+							<li>Rectus muscles rotate eyes</li>
+							<li>Rotation completes when image is centered</li>
+						</ol>
 						<p>
-This page illustrates significant elements and operations
-of the reflex that draws focus to tiny features within view.
 						</p>
 					</td></tr><tr valign="top"><td class="info">
 					<big><b>Controls</b></big>
