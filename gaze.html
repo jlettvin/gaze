@@ -43,7 +43,7 @@ a.button {
 			// GLOBAL CONSTANTS
 			const tab = 8;
 			const tau = Math.PI * 2;
-			const radius = 23;
+			const radius = 20;
 			const diameter = radius * 2 + 1;
 			const column = diameter * 2;
 			const edge = column * 2;
@@ -1381,7 +1381,13 @@ class Airy(object):
 			></canvas>
 			</td><td width="100%">
 				<table cellpadding="10">
-				<tr><td class="info" valign="top">
+				<tr><td class="info" valign="top" bgcolor="#ffff00">
+						<h3>Purpose</h3>
+						<p>
+This page illustrates significant elements and operations
+of the reflex that draws focus to tiny features within view.
+						</p>
+					</td></tr><tr valign="top"><td class="info">
 					<big><b>Controls</b></big>
 					<button id="axesButton" onclick="axesFunction()">
 						axes center
@@ -1428,7 +1434,9 @@ class Airy(object):
 						<option selected>None</option>
 					</select>
 				</td></tr><tr><td class="info" bgcolor="#ffffff">
+					<p>
 					<span id="figure 1a text"></span>
+					</p>
 				</td></tr><tr><td class="info" bgcolor="#ffffff">
 					<span id="paneInfo"></span>
 				</td></tr>
