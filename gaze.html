@@ -204,10 +204,18 @@ to bring the two into registration.
 						center:{x:0,y:0},
 						axes:['x','z'],
 						start:0,
-						SL: newFilledArray (edge, 0),
-						SM: newFilledArray (edge, 0),
-						DM: newFilledArray (edge, 0),
-						DL: newFilledArray (edge, 0),
+						// Standard is the countdown between equilibrium pulses
+						standard:10,
+						// Pulse is a pair of numbers for each muscle
+						// The 1st number is the countdown to the next pulse
+						// The 2nd number is the rate change value
+						// The 1st number is decremented to 0 then
+						// reset to standard + 2nd number.
+						// When the 1st number hits 0, a pulse is displayed
+						SL: {data:newFilledArray (edge, 0),pulse:[0,0]},
+						SM: {data:newFilledArray (edge, 0),pulse:[0,0]},
+						DM: {data:newFilledArray (edge, 0),pulse:[0,0]},
+						DL: {data:newFilledArray (edge, 0),pulse:[0,0]},
 						text:HERE(function() {/*
 			<h3>Pane 6 (<span id="frame5">motor</span>)</h3>
 <p>
@@ -219,6 +227,18 @@ the rate is temporarily increased to the ipsilateral rectus muscle
 and the rate is temporarily decreased to the contralateral rectus muscle.
 To terminate the rotation, the rates are reversed after which
 the rates return to equilibrium.
+</p><p>
+The vertical graph lines in pink illustrate signals delivered to
+<table align="center">
+<tr><td>SL</td><td align="right">Left</td><td align="left">Lateral rectus muscle</td></tr>
+<tr><td>SM</td><td align="right">Left</td><td align="left">Medial rectus muscle</td></tr>
+<tr><td>DM</td><td align="right">Right</td><td align="left">Medial rectus muscle</td></tr>
+<tr><td>DL</td><td align="right">Right</td><td align="left">Lateral rectus muscle</td></tr>
+</table>
+</p><p>
+Inter-pulse intervals are still under development.
+The rate of graph update should not depend on whether tracking/verging are on.
+The interval variation on differential angle should vary for each muscle.
 </p>
 					*/})
 					}
@@ -331,6 +351,7 @@ a retinal diffraction pattern.
 				axes      : 0,
 				blinkdown : 0,
 				blinkon   : true,
+				drift     : {S:0,D:0},
 				coeff     : 12.0,
 				converge  : true,
 				frame     : {x:width,y:height*panes},
@@ -1226,26 +1247,64 @@ class Airy(object):
 
 				// Create a loopable map
 				var data = [
-					[xSL, SL, 'SL'],
-					[xSM, SM, 'SM'],
-					[xDM, DM, 'DM'],
-					[xDL, DL, 'DL'],
+					[xSL, SL, 'SL', 'S', -1, -1],
+					[xSM, SM, 'SM', 'S', -1, +1],
+					[xDM, DM, 'DM', 'D', +1, +1],
+					[xDL, DL, 'DL', 'D', +1, -1],
 				];
 
 				var x8 = x0 / 8;
 				for (var datum of data)
 				{
-					var zero = datum[0];
-					var arr  = datum[1];
-					var lbl  = datum[2];
-					var off = pane[index.motor][2].start;
+					var zero   = datum[0];
+					var arr    = datum[1].data;
+					var lbl    = datum[2];
+					var letter = datum[3];
+					var pulse  = datum[1].pulse;
+					var off    = pane[index.motor][2].start;
+					var phi    = parseInt (session.drift[letter] * 10);
+					//console.log(phi);
+
+					// Determine pulse interval change
+					//pulse[1] = phi * data[4] * data[5];
+					//if (session.drift > 0)
+					//{
+						//pulse[1] = phi;
+					//}
+					//else if (session.drift < 0)
+					//{
+						//pulse[1] = -phi
+					//}
+
+					// Add a pulse if it is time
+					pulse[0] = pulse[0] - 1;
+
+					if (pulse[0] <= 0)
+					{
+						pulse[0] = pulse[1] + pane[index.motor][2].standard;
+						// Put a pulse in the data
+						arr[off] = 1;
+						// Adjust interval
+					}
+					else
+					{
+						arr[off] = 0;
+					}
+
+					// Display pulses in a running stream
 					for (var j=0; j<edge; ++j)
 					{
-						var x = zero + x8 * arr[off];
-						var y = paney + off;
-						disk (x,y,0.4,'#ff7777');
+						if (arr[off])
+						{
+							var xl = parseInt (zero + x8 * arr[off]);
+							var xr = parseInt (zero - x8 * arr[off]);
+							var y = paney + j;
+							line (xl,y,xr,y,'#ff7777');
+						}
 						off = (off - 1 + edge) % edge;
 					}
+
+					// Label the muscle signals
 					session.context.fillStyle = '#ffffff';
 					session.context.fillText (lbl, zero-10, paney + edge - 10);
 				}
@@ -1279,6 +1338,7 @@ class Airy(object):
 
 					// Angle difference between axial and point
 					var point = axial - Math.atan2 (adx,ady);
+					session.drift[letter] = point;
 					//console.log ('A(',letter,')',adx,ady,point);
 
 					eye[letter].axial = axial;
