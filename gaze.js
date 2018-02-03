@@ -447,7 +447,7 @@ var property = function (instance, key)
 } // property
 
 //------------------------------------------------------------------------------
-var iRGB = function (i, q)
+var planeRGB = function (i, q)
 //------------------------------------------------------------------------------
 {
 	var R = pane[i][index.RGB][index.R];
@@ -457,57 +457,22 @@ var iRGB = function (i, q)
 	G = q ? (G<127) * 0xff : G;
 	B = q ? (B<127) * 0xff : B;
 	return 'rgb(' + R + ',' + G + ',' + B + ')';
-} // iRGB
+} // planeRGB
 
 //##############################################################################
 // EVENT FUNCTIONS
 
 //------------------------------------------------------------------------------
-function eventSave ()  // must be function not var for onclick
+function eventMouseClick ()
 //------------------------------------------------------------------------------
 {
-	console.log ("Saving as:", scenario.filename);
-	var element = document.getElementById("buttonSave");
-	element.download = scenario.filename;
-    			element.href = document.
-		getElementById(id.figure1a.canvas).
-		toDataURL("image/png")
-		;
-} // eventSave
-
-//------------------------------------------------------------------------------
-function eventToggleAxes ()
-//------------------------------------------------------------------------------
-{
-	const label = [
-		'axes absent',
-		'axes center',
-		'axes corner'
-	];
-	session.axes = (session.axes + 1) % 3;
-	var next = (session.axes + 1) % 3;
-	var element = document.getElementById("buttonAxes");
-	element.innerHTML = label[next];
-	call ("display");
-} // eventToggleAxes
-
-//------------------------------------------------------------------------------
-function eventToggleDebug ()
-//------------------------------------------------------------------------------
-{
-	var element = document.getElementById("buttonDebug");
-	element.innerHTML = session.verbose ? "debug on" : "debug off";
-	session.verbose = !session.verbose;
-} // eventToggleDebug
-
-//------------------------------------------------------------------------------
-function eventToggleVerge ()
-//------------------------------------------------------------------------------
-{
-	var element = document.getElementById("buttonVerge");
-	element.innerHTML = session.converge ? "verge on" : "verge off";
-	session.converge = !session.converge;
-} // eventToggleVerge
+	if (scenario.visible && !scenario.permanent)
+	{
+		scenario.movable = !scenario.movable;
+		eventMouseMove (event);
+		call ("display");
+	}
+} // eventMouseClick
 
 //------------------------------------------------------------------------------
 function eventMouseMove (e)
@@ -575,16 +540,62 @@ function eventPupilClick (d)
 } // eventPupilClick
 
 //------------------------------------------------------------------------------
-function eventMouseClick ()
+function eventSave ()  // must be function not var for onclick
 //------------------------------------------------------------------------------
 {
-	if (scenario.visible && !scenario.permanent)
-	{
-		scenario.movable = !scenario.movable;
-		eventMouseMove (event);
-		call ("display");
-	}
-} // eventMouseClick
+	console.log ("Saving as:", scenario.filename);
+	var element = document.getElementById("buttonSave");
+	element.download = scenario.filename;
+    			element.href = document.
+		getElementById(id.figure1a.canvas).
+		toDataURL("image/png")
+		;
+} // eventSave
+
+//------------------------------------------------------------------------------
+var eventSelect = function ()
+//------------------------------------------------------------------------------
+{
+	var element = document.getElementById ("figure 1a menu");
+	var value = parseInt (element.selectedOptions[0].value) - 1;
+	scenario = viewable[value];
+	scenario.number = value;
+	call('main');
+} // eventSelect
+
+//------------------------------------------------------------------------------
+function eventToggleAxes ()
+//------------------------------------------------------------------------------
+{
+	const label = [
+		'axes absent',
+		'axes center',
+		'axes corner'
+	];
+	session.axes = (session.axes + 1) % 3;
+	var next = (session.axes + 1) % 3;
+	var element = document.getElementById("buttonAxes");
+	element.innerHTML = label[next];
+	call ("display");
+} // eventToggleAxes
+
+//------------------------------------------------------------------------------
+function eventToggleDebug ()
+//------------------------------------------------------------------------------
+{
+	var element = document.getElementById("buttonDebug");
+	element.innerHTML = session.verbose ? "debug on" : "debug off";
+	session.verbose = !session.verbose;
+} // eventToggleDebug
+
+//------------------------------------------------------------------------------
+function eventToggleVerge ()
+//------------------------------------------------------------------------------
+{
+	var element = document.getElementById("buttonVerge");
+	element.innerHTML = session.converge ? "verge on" : "verge off";
+	session.converge = !session.converge;
+} // eventToggleVerge
 
 //##############################################################################
 // DRAWING PRIMITIVE FUNCTIONS
@@ -634,7 +645,7 @@ var muscle = function (x,y,length)
 }
 
 //------------------------------------------------------------------------------
-var iaxes = function (i)
+var planeAxes = function (i)
 //------------------------------------------------------------------------------
 {
 	if (session.axes)
@@ -654,7 +665,7 @@ var iaxes = function (i)
 		session.context.fillText (hor, x+adjust+len, y+adjust);
 		session.context.fillText (ver, x-adjust, y-adjust-len);
 	}
-} // iaxes
+} // planeAxes
 
 
 //------------------------------------------------------------------------------
@@ -662,9 +673,9 @@ var ipane = function (i,h1,h2)
 //------------------------------------------------------------------------------
 {
 	var title = '' + (i+1) + '. ' + pane[i][index.L];
-	session.context.fillStyle = iRGB (i, false);
+	session.context.fillStyle = planeRGB (i, false);
 	session.context.fillRect (0,h1,session.pane.x,h2);
-	session.context.fillStyle = iRGB(i, true);
+	session.context.fillStyle = planeRGB(i, true);
 	session.context.fillText (title, 10, h1 + 20);
 } // ipane
 
@@ -982,7 +993,7 @@ var initialize = function ()
 } // initialize
 
 //------------------------------------------------------------------------------
-var menu = function ()
+var constructMenu = function ()
 //------------------------------------------------------------------------------
 {
 	var select = document.getElementById (id.figure1a.menu);
@@ -1008,10 +1019,10 @@ var menu = function ()
 		option.innerHTML=''+(s+1)+'. '+viewable[s].title;
 		select.appendChild (option);
 	}
-} // menu
+} // constructMenu
 
 //------------------------------------------------------------------------------
-var canvas = function ()
+var displayCanvas = function ()
 //------------------------------------------------------------------------------
 {
 	var instance = document.getElementById (id.figure1a.canvas);
@@ -1039,10 +1050,10 @@ var canvas = function ()
 		session.context.fillStyle = '#000000';
 		session.context.strokeRect (0,0,session.pane.x,h3);
 	}
-} // canvas
+} // displayCanvas
 
 //------------------------------------------------------------------------------
-var lines = function ()
+var displayLines = function ()
 //------------------------------------------------------------------------------
 {
 	// for each eye
@@ -1075,10 +1086,10 @@ var lines = function ()
 		disk (fixx,fixy,3,'#00ffff');
 		disk (actx,acty,3,'#ff0000');
 	}
-} // lines
+} // displayLines
 
 //------------------------------------------------------------------------------
-var points = function ()
+var displayPoints = function ()
 //------------------------------------------------------------------------------
 {
 	// TODO draw fake Airy disk and fake first ring
@@ -1101,20 +1112,20 @@ var points = function ()
 			disk (scenario.point.x, scenario.point.y, 2, '#ff0000');
 		}
 	}
-} // points
+} // displayPoints
 
 //------------------------------------------------------------------------------
-var axes = function ()
+var displayAxes = function ()
 //------------------------------------------------------------------------------
 {
 	for (var i=0; i<panes ; ++i)
 	{
-		iaxes (i);
+		planeAxes (i);
 	}
-} // axes
+} // displayAxes
 
 //------------------------------------------------------------------------------
-var patterns = function ()
+var displayDiffraction = function ()
 //------------------------------------------------------------------------------
 {
 /*
@@ -1157,10 +1168,10 @@ var patterns = function ()
 	// TODO fix this so it works or replace with true Airy calc
 	session.context.putImageData (Sobj, 0, ypane);
 */
-} // patterns
+} // displayDiffraction
 
 //------------------------------------------------------------------------------
-var verge = function ()
+var displayVerge = function ()
 //------------------------------------------------------------------------------
 {
 	if (scenario.visible && scenario.converge)
@@ -1186,10 +1197,10 @@ var verge = function ()
 			}
 		}
 	}
-} // verge
+} // displayVerge
 
 //------------------------------------------------------------------------------
-var motor = function ()
+var displayMotor = function ()
 //------------------------------------------------------------------------------
 {
 	var paney = index.motor * session.pane.y;
@@ -1278,10 +1289,10 @@ var motor = function ()
 		pane[index.motor][2].start + 1
 	) % edge;
 
-} // motor
+} // displayMotor
 
 //------------------------------------------------------------------------------
-var eyeballs = function ()
+var displayEyeballs = function ()
 //------------------------------------------------------------------------------
 {
 	for (var letter in eye)
@@ -1363,51 +1374,51 @@ var eyeballs = function ()
 		line (eyex+radius,eyey,eyex+radius,eyey+3*radius,"white");
 		muscle (eyex-radius,eyey+diameter, Ly);
 		muscle (eyex+radius,eyey+diameter, Ry);
-		session.context.fillStyle = iRGB(index.eyeball, true);
+		session.context.fillStyle = planeRGB(index.eyeball, true);
 		session.context.fillText (letter, eyex - 5, diameter + eyey);
 	}
-} // eyeballs
+} // displayEyeballs
 
 //------------------------------------------------------------------------------
-var ambient = function ()
+var displayAmbient = function ()
 //------------------------------------------------------------------------------
 {
-} // ambient
+} // displayAmbient
 
 //------------------------------------------------------------------------------
-var info = function ()
+var displayInfo = function ()
 //------------------------------------------------------------------------------
 {
 	var text = document.getElementById (id.figure1a.text);
 	text.innerHTML = scenario.text;
-} // info
+} // displayInfo
 
 //------------------------------------------------------------------------------
-var internals = function ()
+var displayInternals = function ()
 //------------------------------------------------------------------------------
 {
 	//document.getElementById ("key.id").innerHTML = 'scenario.number';
 	//document.getElementById ("val.id").innerHTML = scenario.number;
-} // internals
+} // displayInternals
 
 
 //------------------------------------------------------------------------------
-var display = function ()
+var displayAll = function ()
 //------------------------------------------------------------------------------
 {
 	var funs = [
-		'canvas',
-		'ambient',
-		'eyeballs',
-		'patterns',
-		'info',
-		'lines',
-		'verge',
-		'motor',
+		'displayCanvas',
+		'displayAmbient',
+		'displayEyeballs',
+		'displayDiffraction',
+		'displayInfo',
+		'displayLines',
+		'displayVerge',
+		'displayMotor',
 		'experiment',
-		'axes',
-		'points',    // last to keep point above other content
-		'internals',
+		'displayAxes',
+		'displayPoints',    // last to keep point above other content
+		'displayInternals',
 	];
 	call (funs);
 
@@ -1427,21 +1438,10 @@ var display = function ()
 			clearTimeout(session.timeout);
 		}
 	}
-} // display
+} // displayAll
 
 //##############################################################################
 // MAIN FUNCTION
-
-//------------------------------------------------------------------------------
-var eventSelect = function ()
-//------------------------------------------------------------------------------
-{
-	var element = document.getElementById ("figure 1a menu");
-	var value = parseInt (element.selectedOptions[0].value) - 1;
-	scenario = viewable[value];
-	scenario.number = value;
-	call('main');
-} // eventSelect
 
 //------------------------------------------------------------------------------
 var main = function ()
@@ -1462,9 +1462,9 @@ var main = function ()
 	var about = document.getElementById ("paneInfo");
 	about.innerHTML = pane[0][2].text;
 	var funs = [
-		'menu',
+		'constructMenu',
 		'initialize',
-		'display'
+		'displayAll'
 	];
 	call (funs);
 } // main
