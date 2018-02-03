@@ -368,12 +368,14 @@ String.prototype.isNumber = function ()
 	return /^\d+$/.test(this);
 } // String.prototype.isNumber
 
+
 //------------------------------------------------------------------------------
 var getRandomInt = function (max)
 //------------------------------------------------------------------------------
 {
 	return Math.floor (Math.random () * Math.floor (max));
 } // getRandomInt
+
 
 //##############################################################################
 // SERVICE FUNCTIONS
@@ -393,12 +395,14 @@ var bits = function (val)
 	return ret;
 } // bits
 
+
 //------------------------------------------------------------------------------
 var poke = function (key, val)
 //------------------------------------------------------------------------------
 {
 	session.storage.setItem (key, val);
 } // poke
+
 
 //------------------------------------------------------------------------------
 var peek = function (key)
@@ -409,7 +413,9 @@ var peek = function (key)
 	return value.isNumber () ? parseInt (value) : value;
 } // peek
 
+
 //------------------------------------------------------------------------------
+/// @brief enables documentation of progress during calls
 var call = function (fun)
 //------------------------------------------------------------------------------
 {
@@ -429,6 +435,7 @@ var call = function (fun)
 	}
 } // call
 
+
 //------------------------------------------------------------------------------
 var property = function (instance, key)
 //------------------------------------------------------------------------------
@@ -446,6 +453,31 @@ var property = function (instance, key)
 	}
 } // property
 
+
+//------------------------------------------------------------------------------
+var planeAxes = function (i)
+//------------------------------------------------------------------------------
+{
+	if (session.axes)
+	{
+		var offset = (session.axes == 2) ? column - 10 : 0;
+		var len = 8;
+		var adjust = 3;
+		var hor = pane[i][2].axes[0], ver = pane[i][2].axes[1];
+		var y = i * edge + y0 + offset;
+		var x = x0 - offset;
+		var color = '#ffff00';
+		// display axis lines
+		line (x-len,y,x+len,y,color);
+		line (x,y-len,x,y+len,color);
+		session.context.fillStyle = color;
+		// display axis labels
+		session.context.fillText (hor, x+adjust+len, y+adjust);
+		session.context.fillText (ver, x-adjust, y-adjust-len);
+	}
+} // planeAxes
+
+
 //------------------------------------------------------------------------------
 var planeRGB = function (i, q)
 //------------------------------------------------------------------------------
@@ -459,6 +491,7 @@ var planeRGB = function (i, q)
 	return 'rgb(' + R + ',' + G + ',' + B + ')';
 } // planeRGB
 
+
 //##############################################################################
 // EVENT FUNCTIONS
 
@@ -470,9 +503,10 @@ function eventMouseClick ()
 	{
 		scenario.movable = !scenario.movable;
 		eventMouseMove (event);
-		call ("display");
+		call ("displayAll");
 	}
 } // eventMouseClick
+
 
 //------------------------------------------------------------------------------
 function eventMouseMove (e)
@@ -507,7 +541,7 @@ function eventMouseMove (e)
 			{
 				console.log ('m(' + x + ',' + y + ')');
 			}
-			call ("display");
+			call ("displayAll");
 		}
 	}
 } // eventMouseMove
@@ -522,6 +556,7 @@ function eventPupilEnter (e)
 	element.style.backgroundColor = "black";
 } // eventPupilEnter
 
+
 //------------------------------------------------------------------------------
 function eventPupilLeave (e)
 //------------------------------------------------------------------------------
@@ -531,13 +566,15 @@ function eventPupilLeave (e)
 	element.style.backgroundColor = "#ffffcc";
 } // eventPupilLeave
 
+
 //------------------------------------------------------------------------------
 function eventPupilClick (d)
 //------------------------------------------------------------------------------
 {
 	session.pupil = d;
-	call ("display");
+	call ("displayAll");
 } // eventPupilClick
+
 
 //------------------------------------------------------------------------------
 function eventSave ()  // must be function not var for onclick
@@ -552,6 +589,7 @@ function eventSave ()  // must be function not var for onclick
 		;
 } // eventSave
 
+
 //------------------------------------------------------------------------------
 var eventSelect = function ()
 //------------------------------------------------------------------------------
@@ -562,6 +600,7 @@ var eventSelect = function ()
 	scenario.number = value;
 	call('main');
 } // eventSelect
+
 
 //------------------------------------------------------------------------------
 function eventToggleAxes ()
@@ -576,8 +615,9 @@ function eventToggleAxes ()
 	var next = (session.axes + 1) % 3;
 	var element = document.getElementById("buttonAxes");
 	element.innerHTML = label[next];
-	call ("display");
+	call ("displayAll");
 } // eventToggleAxes
+
 
 //------------------------------------------------------------------------------
 function eventToggleDebug ()
@@ -588,6 +628,7 @@ function eventToggleDebug ()
 	session.verbose = !session.verbose;
 } // eventToggleDebug
 
+
 //------------------------------------------------------------------------------
 function eventToggleVerge ()
 //------------------------------------------------------------------------------
@@ -596,6 +637,7 @@ function eventToggleVerge ()
 	element.innerHTML = session.converge ? "verge on" : "verge off";
 	session.converge = !session.converge;
 } // eventToggleVerge
+
 
 //##############################################################################
 // DRAWING PRIMITIVE FUNCTIONS
@@ -611,6 +653,7 @@ var disk = function (x,y,r,c)
 	session.context.fill ();
 } // disk
 
+
 //------------------------------------------------------------------------------
 var circle = function (x,y,r,c)
 //------------------------------------------------------------------------------
@@ -621,6 +664,7 @@ var circle = function (x,y,r,c)
 	session.context.closePath ();
 	session.context.stroke ();
 } // circle
+
 
 //------------------------------------------------------------------------------
 var line = function (x1,y1,x2,y2,c)
@@ -633,6 +677,7 @@ var line = function (x1,y1,x2,y2,c)
 	session.context.stroke ();
 } // line
 
+
 //------------------------------------------------------------------------------
 var muscle = function (x,y,length)
 //------------------------------------------------------------------------------
@@ -643,29 +688,6 @@ var muscle = function (x,y,length)
 	session.context.ellipse (x,y-2*length/3,width,length,0,tau,false);
 	session.context.fill ();
 }
-
-//------------------------------------------------------------------------------
-var planeAxes = function (i)
-//------------------------------------------------------------------------------
-{
-	if (session.axes)
-	{
-		var offset = (session.axes == 2) ? column - 10 : 0;
-		var len = 8;
-		var adjust = 3;
-		var hor = pane[i][2].axes[0], ver = pane[i][2].axes[1];
-		var y = i * edge + y0 + offset;
-		var x = x0 - offset;
-		var color = '#ffff00';
-		// display axis lines
-		line (x-len,y,x+len,y,color);
-		line (x,y-len,x,y+len,color);
-		session.context.fillStyle = color;
-		// display axis labels
-		session.context.fillText (hor, x+adjust+len, y+adjust);
-		session.context.fillText (ver, x-adjust, y-adjust-len);
-	}
-} // planeAxes
 
 
 //------------------------------------------------------------------------------
@@ -681,7 +703,7 @@ var ipane = function (i,h1,h2)
 
 
 //------------------------------------------------------------------------------
-var diffract = function (axys)
+var displayDiffract = function (axys)
 //------------------------------------------------------------------------------
 {
 	if (!scenario.visible) return;
@@ -792,43 +814,147 @@ class Airy(object):
 		}
 	}
 	*/
-} // diffract
+} // displayDiffract
+
+
+//##############################################################################
+// NON-DISPLAY CALL FUNCTIONS
 
 //------------------------------------------------------------------------------
-var hyperacute = function (axys)
+var initialize = function ()
 //------------------------------------------------------------------------------
 {
-	if (!scenario.visible) return;
+	// reverse index labels to indices
 
-	var paney = index.hyperacute * session.pane.y;
-	var lw    = session.context.linewidth;
-	session.context.lineWidth = 1;
-	for (var axy of axys)
-	{
-		var x = axy[0] + x0;
-		var y = axy[1] + y0 + paney;
-		var show = true;
-		/*
-		show = (
-			(scenario.blinkdown == 0) ||
-			(session.blinkdown > (scenario.blinkdown - 2)));
-		*/
-		if (show)
-		{
-			var r1 = parseInt (1.219 * session.coeff / session.pupil);
-			var r2 = parseInt (2.219 * session.coeff / session.pupil);
-			var r3 = parseInt (3.219 * session.coeff / session.pupil);
-			circle (x, y, r1, '#00ffff77');
-			circle (x, y, r2, '#00777777');
-			disk   (x, y,  2, '#ff000077');
-		}
-	}
-	session.context.lineWidth = lw;
+	var buttonSave = document.getElementById("buttonSave");
+	buttonSave.innerHTML = viewable[scenario.number].filename;
+} // initialize
 
-} // hyperacute
 
 //------------------------------------------------------------------------------
-var crossover = function (axys)
+var constructMenu = function ()
+//------------------------------------------------------------------------------
+{
+	var select = document.getElementById (id.figure1a.menu);
+	var value = select.selectedOptions[0].value;
+	var selected = 0;
+	if (value !== undefined) selected = parseInt (value) - 1;
+
+	// Empty the current menu select
+	var fc = select.firstChild;
+	while (fc)
+	{
+		select.removeChild (fc);
+		fc = select.firstChild;
+	}
+
+	// Refill the select
+	for (var s=0; s<scenarios; ++s)
+	{
+		var option = document.createElement ('option');
+		//option.setAttribute ('id', s);
+		option.setAttribute ('onchange', 'eventSelect()');
+		if (selected == s) option.setAttribute ('selected', true);
+		option.innerHTML=''+(s+1)+'. '+viewable[s].title;
+		select.appendChild (option);
+	}
+} // constructMenu
+
+
+//##############################################################################
+// DISPLAY CALL FUNCTIONS
+
+//------------------------------------------------------------------------------
+var displayAll = function ()
+//------------------------------------------------------------------------------
+{
+	var funs = [
+		'displayCanvas',
+		'displayAmbient',
+		'displayEyeballs',
+		'displayDiffraction',
+		'displayInfo',
+		'displayLines',
+		'displayVerge',
+		'displayMotor',
+		'displayExperiment',
+		'displayAxes',
+		'displayPoints',    // last to keep point above other content
+		'displayInternals',
+	];
+	call (funs);
+
+	scenario.interval += interval.increment;
+	if (scenario.interval > scenario.maximum)
+	{
+		scenario.interval = scenario.maximum;
+	}
+	if (scenario.saccade)
+	{
+		session.timeout = setTimeout (displayAll, scenario.interval);
+	}
+	else
+	{
+		if (session.timeout)
+		{
+			clearTimeout(session.timeout);
+		}
+	}
+} // displayAll
+
+
+//------------------------------------------------------------------------------
+var displayAmbient = function ()
+//------------------------------------------------------------------------------
+{
+} // displayAmbient
+
+
+//------------------------------------------------------------------------------
+var displayAxes = function ()
+//------------------------------------------------------------------------------
+{
+	for (var i=0; i<panes ; ++i)
+	{
+		planeAxes (i);
+	}
+} // displayAxes
+
+
+//------------------------------------------------------------------------------
+var displayCanvas = function ()
+//------------------------------------------------------------------------------
+{
+	var instance = document.getElementById (id.figure1a.canvas);
+	if (instance.getContext)
+	{
+		var h3 = session.frame.y;
+
+		instance.width  = session.pane.x;
+		instance.height = h3;
+
+		session.context = instance.getContext ('2d');
+		session.context.font = font;
+
+		// pane color and label
+		for (var i=0, h1=0, h2=session.pane.y ; i<panes ; ++i)
+		{
+			ipane (i,h1,h2);
+ 						h1 += session.pane.y;
+			h2 += session.pane.y;
+			//var frame = 'frame' + (i+1);
+			//var element = document.getElementById (frame);
+			//element.innerHTML = pane[i][1];
+		}
+		// image outline
+		session.context.fillStyle = '#000000';
+		session.context.strokeRect (0,0,session.pane.x,h3);
+	}
+} // displayCanvas
+
+
+//------------------------------------------------------------------------------
+var displayCrossover = function (axys)
 //------------------------------------------------------------------------------
 {
 	if (!scenario.visible) return;
@@ -961,168 +1087,8 @@ var crossover = function (axys)
 
 	// Restore the lineWidth
 	session.context.lineWidth = lw;
-} // crossover
+} // displayCrossover
 
-//##############################################################################
-// INTERMEDIATE FUNCTIONS
-
-//##############################################################################
-// CALL FUNCTIONS
-
-//------------------------------------------------------------------------------
-var experiment = function ()
-//------------------------------------------------------------------------------
-{
-	var S = -parseInt(100 * eye['S'].point);
-	var D = -parseInt(100 * eye['D'].point);
-	//console.log ('experiment:',S,D);
-	var POV = [[S,0],[D,0]]
-	diffract   (POV);
-	hyperacute (POV);
-	crossover  (POV);
-} // experiment
-
-//------------------------------------------------------------------------------
-var initialize = function ()
-//------------------------------------------------------------------------------
-{
-	// reverse index labels to indices
-
-	var buttonSave = document.getElementById("buttonSave");
-	buttonSave.innerHTML = viewable[scenario.number].filename;
-} // initialize
-
-//------------------------------------------------------------------------------
-var constructMenu = function ()
-//------------------------------------------------------------------------------
-{
-	var select = document.getElementById (id.figure1a.menu);
-	var value = select.selectedOptions[0].value;
-	var selected = 0;
-	if (value !== undefined) selected = parseInt (value) - 1;
-
-	// Empty the current menu select
-	var fc = select.firstChild;
-	while (fc)
-	{
-		select.removeChild (fc);
-		fc = select.firstChild;
-	}
-
-	// Refill the select
-	for (var s=0; s<scenarios; ++s)
-	{
-		var option = document.createElement ('option');
-		//option.setAttribute ('id', s);
-		option.setAttribute ('onchange', 'eventSelect()');
-		if (selected == s) option.setAttribute ('selected', true);
-		option.innerHTML=''+(s+1)+'. '+viewable[s].title;
-		select.appendChild (option);
-	}
-} // constructMenu
-
-//------------------------------------------------------------------------------
-var displayCanvas = function ()
-//------------------------------------------------------------------------------
-{
-	var instance = document.getElementById (id.figure1a.canvas);
-	if (instance.getContext)
-	{
-		var h3 = session.frame.y;
-
-		instance.width  = session.pane.x;
-		instance.height = h3;
-
-		session.context = instance.getContext ('2d');
-		session.context.font = font;
-
-		// pane color and label
-		for (var i=0, h1=0, h2=session.pane.y ; i<panes ; ++i)
-		{
-			ipane (i,h1,h2);
- 						h1 += session.pane.y;
-			h2 += session.pane.y;
-			//var frame = 'frame' + (i+1);
-			//var element = document.getElementById (frame);
-			//element.innerHTML = pane[i][1];
-		}
-		// image outline
-		session.context.fillStyle = '#000000';
-		session.context.strokeRect (0,0,session.pane.x,h3);
-	}
-} // displayCanvas
-
-//------------------------------------------------------------------------------
-var displayLines = function ()
-//------------------------------------------------------------------------------
-{
-	// for each eye
-	// start with two points, fixation and center of eye
-	// project line between from center of eye to foveola
-	// draw line from foveola to fixation (or edge of scene pane)
-	for (var letter in eye)
-	{
-		var axial = eye[letter].axial;
-		var point = eye[letter].point;
-		// location of fixation point
-		var fixx = scenario.vergence.x;
-		var fixy = scenario.vergence.y;
-		// location of eyeball center
-		var eyex = eye[letter].center.x;
-		var eyey = eye[letter].center.y;
-		// location of foveola
-		var fovx = eyex + radius * Math.sin (axial);
-		var fovy = eyey + radius * Math.cos (axial);
-		var actx = eyex + radius * Math.sin (axial-point);
-		var acty = eyey + radius * Math.cos (axial-point);
-		// store foveola xy for later use
-		eye[letter].foveola.x = fovx;
-		eye[letter].foveola.y = fovy;
-		eye[letter].actual.x  = actx;
-		eye[letter].actual.y  = acty;
-		// draw line from foveola to fixation point
-		line (fovx,fovy,fixx,fixy,'#00aaaa');
-		disk (fovx,fovy,3,'#00ffff');
-		disk (fixx,fixy,3,'#00ffff');
-		disk (actx,acty,3,'#ff0000');
-	}
-} // displayLines
-
-//------------------------------------------------------------------------------
-var displayPoints = function ()
-//------------------------------------------------------------------------------
-{
-	// TODO draw fake Airy disk and fake first ring
-	if (scenario.visible)
-	{
-		if (scenario.blink)
-		{
-			if (session.blinkdown-- <= 0)
-			{
-				session.blinkdown = scenario.blinkdown;
-				session.blinkon = !session.blinkon;
-			}
-			if (session.blinkon)
-			{
-				disk (scenario.point.x, scenario.point.y, 2, '#ff0000');
-			}
-		}
-		else
-		{
-			disk (scenario.point.x, scenario.point.y, 2, '#ff0000');
-		}
-	}
-} // displayPoints
-
-//------------------------------------------------------------------------------
-var displayAxes = function ()
-//------------------------------------------------------------------------------
-{
-	for (var i=0; i<panes ; ++i)
-	{
-		planeAxes (i);
-	}
-} // displayAxes
 
 //------------------------------------------------------------------------------
 var displayDiffraction = function ()
@@ -1170,34 +1136,197 @@ var displayDiffraction = function ()
 */
 } // displayDiffraction
 
+
 //------------------------------------------------------------------------------
-var displayVerge = function ()
+var displayExperiment = function ()
 //------------------------------------------------------------------------------
 {
-	if (scenario.visible && scenario.converge)
+	var S = -parseInt(100 * eye['S'].point);
+	var D = -parseInt(100 * eye['D'].point);
+	var POV = [[S,0],[D,0]]
+	displayDiffract   (POV);
+	displayHyperacute (POV);
+	displayCrossover  (POV);
+} // displayExperiment
+
+
+//------------------------------------------------------------------------------
+var displayEyeballs = function ()
+//------------------------------------------------------------------------------
+{
+	for (var letter in eye)
 	{
-		var rx = 0;
-		var ry = 0;
-		if (scenario.saccade)
+		var sign = (letter == 'S') ? -1 : +1;
+		var eyex = x0+sign*ex;
+		var eyey = y0+index.eyeball*session.pane.y;
+		var fixx = scenario.vergence.x;
+		var fixy = scenario.vergence.y;
+		var pntx = scenario.point.x;
+		var pnty = scenario.point.y;
+		var edx = eyex - fixx;
+		var edy = eyey - fixy;
+		var adx = eyex - pntx;
+		var ady = eyey - pnty;
+
+		// Angle of eye rotation
+		var axial = Math.atan2 (edx,edy);
+		//console.log ('E(',letter,')',edx,edy,axial);
+
+		// Angle difference between axial and point
+		var point = axial - Math.atan2 (adx,ady);
+		session.drift[letter] = point;
+		//console.log ('A(',letter,')',adx,ady,point);
+
+		eye[letter].axial = axial;
+		eye[letter].point = point;
+
+		eye[letter].center.x = eyex;
+		eye[letter].center.y = eyey;
+
+		if (session.verbose)
 		{
-			rx = getRandomInt (5) - getRandomInt (5);
-			ry = getRandomInt (5) - getRandomInt (5);
+			prefix = (eye[letter].axial >= 0) ? "+" : "";
+			console.log (
+				letter + ': ' + prefix + eye[letter].axial
+			);
 		}
-		var dx = session.mouse.x - scenario.vergence.x + x0 + rx;
-		var dy = session.mouse.y - scenario.vergence.y + y0 + ry;
-		if (session.converge)
+		// Calculate parameters for corneal circle
+		var dr = (radius * 1) / 4;
+		var rx = (radius - dr ) * Math.sin (axial);
+		var ry = (radius - dr ) * Math.cos (axial);
+
+		// Draw cornea first (black inside, white edge)
+		var cornx = eyex - rx;
+		var corny = eyey - ry;
+		var cornr = radius / 2;
+		disk   (cornx, corny, cornr, '#000000');
+		circle (cornx, corny, cornr, '#ffffff');
+
+		// Draw eyeball second (black inside, white edge)
+		disk   (eyex, eyey, radius, '#000000');
+		circle (eyex, eyey, radius, '#ffffff');
+
+		// Draw pupil
+		const pupils = {
+			1:[17,32],
+			2:[18,32],
+			3:[19,32],
+			4:[20,32],
+			5:[21,32],
+			6:[22,32],
+			7:[23,32],
+			8:[24,32],
+		};
+		var pupil = pupils[session.pupil];
+		var numer = pupil[0];
+		var denom = pupil[1];
+		var pupr  = numer * cornr / denom;
+		disk   (cornx, corny, pupr, '#000000');
+
+		// Construct muscles having appropriate length/diameter.
+		var medianLength = 10 * axial;
+		var circumferential = 2 * diameter / tau;
+		var Ly = -medianLength + circumferential;
+		var Ry = +medianLength + circumferential;
+
+		line (eyex-radius,eyey,eyex-radius,eyey+3*radius,"white");
+		line (eyex+radius,eyey,eyex+radius,eyey+3*radius,"white");
+		muscle (eyex-radius,eyey+diameter, Ly);
+		muscle (eyex+radius,eyey+diameter, Ry);
+		session.context.fillStyle = planeRGB(index.eyeball, true);
+		session.context.fillText (letter, eyex - 5, diameter + eyey);
+	}
+} // displayEyeballs
+
+
+//------------------------------------------------------------------------------
+var displayHyperacute = function (axys)
+//------------------------------------------------------------------------------
+{
+	if (!scenario.visible) return;
+
+	var paney = index.hyperacute * session.pane.y;
+	var lw    = session.context.linewidth;
+	session.context.lineWidth = 1;
+	for (var axy of axys)
+	{
+		var x = axy[0] + x0;
+		var y = axy[1] + y0 + paney;
+		var show = true;
+		/*
+		show = (
+			(scenario.blinkdown == 0) ||
+			(session.blinkdown > (scenario.blinkdown - 2)));
+		*/
+		if (show)
 		{
-			if (dx)
-			{
-				scenario.vergence.x += dx / bits (dx);
-			}
-			if (dy)
-			{
-				scenario.vergence.y += dy / bits (dy);
-			}
+			var r1 = parseInt (1.219 * session.coeff / session.pupil);
+			var r2 = parseInt (2.219 * session.coeff / session.pupil);
+			var r3 = parseInt (3.219 * session.coeff / session.pupil);
+			circle (x, y, r1, '#00ffff77');
+			circle (x, y, r2, '#00777777');
+			disk   (x, y,  2, '#ff000077');
 		}
 	}
-} // displayVerge
+	session.context.lineWidth = lw;
+
+} // displayHyperacute
+
+
+//------------------------------------------------------------------------------
+var displayInfo = function ()
+//------------------------------------------------------------------------------
+{
+	var text = document.getElementById (id.figure1a.text);
+	text.innerHTML = scenario.text;
+} // displayInfo
+
+
+//------------------------------------------------------------------------------
+var displayInternals = function ()
+//------------------------------------------------------------------------------
+{
+	//document.getElementById ("key.id").innerHTML = 'scenario.number';
+	//document.getElementById ("val.id").innerHTML = scenario.number;
+} // displayInternals
+
+
+//------------------------------------------------------------------------------
+var displayLines = function ()
+//------------------------------------------------------------------------------
+{
+	// for each eye
+	// start with two points, fixation and center of eye
+	// project line between from center of eye to foveola
+	// draw line from foveola to fixation (or edge of scene pane)
+	for (var letter in eye)
+	{
+		var axial = eye[letter].axial;
+		var point = eye[letter].point;
+		// location of fixation point
+		var fixx = scenario.vergence.x;
+		var fixy = scenario.vergence.y;
+		// location of eyeball center
+		var eyex = eye[letter].center.x;
+		var eyey = eye[letter].center.y;
+		// location of foveola
+		var fovx = eyex + radius * Math.sin (axial);
+		var fovy = eyey + radius * Math.cos (axial);
+		var actx = eyex + radius * Math.sin (axial-point);
+		var acty = eyey + radius * Math.cos (axial-point);
+		// store foveola xy for later use
+		eye[letter].foveola.x = fovx;
+		eye[letter].foveola.y = fovy;
+		eye[letter].actual.x  = actx;
+		eye[letter].actual.y  = acty;
+		// draw line from foveola to fixation point
+		line (fovx,fovy,fixx,fixy,'#00aaaa');
+		disk (fovx,fovy,3,'#00ffff');
+		disk (fixx,fixy,3,'#00ffff');
+		disk (actx,acty,3,'#ff0000');
+	}
+} // displayLines
+
 
 //------------------------------------------------------------------------------
 var displayMotor = function ()
@@ -1291,154 +1420,63 @@ var displayMotor = function ()
 
 } // displayMotor
 
+
 //------------------------------------------------------------------------------
-var displayEyeballs = function ()
+var displayPoints = function ()
 //------------------------------------------------------------------------------
 {
-	for (var letter in eye)
+	// TODO draw fake Airy disk and fake first ring
+	if (scenario.visible)
 	{
-		var sign = (letter == 'S') ? -1 : +1;
-		var eyex = x0+sign*ex;
-		var eyey = y0+index.eyeball*session.pane.y;
-		var fixx = scenario.vergence.x;
-		var fixy = scenario.vergence.y;
-		var pntx = scenario.point.x;
-		var pnty = scenario.point.y;
-		var edx = eyex - fixx;
-		var edy = eyey - fixy;
-		var adx = eyex - pntx;
-		var ady = eyey - pnty;
-
-		// Angle of eye rotation
-		var axial = Math.atan2 (edx,edy);
-		//console.log ('E(',letter,')',edx,edy,axial);
-
-		// Angle difference between axial and point
-		var point = axial - Math.atan2 (adx,ady);
-		session.drift[letter] = point;
-		//console.log ('A(',letter,')',adx,ady,point);
-
-		eye[letter].axial = axial;
-		eye[letter].point = point;
-
-		eye[letter].center.x = eyex;
-		eye[letter].center.y = eyey;
-
-		if (session.verbose)
+		if (scenario.blink)
 		{
-			prefix = (eye[letter].axial >= 0) ? "+" : "";
-			console.log (
-				letter + ': ' + prefix + eye[letter].axial
-			);
+			if (session.blinkdown-- <= 0)
+			{
+				session.blinkdown = scenario.blinkdown;
+				session.blinkon = !session.blinkon;
+			}
+			if (session.blinkon)
+			{
+				disk (scenario.point.x, scenario.point.y, 2, '#ff0000');
+			}
 		}
-		// Calculate parameters for corneal circle
-		var dr = (radius * 1) / 4;
-		var rx = (radius - dr ) * Math.sin (axial);
-		var ry = (radius - dr ) * Math.cos (axial);
-
-		// Draw cornea first (black inside, white edge)
-		var cornx = eyex - rx;
-		var corny = eyey - ry;
-		var cornr = radius / 2;
-		disk   (cornx, corny, cornr, '#000000');
-		circle (cornx, corny, cornr, '#ffffff');
-
-		// Draw eyeball second (black inside, white edge)
-		disk   (eyex, eyey, radius, '#000000');
-		circle (eyex, eyey, radius, '#ffffff');
-
-		// Draw pupil
-		const pupils = {
-			1:[17,32],
-			2:[18,32],
-			3:[19,32],
-			4:[20,32],
-			5:[21,32],
-			6:[22,32],
-			7:[23,32],
-			8:[24,32],
-		};
-		var pupil = pupils[session.pupil];
-		var numer = pupil[0];
-		var denom = pupil[1];
-		var pupr  = numer * cornr / denom;
-		disk   (cornx, corny, pupr, '#000000');
-
-		// Construct muscles having appropriate length/diameter.
-		var medianLength = 10 * axial;
-		var circumferential = 2 * diameter / tau;
-		var Ly = -medianLength + circumferential;
-		var Ry = +medianLength + circumferential;
-
-		line (eyex-radius,eyey,eyex-radius,eyey+3*radius,"white");
-		line (eyex+radius,eyey,eyex+radius,eyey+3*radius,"white");
-		muscle (eyex-radius,eyey+diameter, Ly);
-		muscle (eyex+radius,eyey+diameter, Ry);
-		session.context.fillStyle = planeRGB(index.eyeball, true);
-		session.context.fillText (letter, eyex - 5, diameter + eyey);
-	}
-} // displayEyeballs
-
-//------------------------------------------------------------------------------
-var displayAmbient = function ()
-//------------------------------------------------------------------------------
-{
-} // displayAmbient
-
-//------------------------------------------------------------------------------
-var displayInfo = function ()
-//------------------------------------------------------------------------------
-{
-	var text = document.getElementById (id.figure1a.text);
-	text.innerHTML = scenario.text;
-} // displayInfo
-
-//------------------------------------------------------------------------------
-var displayInternals = function ()
-//------------------------------------------------------------------------------
-{
-	//document.getElementById ("key.id").innerHTML = 'scenario.number';
-	//document.getElementById ("val.id").innerHTML = scenario.number;
-} // displayInternals
-
-
-//------------------------------------------------------------------------------
-var displayAll = function ()
-//------------------------------------------------------------------------------
-{
-	var funs = [
-		'displayCanvas',
-		'displayAmbient',
-		'displayEyeballs',
-		'displayDiffraction',
-		'displayInfo',
-		'displayLines',
-		'displayVerge',
-		'displayMotor',
-		'experiment',
-		'displayAxes',
-		'displayPoints',    // last to keep point above other content
-		'displayInternals',
-	];
-	call (funs);
-
-	scenario.interval += interval.increment;
-	if (scenario.interval > scenario.maximum)
-	{
-		scenario.interval = scenario.maximum;
-	}
-	if (scenario.saccade)
-	{
-		session.timeout = setTimeout (display, scenario.interval);
-	}
-	else
-	{
-		if (session.timeout)
+		else
 		{
-			clearTimeout(session.timeout);
+			disk (scenario.point.x, scenario.point.y, 2, '#ff0000');
 		}
 	}
-} // displayAll
+} // displayPoints
+
+
+//------------------------------------------------------------------------------
+var displayVerge = function ()
+//------------------------------------------------------------------------------
+{
+	if (scenario.visible && scenario.converge)
+	{
+		var rx = 0;
+		var ry = 0;
+		if (scenario.saccade)
+		{
+			rx = getRandomInt (5) - getRandomInt (5);
+			ry = getRandomInt (5) - getRandomInt (5);
+		}
+		var dx = session.mouse.x - scenario.vergence.x + x0 + rx;
+		var dy = session.mouse.y - scenario.vergence.y + y0 + ry;
+		if (session.converge)
+		{
+			if (dx)
+			{
+				scenario.vergence.x += dx / bits (dx);
+			}
+			if (dy)
+			{
+				scenario.vergence.y += dy / bits (dy);
+			}
+		}
+	}
+} // displayVerge
+
 
 //##############################################################################
 // MAIN FUNCTION
@@ -1468,6 +1506,7 @@ var main = function ()
 	];
 	call (funs);
 } // main
+
 
 //##############################################################################
 // ENTRYPOINT
