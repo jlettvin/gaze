@@ -1,0 +1,15 @@
+table { border: 1px solid black; border-collapse: collapse; align: center;}
+table.center { margin-left:auto; margin-right:auto; }
+tr { height:20%; }
+td { border:1px solid black; text-align:center; vertical-align:top; }
+h1,h2,h3,h4,h6 {text-align: center; padding: 0px; margin: 0px; }
+li {text-align: left;}
+h5 {text-align: left; }
+p {text-indent: 1em; }
+.pad { padding:10px; }
+.info { text-align:left; }
+a.button {
+  -webkit-appearance: button;
+  -moz-appearance: button;
+  appearance: button;
+}
