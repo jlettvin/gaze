@@ -29,7 +29,7 @@ Active vergence is only default enabled for Scenario 3.
 			center:{x:0,y:0},
 			axes:['x','z'],
 			text:HERE(function() {/*
-<h3>Pane 2 (<span id="frame2">eyeball</span>)</h3>
+<h3>Pane 2 (<span id="frame2">eyeballs</span>)</h3>
 <p>
 A pair of eyeballs is shown from above (Y axis normal)
 with associated lateral and medial rectus muscles for horizontal rotation.
