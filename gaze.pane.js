@@ -3,10 +3,10 @@
 const pane = [
 	[[  0,  0,  0],'scene',     
 		{
-			corner:{x:0,y:0},
-			center:{x:0,y:0},
-			axes:['x','z'],
-			text:HERE(function() {/*
+			corner: {x:0,y:0},
+			center: {x:0,y:0},
+			axes  : ['x','z'],
+			text  : HERE(function() {/*
 <h3>Pane 1 (<span id="frame1">scene</span>)</h3>
 <p>
 Two lines (CYAN) join eye optic centers to their common vergence point 
@@ -25,10 +25,10 @@ Active vergence is only default enabled for Scenario 3.
 	],
 	[[ 64, 64, 64],'eyeballs',   
 		{
-			corner:{x:0,y:0},
-			center:{x:0,y:0},
-			axes:['x','z'],
-			text:HERE(function() {/*
+			corner: {x:0,y:0},
+			center: {x:0,y:0},
+			axes  : ['x','z'],
+			text  : HERE(function() {/*
 <h3>Pane 2 (<span id="frame2">eyeballs</span>)</h3>
 <p>
 A pair of eyeballs is shown from above (Y axis normal)
@@ -51,10 +51,10 @@ to the scene vergence point in Pane 1 (CYAN).
 	],
 	[[  0,  0,  0],'image',     
 		{
-			corner:{x:0,y:0},
-			center:{x:0,y:0},
-			axes:['x','y'],
-			text:HERE(function() {/*
+			corner: {x:0,y:0},
+			center: {x:0,y:0},
+			axes  : ['x','y'],
+			text  : HERE(function() {/*
 <h3>Pane 3 (<span id="frame3">image</span>)</h3>
 <p>
 Overlapping fake diffraction pattern incident on retina
@@ -76,10 +76,10 @@ having the optic axis at its center.
 	],
 	[[  0,  0,  0],'hyperacute',
 		{
-			corner:{x:0,y:0},
-			center:{x:0,y:0},
-			axes:['x','y'],
-			text:HERE(function() {/*
+			corner: {x:0,y:0},
+			center: {x:0,y:0},
+			axes  : ['x','y'],
+			text  : HERE(function() {/*
 <h3>Pane 4 (<span id="frame4">hyperacute</span>)</h3>
 <p>
 Airy diffraction patterns of point sources have "zeros"
@@ -102,10 +102,10 @@ having the optic axis at its center.
 	],
 	[[  0,  0,  0],'crossover', 
 		{
-			corner:{x:0,y:0},
-			center:{x:0,y:0},
-			axes:['x','z'],
-			text:HERE(function() {/*
+			corner: {x:0,y:0},
+			center: {x:0,y:0},
+			axes  : ['x','z'],
+			text  : HERE(function() {/*
 <h3>Pane 5 (<span id="frame5">crossover</span>)</h3>
 <p>
 Signals from the optic nerve are delivered to the midbrain as a map.
@@ -131,10 +131,10 @@ to bring the two into registration.
 	],
 	[[  0,  0,  0],'motor', 
 		{
-			corner:{x:0,y:0},
-			center:{x:0,y:0},
-			axes:['x','z'],
-			start:0,
+			corner: {x:0,y:0},
+			center: {x:0,y:0},
+			axes  : ['x','z'],
+			start : 0,
 			// Standard is the countdown between equilibrium pulses
 			standard:10,
 			// Pulse is a pair of numbers for each muscle
@@ -143,11 +143,11 @@ to bring the two into registration.
 			// The 1st number is decremented to 0 then
 			// reset to standard + 2nd number.
 			// When the 1st number hits 0, a pulse is displayed
-			SL: {data:newFilledArray (edge, 0),pulse:[0,0]},
-			SM: {data:newFilledArray (edge, 0),pulse:[0,0]},
-			DM: {data:newFilledArray (edge, 0),pulse:[0,0]},
-			DL: {data:newFilledArray (edge, 0),pulse:[0,0]},
-			text:HERE(function() {/*
+			SL    : {data:newFilledArray (edge, 0),pulse:[0,0]},
+			SM    : {data:newFilledArray (edge, 0),pulse:[0,0]},
+			DM    : {data:newFilledArray (edge, 0),pulse:[0,0]},
+			DL    : {data:newFilledArray (edge, 0),pulse:[0,0]},
+			text  : HERE(function() {/*
 <h3>Pane 6 (<span id="frame5">motor</span>)</h3>
 <p>
 Midbrain delivers signals to rectus muscles.

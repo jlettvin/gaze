@@ -3,7 +3,7 @@
 //##############################################################################
 // GLOBAL VARIABLES
 
-// Translations from named to numberical accessors.
+// Translations from named to numerical accessors.
 var index = {
 	R:0,
 	G:1,
@@ -11,6 +11,7 @@ var index = {
 	RGB:0,
 	L:1,
 };
+
 // Reverse index for panes
 for (var i=0; i<panes; ++i) { index[pane[i][index.L]] = i; }
 
@@ -44,8 +45,8 @@ var eye = {
 	S:{
 		point:0,
 		axial:0,
-		actual:{x:0,y:0},
-		center:{x:0,y:0},
+		actual: {x:0,y:0},
+		center: {x:0,y:0},
 		foveola:{x:0,y:0},
 		dactual:{x:0,y:0},
 		dfoveal:{x:0,y:0},
@@ -53,8 +54,8 @@ var eye = {
 	D:{
 		point:0,
 		axial:0,
-		actual:{x:0,y:0},
-		center:{x:0,y:0},
+		actual: {x:0,y:0},
+		center: {x:0,y:0},
 		foveola:{x:0,y:0},
 		dactual:{x:0,y:0},
 		dfoveal:{x:0,y:0},
@@ -440,83 +441,6 @@ var displayDiffract = function (axys)
     			var r0 = 1.2196698912665045; // Resolve lim u0/r0==pi, u0/pi==r0
 	// Initialized singletons
     			var point = [], zeros = [], peaks = [], spike = [];
-	/*
-class Airy(object):
-
-    def element(this,i,r):
-        u = r * Airy.u0 * 1e+4
-        sqrtI = 1.0 if u == 0.0 else 2.0*j1(u)/u
-        return {'index': i, 'radius': r, 'parameter': u, 'amplitude': sqrtI}
-
-    def __init__(this, **kwargs):
-        if not Airy.point:
-            delta    = kwargs.get(  'delta', 1e-7)
-            epsilon  = kwargs.get('epsilon', 1e-3)
-            valn, val0 = this.element(-2,2*delta), this.element(-1,1*delta)
-            terminal, avoid_neighbors = False, False
-            for index, radius in enumerate(arange(0.0, 1e-3, delta)):
-                valp = this.element(index,radius)
-                Airy.point += [valp,]
-                vn, v0, vp = (val['amplitude'] for val in (valn,val0,valp))
-                if vn * vp < 0.0:
-                    if avoid_neighbors:
-                        avoid_neighbors = False
-                    else:
-                        Airy.zeros += [val0,]
-                        Airy.spike += [(val0['parameter'],abs(Airy.peaks[-1]['amplitude'])),]
-                        avoid_neighbors = True
-                    "Find first zero past below epsilon peak"
-                    if terminal: break
-                elif abs(vn) <= abs(v0) >= abs(vp):
-                    Airy.peaks += [val0,]
-                    "Find a below epsilon peak"
-                    if abs(val0['amplitude']) < epsilon: terminal = True
-                valn, val0 = val0, valp
-
-	*/
-
-	/*
-	// Airy u is (tau * a * q) / (lambda * R)
-	// a is aperture radius
-	// q is the image radius
-	// lambda is wavelength
-	// R is focal distance
-	var A = 1.0;               // amplitude
-	var a = 3e-3;              // pupil
-	var lambda = 566e-9;       // red
-	var R = 17e-3;             // 17 mm (corrected for vitreous)
-	var u0 = (tau * a) / (lambda * R);
-
-	// Add each pixel
-	for (axy of axys)
-	{
-		var a1=axy.a;
-		var x1=axy.x;
-		var y1=axy.y;
-		for (var i=0,y=0;y<edge;++y)
-		{
-			var y2 = y - y0;
-			var dy = y1 - y2;
-			for (var x=0;x<edge;++x,++i)
-			{
-				var x2 = x - x0;
-				var dx = x1 - x2;
-				var r = Math.sqrt(dx*dx+dy*dy);
-				var u = u0*r;
-				var sqrtI = ((u==0) ? 1 : 2*BESSEL.besselj(u,1)/u);
-				session.amplitude[i] += sqrtI;
-			}
-		}
-	}
-	// Square it for intensity
-	for (var i=0,y=0;y<edge;++y)
-	{
-		for (var x=0;x<edge;++x,++i)
-		{
-			session.amplitude[i] *= session.amplitude[i];
-		}
-	}
-	*/
 } // displayDiffract
 
 
@@ -797,46 +721,6 @@ var displayCrossover = function (axys)
 var displayDiffraction = function ()
 //------------------------------------------------------------------------------
 {
-/*
-	session.pixels = {
-		//'S':session.context.createImageData (edge, edge),
-		//'D':session.context.createImageData (edge, edge),
-	};
-	for (var letter in eye)
-	{
-		var lw   = session.context.lineWidth;
-		var sign = (letter == 'S') ? -1 : +1;
-		var axial = eye[letter].axial;
-		var patx = x0+sign*ex;
-		var paty = y0+session.pattern*session.pane.y;
-		var centered = column + axial * 50;
-		var ypane = session.patterh * session.pane.y;
-
-		// TODO find and use angle between fixation and point.
-		// TODO generate Airy pattern on pixel array then copy.
-
-		session.context.lineWidth = 5;
-		disk   (centered, paty, 12 * radius / 50, '#ff0000');
-		circle (centered, paty, 22 * radius / 50, '#770000');
-		circle (centered, paty, 32 * radius / 50, '#330000');
-		session.context.lineWidth = lw;
-		session.pixels[letter] = session.context.getImageData (
-			0, ypane, edge, edge
-		);
-	}
-	// Find max of two pixel arrays then put result back.
-	var Sobj = session.pixels['S'];
-	var Dobj = session.pixels['D'];
-	var Sdat = Sobj.data;
-	var Ddat = Dobj.data;
-	var size = Sobj.height * Sobj.width;
-	for (var i=0; i<size;++i)
-	{
-		Sdat[i] = Math.max (Sdat[i], Ddat[i]);
-	}
-	// TODO fix this so it works or replace with true Airy calc
-	session.context.putImageData (Sobj, 0, ypane);
-*/
 } // displayDiffraction
 
 
