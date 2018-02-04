@@ -861,7 +861,7 @@ var displayEyeballs = function ()
 	{
 		var sign = (letter == 'S') ? -1 : +1;
 		var eyex = x0+sign*ex;
-		var eyey = y0+index.eyeball*session.pane.y;
+		var eyey = y0+index.eyeballs*session.pane.y;
 		var fixx = scenario.vergence.x;
 		var fixy = scenario.vergence.y;
 		var pntx = scenario.point.x;
@@ -936,7 +936,7 @@ var displayEyeballs = function ()
 		line (eyex+radius,eyey,eyex+radius,eyey+3*radius,"white");
 		muscle (eyex-radius,eyey+diameter, Ly);
 		muscle (eyex+radius,eyey+diameter, Ry);
-		session.context.fillStyle = planeRGB(index.eyeball, true);
+		session.context.fillStyle = planeRGB(index.eyeballs, true);
 		session.context.fillText (letter, eyex - 5, diameter + eyey);
 	}
 } // displayEyeballs

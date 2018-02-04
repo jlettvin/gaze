@@ -23,7 +23,7 @@ Active vergence is only default enabled for Scenario 3.
 		*/})
 		}
 	],
-	[[ 64, 64, 64],'eyeball',   
+	[[ 64, 64, 64],'eyeballs',   
 		{
 			corner:{x:0,y:0},
 			center:{x:0,y:0},
