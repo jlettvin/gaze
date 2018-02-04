@@ -199,13 +199,13 @@ var planeRGB = function (i, q)
 // EVENT FUNCTIONS
 
 //------------------------------------------------------------------------------
-function eventMouseClick ()
+function eventMouseClick (e)
 //------------------------------------------------------------------------------
 {
 	if (scenario.visible && !scenario.permanent)
 	{
 		scenario.movable = !scenario.movable;
-		eventMouseMove (event);
+		eventMouseMove (e);
 		call ("displayAll");
 	}
 } // eventMouseClick
