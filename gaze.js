@@ -406,44 +406,6 @@ var ipane = function (i,h1,h2)
 } // ipane
 
 
-//------------------------------------------------------------------------------
-var displayDiffract = function (axys)
-//------------------------------------------------------------------------------
-{
-	if (!scenario.visible) return;
-
-	var paney = index.image * session.pane.y;
-	//var paney = pane[index.image][2].corner.y;
-	var lw = session.context.lineWidth;
-	var coeff = session.coeff;
-	var coeff2 = (7 * coeff) / 8;
-	session.context.lineWidth = coeff2 / session.pupil; //parseInt (
-		//10 * coeff * session.context.linewidth / session.pupil);
-	var half = session.context.lineWidth / 2;
-
-	for (var axy of axys)
-	{
-		var x = axy[0] + x0;
-		var y = axy[1] + y0 + paney;
-		var r1 = parseInt (1.219 * coeff / session.pupil);
-		var r2 = parseInt ((2.219 * coeff / session.pupil) - half);
-		var r3 = parseInt ((3.219 * coeff / session.pupil) - half);
-		disk   (x, y, r1, '#ff000077');
-		circle (x, y, r2, '#77000077');
-		circle (x, y, r3, '#33000077');
-	}
-	session.context.lineWidth = 1;
-	line (x0,paney+y0-column,x0,paney+y0+column,'#333333');
-	session.context.lineWidth = lw;
-
-	/* Airy maintains an abstract fine-grained Airy lookup table.*/
-    			var u0 = 3.8317059702075125; // First zero of j1(u)/u
-    			var r0 = 1.2196698912665045; // Resolve lim u0/r0==pi, u0/pi==r0
-	// Initialized singletons
-    			var point = [], zeros = [], peaks = [], spike = [];
-} // displayDiffract
-
-
 //##############################################################################
 // NON-DISPLAY CALL FUNCTIONS
 
@@ -585,6 +547,79 @@ var displayCrossover = function (axys)
 //------------------------------------------------------------------------------
 {
 	if (!scenario.visible) return;
+	// Store lineWidth temporarily to restore before return
+	var lw    = session.context.linewidth;
+	session.context.lineWidth = 1;
+
+	// Calculate offset to upper left corner
+	var paney = index.crossover * session.pane.y;
+
+	// Generate the crossover background grid
+	for (var i=-edge;i<=edge;i+=10)
+	{
+		line (i,paney,i+edge,paney+edge,color.grid);
+		line (i+edge,paney,i,paney+edge,color.grid);
+	}
+
+	// Set the fixed opposing lines
+	line (    edge,     paney,        0, paney+edge, '#ff0000');
+	line (       0,     paney,     edge, paney+edge, '#00ff00');
+
+	// Label the fixed opposing lines
+	session.context.fillStyle = '#ff0000';
+	session.context.fillText ('S',      x0/2 - 15, paney + y0 + y0/2);
+
+	session.context.fillStyle = '#00ff00';
+	session.context.fillText ('D', x0 + x0/2 +  5, paney + y0 + y0/2);
+
+	// Calculate display for moving lines of sight
+	// Extract eye-relative point source offsets
+	// Expect these to be in center (0,0) coordinates
+	// x is towards right, y is away from eyeballs (actually, Z axis)
+	var Sxy = axys[0];    // left  eye point offset
+	var Dxy = axys[1];    // right eye point offset
+	var Sx = Sxy[0], Sy = Sxy[1];
+	var Dx = Dxy[0], Dy = Dxy[1];
+
+	var x1=0, y1=0, x2=0, y2=0, x3=0, y3=0, x4=0, y4=0;
+
+	if      (Sx < 0) { x1 = +x0   ; x2 = -x0-Sx; y1 = +y0+Sx; y2 = -y0   ; }
+	else if (Sx > 0) { x1 = +x0-Sx; x2 = -x0   ; y1 = +y0   ; y2 = -y0+Sx; }
+	else             { x1 = +x0   ; x2 = -x0   ; y1 = +y0   ; y2 = -y0   ; }
+
+	if      (Dx < 0) { x3 = -x0   ; x4 = +x0+Dx; y3 = +y0+Dx; y4 = -y0   ; }
+	else if (Dx > 0) { x3 = -x0+Dx; x4 = +x0   ; y3 = +y0   ; y4 = -y0+Dx; }
+	else             { x3 = +x0   ; x4 = -x0   ; y3 = +y0   ; y4 = -y0   ; }
+
+	/*
+	var pxy = [
+	     (((x1*y2-y1*x2)-(x1-x2)*(x3*y4-y3*x4))/
+	      ((x1-x2)*(y3-y4)-(y1-y2)*(x3-x4))),
+	     (((x1*y2-y1*x2)*(y3-y4)-(y1-y2)*(x3*y4-y3*x4))/
+	      (x1-x2)*(y3-y4)-(y1-y2)*(x3-x4))
+	];
+	*/
+
+	// Show the active lines
+	line (x1+x0,paney + y1+y0,x2+x0,paney + y2+y0,'#ff0000');
+	line (x3+x0,paney + y3+y0,x4+x0,paney + y4+y0,'#00ff00');
+
+	//disk (x0+pxy[0][0],y0+paney+pxy[0][1],2,'#ff0000');
+	//disk (x0+pxy[1][0],y0+paney+pxy[1][1],2,'#00ff00');
+	//console.log(pxy);
+
+	// Show the (0,0) point
+	disk (x0,y0+paney,2,'#ffffff');
+
+	// Restore the lineWidth
+	session.context.lineWidth = lw;
+} // displayCrossover
+
+//------------------------------------------------------------------------------
+var olddisplayCrossover = function (axys)
+//------------------------------------------------------------------------------
+{
+	if (!scenario.visible) return;
 	// https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection
 	// x = (d-c)/(a-b)
 	// y = a * x + c;
@@ -602,20 +637,21 @@ var displayCrossover = function (axys)
 	// Calculate offset to upper left corner
 	var paney = index.crossover * session.pane.y;
 
+	// yn is top of crossover pane relative to center
+	var yn = y0 - column;
+	var yp = y0 + column;
+
 	// Extract eye-relative point source offsets
 	// Expect these to be in center coordinates
 	var Sxy = axys[0];    // left  eye point offset
 	var Dxy = axys[1];    // right eye point offset
 
+	/*
 	// Calculate corner offsets for eye-relative point source offsets
 	var Sx = Sxy[0] + x0;
 	var Dx = Dxy[0] + x0;
 	var Sy = Sxy[1] + y0;
 	var Dy = Dxy[1] + y0;
-
-	// yn is top of crossover pane relative to center
-	var yn = y0 - column;
-	var yp = y0 + column;
 
 	// sign determines direction from center to each eye
 	var Ssign = -1;
@@ -659,6 +695,7 @@ var displayCrossover = function (axys)
 	// TODO why are these fudge factors needed?
 	//py = (py - y0) * 3 + y0;
 	//px = (px - x0) * 3 / 8 + x0;
+*/
 
 	// Generate the crossover background grid
 	for (var i=-edge;i<=edge;i+=10)
@@ -667,6 +704,7 @@ var displayCrossover = function (axys)
 		line (i+edge,paney,i,paney+edge,color.grid);
 	}
 
+	/*
 	if (false)
 	{
 		// Display RED diagonal reticle for the hyperacute point image
@@ -683,6 +721,7 @@ var displayCrossover = function (axys)
 		disk (x0,y0+paney,2,color.actual);
 	}
 	else
+	*/
 	{
 		// Display optic axis with reticle
 		line (x0,paney+yn,x0,paney+yp,color.fixation);
@@ -699,22 +738,60 @@ var displayCrossover = function (axys)
 		var x3 = Dx - edge, x4 = Dx + edge;
 		var y3 = Dy + edge, y4 = Dy - edge;
 
-		//y1 += paney;
-		//y2 += paney;
-		//y3 += paney;
-		//y4 += paney;
-
 		var pSx = Sx+x0, pSy = Sy+paney+y0;
 		var pDx = Dx+x0, pDy = Dy+paney+y0;
+
 		line (pSx-edge,  pSy-edge, pSx+edge,   pSy+edge, '#ff0000');
 		line (    edge,     paney,        0, paney+edge, '#ff0000');
 		line (       0,     paney,     edge, paney+edge, '#00ffff');
 		line (pDx+edge,  pDy-edge, pDx-edge,   pDy+edge, '#00ffff');
 	}
 
+	session.context.fillStyle = '#fffff';
+	session.context.fillText ('Sinister', x0, paney + y0, '#ff0000');
+	console.log (x0, paney + y0);
+
 	// Restore the lineWidth
 	session.context.lineWidth = lw;
 } // displayCrossover
+
+
+//------------------------------------------------------------------------------
+var displayDiffract = function (axys)
+//------------------------------------------------------------------------------
+{
+	if (!scenario.visible) return;
+
+	var paney = index.image * session.pane.y;
+	//var paney = pane[index.image][2].corner.y;
+	var lw = session.context.lineWidth;
+	var coeff = session.coeff;
+	var coeff2 = (7 * coeff) / 8;
+	session.context.lineWidth = coeff2 / session.pupil; //parseInt (
+		//10 * coeff * session.context.linewidth / session.pupil);
+	var half = session.context.lineWidth / 2;
+
+	for (var axy of axys)
+	{
+		var x = -axy[0] + x0;
+		var y =  axy[1] + y0 + paney;
+		var r1 = parseInt (1.219 * coeff / session.pupil);
+		var r2 = parseInt ((2.219 * coeff / session.pupil) - half);
+		var r3 = parseInt ((3.219 * coeff / session.pupil) - half);
+		disk   (x, y, r1, '#ff000077');
+		circle (x, y, r2, '#77000077');
+		circle (x, y, r3, '#33000077');
+	}
+	session.context.lineWidth = 1;
+	line (x0,paney+y0-column,x0,paney+y0+column,'#333333');
+	session.context.lineWidth = lw;
+
+	/* Airy maintains an abstract fine-grained Airy lookup table.*/
+    			var u0 = 3.8317059702075125; // First zero of j1(u)/u
+    			var r0 = 1.2196698912665045; // Resolve lim u0/r0==pi, u0/pi==r0
+	// Initialized singletons
+    			var point = [], zeros = [], peaks = [], spike = [];
+} // displayDiffract
 
 
 //------------------------------------------------------------------------------
@@ -728,8 +805,8 @@ var displayDiffraction = function ()
 var displayExperiment = function ()
 //------------------------------------------------------------------------------
 {
-	var S = -parseInt(100 * eye['S'].point);
-	var D = -parseInt(100 * eye['D'].point);
+	var S = parseInt(100 * eye['S'].point);
+	var D = parseInt(100 * eye['D'].point);
 	var POV = [[S,0],[D,0]]
 	displayDiffract   (POV);
 	displayHyperacute (POV);
@@ -837,8 +914,8 @@ var displayHyperacute = function (axys)
 	session.context.lineWidth = 1;
 	for (var axy of axys)
 	{
-		var x = axy[0] + x0;
-		var y = axy[1] + y0 + paney;
+		var x = -axy[0] + x0;
+		var y =  axy[1] + y0 + paney;
 		var show = true;
 		/*
 		show = (
