@@ -96,6 +96,9 @@ convolvable from the zeros, aka hyperacute center data.
 </p><p>
 The patterns from both retinas are projected onto a common image
 having the optic axis at its center.
+</p><p>
+If you wear glasses, turn your head straight to the screen
+otherwise you will see the RED point off center to the CYAN vergence point.
 </p>
 		*/})
 		}
