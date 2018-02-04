@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-	<!-- ******************************************************************** -->
 	<head>
 		<meta   charset="utf-8" />
 		<script type   ="text/javascript" src ="bessel.js"></script>
@@ -9,17 +8,13 @@
 		<!--<script type   ="text/javascript" src ="pngmetadata.js"></script>-->
 		<link   type   ="text/css"        href="gaze.css" rel="stylesheet">
 	</head>
-	<!-- ******************************************************************** -->
 	<body bgcolor="#ffffcc">
 		<h1>Verging on Hyperacuity</h1>
 		<h6>Copyright&copy; 2018 Jonathan D. Lettvin, All Rights Reserved</h6>
 		<table class="center">
 			<tr><td>
 				Save as: 
-				<a href="" id="buttonSave"
-					onclick="eventSave()"
-					download="">
-				</a>
+				<a href="" id="buttonSave" onclick="eventSave()" download=""></a>
 				<canvas    id="figure 1a canvas"
 					onmousemove="eventMouseMove(event)"
 					onclick    ="eventMouseClick()"
@@ -27,19 +22,19 @@
 			</td><td width="100%">
 				<table cellpadding="10">
 					<tr><td class="info" valign="top" bgcolor="#ffff00">
-							<h3>Purpose</h3>
-							<h5>
+						<h3>Purpose</h3>
+						<h5>
 	What are the elements of reflex that draws focus to tiny moving features?
-							</h5>
-							<ol>
-								<li>A tiny contrasty object moves</li>
-								<li>An eccentric image appears on the retina</ul>
-								<li>Signal is sent to the midbrain</li>
-								<li>Midbrain signals rectus muscles</li>
-								<li>Rectus muscles rotate eyes</li>
-								<li>Rotation completes on image centered</li>
-							</ol>
-						</td></tr><tr valign="top"><td class="info">
+						</h5>
+						<ol>
+							<li>A off-center tiny contrasty object moves</li>
+							<li>An eccentric image appears on the retina</ul>
+							<li>Signal is sent to the midbrain</li>
+							<li>Midbrain signals rectus muscles</li>
+							<li>Rectus muscles rotate eyes</li>
+							<li>Rotation completes on image centered</li>
+						</ol>
+					</td></tr><tr valign="top"><td class="info">
 						<big><b>Controls</b></big>
 						<button id="buttonAxes"  onclick="eventToggleAxes()">
 							axes center
@@ -85,14 +80,119 @@
 							<!-- selected option is needed to prime the pump -->
 							<option selected>None</option>
 						</select>
+					</td></tr><tr><td id="figure 1a text" class="info" bgcolor="#ffffff">
 					</td></tr><tr><td class="info" bgcolor="#ffffff">
-						<p id="figure 1a text"></p>
-					</td></tr><tr><td class="info" bgcolor="#ffffff">
-						<span id="paneInfo"></span>
+<textarea cols="54" rows="12" readonly>
+SCROLL THIS TEXTAREA FOR GUIDANCE ABOUT CONTROLS.
+
+== Mouse in pane 1. scene:==
+
+   In Scenarios 2 and 3 move the mouse around and
+a red point source with the mouse.
+
+   A mouse click in pane 1 toggles movement
+meaning that the red point remains where it is.
+You can do this, then toggle verge off then
+click in pane 1 again and move the point source
+without verge following the point source.
+
+=== axes: ===
+
+   this lets you choose to see abstract axes
+Some images, the vertical axis is Y, others it is Z.
+There are three states: absent, center, and corner
+
+=== verge: ===
+
+   This toggles tracking
+The lines of sight are usually verged on something.
+With verge on, the eyes verge on a red point.
+With it off, the current lines of sight persist.
+
+=== debug: ===
+
+   This is for development and not the end-user.
+The javascript console shows some state information
+as the display is updated.
+
+=== Pupil: ===
+
+   This has 8 values for pupil diameter.
+It affects the radius of the diffraction pattern
+and the radius of the hyperacute data.
+As the mouse hovers over the values
+the colors invert so you know which one you are choosing.
+
+=== Scenarios: ===
+
+   There are currently three
+As you change from 1 scenario to another
+the text just below the selection updates to reflect
+more details about the chosen scenario.
+
+* Scenario 1 is stationary viewing of a red star
+* Scenario 2 is the most active, everything in motion
+* Scenario 3 is an in-between scenario.
+
+   As you move the mouse from pane to pane
+the bottom-most text describes the pane.
+
+== Panes: ==
+
+=== Pane 1  ===
+
+   This is where the point source is movable and
+where the lines-of-sight to the eye optic axis verge.
+
+=== Pane 2 ===
+   Is a visualization of eyeballs with
+medial and lateral rectus muscles shown
+and using S (Sinister=left) D (Dexter=right)
+to identify which eye is which.
+The muscles change appearance as the eye rotates.
+Eyes rotate when verge is on and the point source moves.
+The pupil changes as different sizes are chosen.
+The image of the point source is shown as a red dot
+on the retinal surface.
+The optic axis is shown as a CYAN dot except
+if fully verged, it is overdrawn by the red dot.
+
+=== Pane 3 ===
+
+   Shows the overlapped images of
+the diffraction patterns from both eyes.
+The red dot shown in Pane 2 is actually
+a diffraction pattern called an "Airy" pattern.
+This pane shows imitation patterns which
+change size in inverse proportion to the pupil.
+
+=== Pane 4 ===
+
+   Shows the overlapped images of
+the difference patterns from the diffraction patterns.
+
+=== Pane 5 ===
+
+   Shows the crossover transform where
+the reconvolved hyperacute point source
+is sent through crossing axons to be
+used to identify where the point source is in 3D.
+(This is not working as it ought to yet).
+
+=== Pane 6 ===
+   Show the pulse trains generated to
+cause differential contraction of the rectus muscles
+to rotate the eyes.
+(This is not working as it ought to yet).
+Saving the image:
+Above the panes is the last control.
+You can save the current image on your computer
+by clicking on this filename.
+</textarea>
+					</td></tr><tr><td id="paneInfo" class="info" bgcolor="#ffffff">
 					</td></tr>
 				</table>
 			</td></tr>
 		</table>
 	</body>
-	<!-- ******************************************************************** -->
 </html>
