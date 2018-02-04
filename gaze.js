@@ -706,10 +706,10 @@ var displayCrossover = function (axys)
 
 		var pSx = Sx+x0, pSy = Sy+paney+y0;
 		var pDx = Dx+x0, pDy = Dy+paney+y0;
-		line (pSx-edge,pSy-edge,pSx+edge,pSy+edge,'#ff0000');
-		line (pSx+edge,pSy-edge,pSx-edge,pSy+edge,'#ff0000');
-		line (pDx-edge,pDy-edge,pDx+edge,pDy+edge,'#00ffff');
-		line (pDx+edge,pDy-edge,pDx-edge,pDy+edge,'#00ffff');
+		line (pSx-edge,  pSy-edge, pSx+edge,   pSy+edge, '#ff0000');
+		line (    edge,     paney,        0, paney+edge, '#ff0000');
+		line (       0,     paney,     edge, paney+edge, '#00ffff');
+		line (pDx+edge,  pDy-edge, pDx-edge,   pDy+edge, '#00ffff');
 	}
 
 	// Restore the lineWidth
