@@ -44,6 +44,7 @@ var eye = {
 	S:{
 		point:0,
 		axial:0,
+		change: 0,
 		actual: {x:0,y:0},
 		center: {x:0,y:0},
 		foveola:{x:0,y:0},
@@ -53,6 +54,7 @@ var eye = {
 	D:{
 		point:0,
 		axial:0,
+		change: 0,
 		actual: {x:0,y:0},
 		center: {x:0,y:0},
 		foveola:{x:0,y:0},
@@ -604,66 +606,6 @@ var displayCrossover = function (axys)
 	session.context.lineWidth = lw;
 } // displayCrossover
 
-//------------------------------------------------------------------------------
-var olddisplayCrossover = function (axys)
-//------------------------------------------------------------------------------
-{
-	if (!scenario.visible) return;
-
-	// Store lineWidth temporarily to restore before return
-	var lw    = session.context.linewidth;
-	session.context.lineWidth = 1;
-
-	// Calculate offset to upper left corner
-	var paney = index.crossover * session.pane.y;
-
-	// yn is top of crossover pane relative to center
-	var yn = y0 - column;
-	var yp = y0 + column;
-
-	// Extract eye-relative point source offsets
-	// Expect these to be in center coordinates
-	var Sxy = axys[0];    // left  eye point offset
-	var Dxy = axys[1];    // right eye point offset
-
-	// Generate the crossover background grid
-	for (var i=-edge;i<=edge;i+=10)
-	{
-		line (i,paney,i+edge,paney+edge,color.grid);
-		line (i+edge,paney,i,paney+edge,color.grid);
-	}
-
-	// Display optic axis with reticle
-	line (x0,paney+yn,x0,paney+yp,color.fixation);
-	line ( 0,paney+y0,edge,paney+y0);
-	disk (x0,y0+paney,2,color.fixation);
-
-	// Display 3D point offset in crossover
-	var Sx = Sxy[0], Sy = Sxy[1];
-	var Dx = Dxy[0], Dy = Dxy[1];
-
-	var x1 = Sx - edge, x2 = Sx + edge;
-	var y1 = Sy - edge, y2 = Sy + edge;
-
-	var x3 = Dx - edge, x4 = Dx + edge;
-	var y3 = Dy + edge, y4 = Dy - edge;
-
-	var pSx = Sx+x0, pSy = Sy+paney+y0;
-	var pDx = Dx+x0, pDy = Dy+paney+y0;
-
-	line (pSx-edge,  pSy-edge, pSx+edge,   pSy+edge, '#ff0000');
-	line (    edge,     paney,        0, paney+edge, '#ff0000');
-	line (       0,     paney,     edge, paney+edge, '#00ffff');
-	line (pDx+edge,  pDy-edge, pDx-edge,   pDy+edge, '#00ffff');
-
-	session.context.fillStyle = '#fffff';
-	session.context.fillText ('Sinister', x0, paney + y0, '#ff0000');
-	console.log (x0, paney + y0);
-
-	// Restore the lineWidth
-	session.context.lineWidth = lw;
-} // displayCrossover
-
 
 //------------------------------------------------------------------------------
 var displayDiffract = function (axys)
@@ -696,10 +638,10 @@ var displayDiffract = function (axys)
 	session.context.lineWidth = lw;
 
 	/* Airy maintains an abstract fine-grained Airy lookup table.*/
-    			var u0 = 3.8317059702075125; // First zero of j1(u)/u
-    			var r0 = 1.2196698912665045; // Resolve lim u0/r0==pi, u0/pi==r0
+    //var u0 = 3.8317059702075125; // First zero of j1(u)/u
+    //var r0 = 1.2196698912665045; // Resolve lim u0/r0==pi, u0/pi==r0
 	// Initialized singletons
-    			var point = [], zeros = [], peaks = [], spike = [];
+    //var point = [], zeros = [], peaks = [], spike = [];
 } // displayDiffract
 
 
@@ -741,14 +683,24 @@ var displayEyeballs = function ()
 		var adx = eyex - pntx;
 		var ady = eyey - pnty;
 
-		// Angle of eye rotation
 		var axial = Math.atan2 (edx,edy);
-		//console.log ('E(',letter,')',edx,edy,axial);
+		var point = 0;
+		if (false)
+		{
+			// TODO New pulse management of rotation
+			var _L = letter + 'L';
+			var _M = letter + 'M';
+			var offset = pane[index.motor][2].start;
+			var L = pane[index.motor][2][_L].data[offset];
+			var M = pane[index.motor][2][_M].data[offset];
+			var force = sign * (L * +1 + M * -1);
+		} else {
+			// Angle of eye rotation
+			point = axial - Math.atan2 (adx,ady);
+		}
 
 		// Angle difference between axial and point
-		var point = axial - Math.atan2 (adx,ady);
 		session.drift[letter] = point;
-		//console.log ('A(',letter,')',adx,ady,point);
 
 		eye[letter].axial = axial;
 		eye[letter].point = point;
@@ -927,17 +879,23 @@ var displayMotor = function ()
 		[xDL, DL, 'D', 'L'],
 	];
 
+	//var offset = pane[index.motor][2].start;
+	//var v = pane[index.motor][2].SL.data[offset];
+
 	var x8 = x0 / 8;
 	for (var datum of data)
 	{
 		var zero   = datum[0];
 		var arr    = datum[1].data;
-		var lbl    = datum[2] + datum[3];
 		var letter = datum[2];
+		var side   = datum[3];
+		var lbl    = letter + side;
 		var off    = pane[index.motor][2].start;
 
-		var modulo = session.sequence % (8 + eye[datum[2]].muscle[datum[3]]);
-		arr[off] = modulo ? 0 : 1;
+		var modulo = session.sequence % (8 + eye[letter].muscle[side]);
+		var pulse = modulo ? 0 : 1;
+		arr[off] = pulse;
+		//eye[letter].change = 
 
 		// Display pulses in a running stream
 		for (var j=0; j<edge; ++j)
