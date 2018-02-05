@@ -26,6 +26,5 @@ FILES:
 TODO:
 
 * Replace completely fake diffraction with mathematically correct diffraction.
-* Generate different pulse intervals for driving muscles.
 * Cause pulses to drive muscle contraction.
 * Cause muscle contraction to drive eyeball rotation.
