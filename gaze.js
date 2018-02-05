@@ -119,6 +119,31 @@ var peek = function (key)
 
 
 //------------------------------------------------------------------------------
+// https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection
+// TODO this implementation doesn't quite work
+var intersection = function (x1,y1,x2,y2,x3,y3,x4,y4)
+//------------------------------------------------------------------------------
+{
+	console.log (x1,y1,x2,y2,x3,y3,x4,y4);
+
+	var x1m2 = x1 - x2, x3m4 = x3 - x4;
+	var y1m2 = y1 - y2, y3m4 = y3 - y4;
+	var x1y2 = x1 * y2, x2y1 = x2 * y1;
+	var x3y4 = x3 * y4, x4y3 = x4 * y3;
+
+	var Xdenom = (x1m2*y3m4 - y1m2*x3m4);
+	var Ydenom = (x1m2*y3m4 - y1m2*x3m4);
+
+	if (Xdenom == 0) Xdenom = 1e-128;
+	if (Ydenom == 0) Ydenom = 1e-128;
+
+	return [
+		parseInt ((((x1y2-x2y1)*x3m4) - (x1m2*(x3y4-x4y3))) / Xdenom),
+		parseInt ((((x1y2-x2y1)*y3m4) - (y1m2*(x3y4-x4y3))) / Ydenom)
+	];
+}
+
+//------------------------------------------------------------------------------
 /// @brief enables documentation of progress during calls
 var call = function (fun)
 //------------------------------------------------------------------------------
@@ -587,26 +612,26 @@ var displayCrossover = function (axys)
 	else if (Sx > 0) { x1 = +x0-Sx; x2 = -x0   ; y1 = +y0   ; y2 = -y0+Sx; }
 	else             { x1 = +x0   ; x2 = -x0   ; y1 = +y0   ; y2 = -y0   ; }
 
-	if      (Dx < 0) { x3 = -x0   ; x4 = +x0+Dx; y3 = +y0+Dx; y4 = -y0   ; }
-	else if (Dx > 0) { x3 = -x0+Dx; x4 = +x0   ; y3 = +y0   ; y4 = -y0+Dx; }
-	else             { x3 = +x0   ; x4 = -x0   ; y3 = +y0   ; y4 = -y0   ; }
-
-	/*
-	var pxy = [
-	     (((x1*y2-y1*x2)-(x1-x2)*(x3*y4-y3*x4))/
-	      ((x1-x2)*(y3-y4)-(y1-y2)*(x3-x4))),
-	     (((x1*y2-y1*x2)*(y3-y4)-(y1-y2)*(x3*y4-y3*x4))/
-	      (x1-x2)*(y3-y4)-(y1-y2)*(x3-x4))
-	];
-	*/
+	// X Traversal direction is negative
+	if      (Dx < 0) { x3 = +x0   ; x4 = -x0-Dx; y3 = -y0-Dx; y4 = +y0   ; }
+	else if (Dx > 0) { x3 = +x0-Dx; x4 = -x0   ; y3 = -y0   ; y4 = +y0-Dx; }
+	else             { x3 = +x0   ; x4 = -x0   ; y3 = -y0   ; y4 = +y0   ; }
 
 	// Show the active lines
 	line (x1+x0,paney + y1+y0,x2+x0,paney + y2+y0,'#ff0000');
 	line (x3+x0,paney + y3+y0,x4+x0,paney + y4+y0,'#00ff00');
 
-	//disk (x0+pxy[0][0],y0+paney+pxy[0][1],2,'#ff0000');
-	//disk (x0+pxy[1][0],y0+paney+pxy[1][1],2,'#00ff00');
-	//console.log(pxy);
+	if (false)
+	{
+		// Intersection points do not quite work yet.
+		var PSxy = intersection (x1,y1,x2,y2,edge,   0,   0,edge);
+		var PDxy = intersection (x3,y3,x4,y4,   0,edge,edge,   0);
+
+		// Points at intersections of active and passive lines
+		disk (x0+PSxy[0],y0+paney+PSxy[1],2,'#ff0000');
+		disk (x0+PDxy[0],y0+paney+PDxy[1],2,'#00ff00');
+		console.log (PSxy,PDxy);
+	}
 
 	// Show the (0,0) point
 	disk (x0,y0+paney,2,'#ffffff');
