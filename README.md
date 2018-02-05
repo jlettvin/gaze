@@ -2,6 +2,15 @@
 
 Visit http://rawgit.com/jlettvin/gaze/master/gaze.html to run model.
 
+This visual model illustrates the full reflex arc needed to describe
+how attention is drawn to tiny moving features.
+
+The model is self-documenting so this README.md is very sparse.
+Visit the model and experiment with it.
+
+<hr />
+It is a work in progress and future directions are shown below:
+
 Status:
 
 * Airy.js unused but will generate better data for modeling diffraction patterns.
