@@ -588,9 +588,9 @@ var displayCrossover = function (axys)
 	}
 
 	if (       PDxy[0] < 0) { // Rotate right eye left.
-		eye.D.muscle.L = +4; eye.D.muscle.M = -4;
-	} else if (PDxy[0] > 0) { // Rotate right eye right
 		eye.D.muscle.L = -4; eye.D.muscle.M = +4;
+	} else if (PDxy[0] > 0) { // Rotate right eye right
+		eye.D.muscle.L = +4; eye.D.muscle.M = -4;
 	} else {
 		eye.D.muscle.L =  0; eye.D.muscle.M =  0;
 	}
