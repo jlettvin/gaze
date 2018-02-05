@@ -22,8 +22,6 @@ var scenario = viewable[0];
 var session = {
 	amplitude : new Float32Array (area),
 	axes      : 0,
-	blinkdown : 0,
-	blinkon   : true,
 	drift     : {S:0,D:0},
 	coeff     : 12.0,
 	converge  : true,
@@ -627,7 +625,7 @@ var displayCrossover = function (axys)
 		// TODO use these as vectors to drive the rectus muscles
 		eye.S.vector = {x:-(PSxy[0]-x0),y:-(PSxy[1]-x0)}; // TODO why (x0,y0)
 		eye.D.vector = {x:-(PDxy[0]   ),y:-(PDxy[1]   )};
-		console.log(eye.S.vector,eye.D.vector);
+		//console.log(eye.S.vector,eye.D.vector);
 
 		// Points at intersections of active and passive lines
 		disk (PSxy[0]   ,paney+PSxy[1]   ,2,'#ff0000');
@@ -646,15 +644,6 @@ var olddisplayCrossover = function (axys)
 //------------------------------------------------------------------------------
 {
 	if (!scenario.visible) return;
-	// https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection
-	// x = (d-c)/(a-b)
-	// y = a * x + c;
-	// pxy = [
-	//      (((x1*y2-y1*x2)-(x1-x2)*(x3*y4-y3*x4))/
-	//       ((x1-x2)*(y3-y4)-(y1-y2)*(x3-x4))),
-	//      (((x1*y2-y1*x2)*(y3-y4)-(y10y2)*(x3*y4-y3*x4))/
-	//       (x1-x2)*(y3-y4)-(y1-y2)*(x3-x4))
-	// ]
 
 	// Store lineWidth temporarily to restore before return
 	var lw    = session.context.linewidth;
@@ -672,57 +661,6 @@ var olddisplayCrossover = function (axys)
 	var Sxy = axys[0];    // left  eye point offset
 	var Dxy = axys[1];    // right eye point offset
 
-	/*
-	// Calculate corner offsets for eye-relative point source offsets
-	var Sx = Sxy[0] + x0;
-	var Dx = Dxy[0] + x0;
-	var Sy = Sxy[1] + y0;
-	var Dy = Dxy[1] + y0;
-
-	// sign determines direction from center to each eye
-	var Ssign = -1;
-	var Dsign = 1;
-
-	// Calculate coordinates for fixation crossover
-	var x1 = Sx-Ssign*column;
-	var x2 = Sx+Ssign*column;
-	var x3 = Dx-Dsign*column;
-	var x4 = Dx+Dsign*column;
-
-	// y1->y2 is one line's vertical, y3-y4 is the other line's
-	var y1 = yn; //Sy-Ssign*column; //yn;
-	var y2 = yp; //Sy+Ssign*column; //yp;
-	var y3 = yn; //Dy-Dsign*column; //yn;
-	var y4 = yp; //Dy+Dsign*column; //yp;
-
-	// Calculate location of fixation relative to point source
-	var x1y2 = x1*y2, x3y4 = x3*y4;
-	var x2y1 = x2*y1, x4y3 = x4*y3;
-
-	var x1mx2 = x1-x2, x3mx4 = x3-x4;
-	var y1my2 = y1-y2, y3my4 = y3-y4;
-
-	var x1y2mx2y1 = x1*y2 - x2*y1;
-	var x3y4mx4y3 = x3*y4 - x4*y3;
-
-	var denom = x1mx2*y3my4-y1my2*x3mx4;
-
-	// (px,py) are the fixation point coordinates
-	var px = parseInt((x1y2mx2y1*x3mx4 - x3y4mx4y3*x1mx2)/denom);
-	var py = parseInt((x1y2mx2y1*y3my4 - x3y4mx4y3*y1my2)/denom);
-
-	// Offset local coordinates to canvas coordinates
-	y1 += paney;
-	y2 += paney;
-	y3 += paney;
-	y4 += paney;
-	py += paney;
-
-	// TODO why are these fudge factors needed?
-	//py = (py - y0) * 3 + y0;
-	//px = (px - x0) * 3 / 8 + x0;
-*/
-
 	// Generate the crossover background grid
 	for (var i=-edge;i<=edge;i+=10)
 	{
@@ -730,48 +668,28 @@ var olddisplayCrossover = function (axys)
 		line (i+edge,paney,i,paney+edge,color.grid);
 	}
 
-	/*
-	if (false)
-	{
-		// Display RED diagonal reticle for the hyperacute point image
-		line (0, paney     , edge, paney+edge, color.actual);
-		line (0, paney+edge, edge, paney     , color.actual);
+	// Display optic axis with reticle
+	line (x0,paney+yn,x0,paney+yp,color.fixation);
+	line ( 0,paney+y0,edge,paney+y0);
+	disk (x0,y0+paney,2,color.fixation);
 
-		// Display GREEN reticle for fixation point
-		line (x0-edge,py,x0+edge,py, color.fixation);
-		line (px,y0+paney-column,px,y0+paney+column, color.fixation);
-		disk (px,py+paney,2,color.fixation);
+	// Display 3D point offset in crossover
+	var Sx = Sxy[0], Sy = Sxy[1];
+	var Dx = Dxy[0], Dy = Dxy[1];
 
-		// Display vector from hyperacute point image to fixation point
-		line (x0,y0+paney,px,py,color.vector);
-		disk (x0,y0+paney,2,color.actual);
-	}
-	else
-	*/
-	{
-		// Display optic axis with reticle
-		line (x0,paney+yn,x0,paney+yp,color.fixation);
-		line ( 0,paney+y0,edge,paney+y0);
-		disk (x0,y0+paney,2,color.fixation);
+	var x1 = Sx - edge, x2 = Sx + edge;
+	var y1 = Sy - edge, y2 = Sy + edge;
 
-		// Display 3D point offset in crossover
-		var Sx = Sxy[0], Sy = Sxy[1];
-		var Dx = Dxy[0], Dy = Dxy[1];
+	var x3 = Dx - edge, x4 = Dx + edge;
+	var y3 = Dy + edge, y4 = Dy - edge;
 
-		var x1 = Sx - edge, x2 = Sx + edge;
-		var y1 = Sy - edge, y2 = Sy + edge;
+	var pSx = Sx+x0, pSy = Sy+paney+y0;
+	var pDx = Dx+x0, pDy = Dy+paney+y0;
 
-		var x3 = Dx - edge, x4 = Dx + edge;
-		var y3 = Dy + edge, y4 = Dy - edge;
-
-		var pSx = Sx+x0, pSy = Sy+paney+y0;
-		var pDx = Dx+x0, pDy = Dy+paney+y0;
-
-		line (pSx-edge,  pSy-edge, pSx+edge,   pSy+edge, '#ff0000');
-		line (    edge,     paney,        0, paney+edge, '#ff0000');
-		line (       0,     paney,     edge, paney+edge, '#00ffff');
-		line (pDx+edge,  pDy-edge, pDx-edge,   pDy+edge, '#00ffff');
-	}
+	line (pSx-edge,  pSy-edge, pSx+edge,   pSy+edge, '#ff0000');
+	line (    edge,     paney,        0, paney+edge, '#ff0000');
+	line (       0,     paney,     edge, paney+edge, '#00ffff');
+	line (pDx+edge,  pDy-edge, pDx-edge,   pDy+edge, '#00ffff');
 
 	session.context.fillStyle = '#fffff';
 	session.context.fillText ('Sinister', x0, paney + y0, '#ff0000');
@@ -943,11 +861,6 @@ var displayHyperacute = function (axys)
 		var x = -axy[0] + x0;
 		var y =  axy[1] + y0 + paney;
 		var show = true;
-		/*
-		show = (
-			(scenario.blinkdown == 0) ||
-			(session.blinkdown > (scenario.blinkdown - 2)));
-		*/
 		if (show)
 		{
 			var r1 = parseInt (1.219 * session.coeff / session.pupil);
@@ -1118,22 +1031,7 @@ var displayPoints = function ()
 	// TODO draw fake Airy disk and fake first ring
 	if (scenario.visible)
 	{
-		if (scenario.blink)
-		{
-			if (session.blinkdown-- <= 0)
-			{
-				session.blinkdown = scenario.blinkdown;
-				session.blinkon = !session.blinkon;
-			}
-			if (session.blinkon)
-			{
-				disk (scenario.point.x, scenario.point.y, 2, '#ff0000');
-			}
-		}
-		else
-		{
-			disk (scenario.point.x, scenario.point.y, 2, '#ff0000');
-		}
+		disk (scenario.point.x, scenario.point.y, 2, '#ff0000');
 	}
 } // displayPoints
 
