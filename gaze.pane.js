@@ -128,6 +128,8 @@ through crossing axons which project a 3D map
 of point location relative to the fixation point.
 A vector shows the direction which must be traversed
 to bring the two into registration.
+</p><p>
+The 3D position information is sufficient to adjust lens focal distance.
 </p>
 		*/})
 		}

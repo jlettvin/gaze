@@ -124,8 +124,6 @@ var peek = function (key)
 var intersection = function (x1,y1,x2,y2,x3,y3,x4,y4)
 //------------------------------------------------------------------------------
 {
-	console.log (x1,y1,x2,y2,x3,y3,x4,y4);
-
 	var x1m2 = x1 - x2, x3m4 = x3 - x4;
 	var y1m2 = y1 - y2, y3m4 = y3 - y4;
 	var x1y2 = x1 * y2, x2y1 = x2 * y1;
@@ -133,6 +131,8 @@ var intersection = function (x1,y1,x2,y2,x3,y3,x4,y4)
 
 	var Xdenom = (x1m2*y3m4 - y1m2*x3m4);
 	var Ydenom = (x1m2*y3m4 - y1m2*x3m4);
+
+	if (Xdenom == 0 || Ydenom == 0) return [0,0];
 
 	if (Xdenom == 0) Xdenom = 1e-128;
 	if (Ydenom == 0) Ydenom = 1e-128;
@@ -621,16 +621,15 @@ var displayCrossover = function (axys)
 	line (x1+x0,paney + y1+y0,x2+x0,paney + y2+y0,'#ff0000');
 	line (x3+x0,paney + y3+y0,x4+x0,paney + y4+y0,'#00ff00');
 
-	if (false)
+	if (true)
 	{
 		// Intersection points do not quite work yet.
 		var PSxy = intersection (x1,y1,x2,y2,edge,   0,   0,edge);
-		var PDxy = intersection (x3,y3,x4,y4,   0,edge,edge,   0);
+		var PDxy = intersection (x3,y3,x4,y4,   0,   0,edge,edge);
 
 		// Points at intersections of active and passive lines
-		disk (x0+PSxy[0],y0+paney+PSxy[1],2,'#ff0000');
-		disk (x0+PDxy[0],y0+paney+PDxy[1],2,'#00ff00');
-		console.log (PSxy,PDxy);
+		disk (PSxy[0]   ,paney+PSxy[1]   ,2,'#ff0000');
+		disk (PDxy[0]+x0,paney+PDxy[1]+y0,2,'#00ff00'); // TODO Why x0,y0?
 	}
 
 	// Show the (0,0) point
