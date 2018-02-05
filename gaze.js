@@ -48,8 +48,7 @@ var eye = {
 		actual: {x:0,y:0},
 		center: {x:0,y:0},
 		foveola:{x:0,y:0},
-		dactual:{x:0,y:0},
-		dfoveal:{x:0,y:0},
+		vector: {x:0,y:0},
 	},
 	D:{
 		point:0,
@@ -57,8 +56,7 @@ var eye = {
 		actual: {x:0,y:0},
 		center: {x:0,y:0},
 		foveola:{x:0,y:0},
-		dactual:{x:0,y:0},
-		dfoveal:{x:0,y:0},
+		vector: {x:0,y:0},
 	}
 };
 
@@ -626,6 +624,10 @@ var displayCrossover = function (axys)
 		// Intersection points do not quite work yet.
 		var PSxy = intersection (x1,y1,x2,y2,edge,   0,   0,edge);
 		var PDxy = intersection (x3,y3,x4,y4,   0,   0,edge,edge);
+		// TODO use these as vectors to drive the rectus muscles
+		eye.S.vector = {x:-(PSxy[0]-x0),y:-(PSxy[1]-x0)}; // TODO why (x0,y0)
+		eye.D.vector = {x:-(PDxy[0]   ),y:-(PDxy[1]   )};
+		console.log(eye.S.vector,eye.D.vector);
 
 		// Points at intersections of active and passive lines
 		disk (PSxy[0]   ,paney+PSxy[1]   ,2,'#ff0000');
