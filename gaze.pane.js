@@ -165,7 +165,7 @@ To terminate the rotation, rates are reversed after which
 they return to equilibrium.
 (Inter-pulse intervals are still under development.)
 </p><p>
-The vertical graph lines in pink illustrate signals delivered to
+The vertical graph lines in orange illustrate signals delivered to
 <table align="center">
 <tr><td>SL</td><td align="right">Left</td><td align="left">Lateral rectus muscle</td></tr>
 <tr><td>SM</td><td align="right">Left</td><td align="left">Medial rectus muscle</td></tr>
