@@ -20,6 +20,7 @@ var scenario = viewable[0];
 
 // Current session control states
 var session = {
+	sequence  : 0,
 	amplitude : new Float32Array (area),
 	axes      : 0,
 	drift     : {S:0,D:0},
@@ -47,6 +48,7 @@ var eye = {
 		center: {x:0,y:0},
 		foveola:{x:0,y:0},
 		vector: {x:0,y:0},
+		muscle: {L:0,M:0},
 	},
 	D:{
 		point:0,
@@ -55,6 +57,7 @@ var eye = {
 		center: {x:0,y:0},
 		foveola:{x:0,y:0},
 		vector: {x:0,y:0},
+		muscle: {L:0,M:0},
 	}
 };
 
@@ -433,6 +436,7 @@ var displayAll = function ()
 		'displayInternals',
 	];
 	call (funs);
+	session.sequence++;
 
 	scenario.interval += interval.increment;
 	if (scenario.interval > scenario.maximum)
@@ -553,6 +557,9 @@ var displayCrossover = function (axys)
 	else if (Dx > 0) { x3 = +x0-Dx; x4 = -x0   ; y3 = -y0   ; y4 = +y0-Dx; }
 	else             { x3 = +x0   ; x4 = -x0   ; y3 = -y0   ; y4 = +y0   ; }
 
+	//var O='(', I=')(', C=')';
+	//console.log (O,x1,y1,I,x2,y2,I,x3,y3,I,x4,y4,C);
+
 	// Show the active lines
 	line (x1+x0,paney + y1+y0,x2+x0,paney + y2+y0,'#ff0000');
 	line (x3+x0,paney + y3+y0,x4+x0,paney + y4+y0,'#00ff00');
@@ -571,6 +578,24 @@ var displayCrossover = function (axys)
 		disk (PSxy[0]   ,paney+PSxy[1]   ,2,'#ff0000');
 		disk (PDxy[0]+x0,paney+PDxy[1]+y0,2,'#00ff00'); // TODO Why x0,y0?
 	}
+
+	if (       PSxy[0] < x0) { // Rotate left eye left.
+		eye.S.muscle.L = +4; eye.S.muscle.M = -4;
+	} else if (PSxy[0] > x0) { // Rotate left eye right
+		eye.S.muscle.L = -4; eye.S.muscle.M = +4;
+	} else {
+		eye.S.muscle.L =  0; eye.S.muscle.M =  0;
+	}
+
+	if (       PDxy[0] < 0) { // Rotate right eye left.
+		eye.D.muscle.L = +4; eye.D.muscle.M = -4;
+	} else if (PDxy[0] > 0) { // Rotate right eye right
+		eye.D.muscle.L = -4; eye.D.muscle.M = +4;
+	} else {
+		eye.D.muscle.L =  0; eye.D.muscle.M =  0;
+	}
+
+	//console.log (PSxy,PDxy);
 
 	// Show the (0,0) point
 	disk (x0,y0+paney,2,'#ffffff');
@@ -896,10 +921,10 @@ var displayMotor = function ()
 
 	// Create a loopable map
 	var data = [
-		[xSL, SL, 'SL', 'S', -1, -1],
-		[xSM, SM, 'SM', 'S', -1, +1],
-		[xDM, DM, 'DM', 'D', +1, +1],
-		[xDL, DL, 'DL', 'D', +1, -1],
+		[xSL, SL, 'S', 'L'],
+		[xSM, SM, 'S', 'M'],
+		[xDM, DM, 'D', 'M'],
+		[xDL, DL, 'D', 'L'],
 	];
 
 	var x8 = x0 / 8;
@@ -907,38 +932,12 @@ var displayMotor = function ()
 	{
 		var zero   = datum[0];
 		var arr    = datum[1].data;
-		var lbl    = datum[2];
-		var letter = datum[3];
-		var pulse  = datum[1].pulse;
+		var lbl    = datum[2] + datum[3];
+		var letter = datum[2];
 		var off    = pane[index.motor][2].start;
-		var phi    = parseInt (session.drift[letter] * 10);
-		//console.log(phi);
 
-		// Determine pulse interval change
-		//pulse[1] = phi * data[4] * data[5];
-		//if (session.drift > 0)
-		//{
-			//pulse[1] = phi;
-		//}
-		//else if (session.drift < 0)
-		//{
-			//pulse[1] = -phi
-		//}
-
-		// Add a pulse if it is time
-		pulse[0] = pulse[0] - 1;
-
-		if (pulse[0] <= 0)
-		{
-			pulse[0] = pulse[1] + pane[index.motor][2].standard;
-			// Put a pulse in the data
-			arr[off] = 1;
-			// Adjust interval
-		}
-		else
-		{
-			arr[off] = 0;
-		}
+		var modulo = session.sequence % (8 + eye[datum[2]].muscle[datum[3]]);
+		arr[off] = modulo ? 0 : 1;
 
 		// Display pulses in a running stream
 		for (var j=0; j<edge; ++j)
@@ -957,6 +956,7 @@ var displayMotor = function ()
 		session.context.fillStyle = '#ffffff';
 		session.context.fillText (lbl, zero-10, paney + edge - 10);
 	}
+
 	pane[index.motor][2].start = (
 		pane[index.motor][2].start + 1
 	) % edge;
