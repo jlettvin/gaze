@@ -7,18 +7,18 @@ const pane = [
 			center: {x:0,y:0},
 			axes  : ['x','z'],
 			text  : HERE(function() {/*
-<h3>Pane 1 (<span id="frame1">scene</span>)</h3>
+<h3>Pane&nbsp;1 (<span id="frame1">scene</span>)</h3>
 <p>
 Two lines (CYAN) join eye optic centers to their common vergence point 
-The vergence point (CYAN) is shown if within Pane 1.
+The vergence point (CYAN) is shown if within Pane&nbsp;1.
 </p><p>
-When the mouse is in Pane 1 and movement is enabled,
+When the mouse is in Pane&nbsp;1 and movement is enabled,
 the mouse moves the point source.
 If verge is enabled, the vergence point follows the point.
 If saccades are enabled,
 when the two points coincide, the vergence point exhibits saccades.
-Clicking the mouse in Pane 1 toggles point movement.
-Active vergence is only default enabled for Scenario 3.
+Clicking the mouse in Pane&nbsp;1 toggles point movement.
+Active vergence is only default enabled for Scenario&nbsp;3.
 </p>
 		*/})
 		}
@@ -29,22 +29,22 @@ Active vergence is only default enabled for Scenario 3.
 			center: {x:0,y:0},
 			axes  : ['x','z'],
 			text  : HERE(function() {/*
-<h3>Pane 2 (<span id="frame2">eyeballs</span>)</h3>
+<h3>Pane&nbsp;2 (<span id="frame2">eyeballs</span>)</h3>
 <p>
 A pair of eyeballs is shown from above (Y axis normal)
 with associated lateral and medial rectus muscles for horizontal rotation.
 The eyes are labelled S (Sinister == Left) and D (Dexter == Right).
 The corneas and adjustable pupils are shown.
 </p><p>
-If visible the point source is in Pane 1 (RED)
+If visible the point source is in Pane&nbsp;1 (RED)
 which projects to small diffraction patterns on both retinas (RED).
 When the optic axis and projected image are coincident
 the projected RED takes precedence over the center CYAN.
 </p><p>
 To rotate the associated eyeball
 muscles change length and width as they contract and relax.
-Lines of sight extend from the retinal optic center in this Pane (CYAN)
-to the scene vergence point in Pane 1 (CYAN).
+Lines of sight extend from the retinal optic center in this Pane&nbsp;(CYAN)
+to the scene vergence point in Pane&nbsp;1 (CYAN).
 </p>
 		*/})
 		}
@@ -55,7 +55,7 @@ to the scene vergence point in Pane 1 (CYAN).
 			center: {x:0,y:0},
 			axes  : ['x','y'],
 			text  : HERE(function() {/*
-<h3>Pane 3 (<span id="frame3">image</span>)</h3>
+<h3>Pane&nbsp;3 (<span id="frame3">image</span>)</h3>
 <p>
 Overlapping fake diffraction pattern incident on retina
 are shown with relative displacement from center when
@@ -80,7 +80,7 @@ having the optic axis at its center.
 			center: {x:0,y:0},
 			axes  : ['x','y'],
 			text  : HERE(function() {/*
-<h3>Pane 4 (<span id="frame4">hyperacute</span>)</h3>
+<h3>Pane&nbsp;4 (<span id="frame4">hyperacute</span>)</h3>
 <p>
 Airy diffraction patterns of point sources have "zeros"
 between rings and between the central disk and first ring.
@@ -109,7 +109,7 @@ otherwise you will see the RED point off center to the CYAN vergence point.
 			center: {x:0,y:0},
 			axes  : ['x','z'],
 			text  : HERE(function() {/*
-<h3>Pane 5 (<span id="frame5">crossover</span>)</h3>
+<h3>Pane&nbsp;5 (<span id="frame5">crossover</span>)</h3>
 <p>
 Signals from the optic nerve are delivered to the midbrain as a map.
 Locations where features move in the scene map to activity locations.
@@ -153,7 +153,7 @@ The 3D position information is sufficient to adjust lens focal distance.
 			DM    : {data:newFilledArray (edge, 0),pulse:[0,0]},
 			DL    : {data:newFilledArray (edge, 0),pulse:[0,0]},
 			text  : HERE(function() {/*
-<h3>Pane 6 (<span id="frame5">motor</span>)</h3>
+<h3>Pane&nbsp;6 (<span id="frame5">motor</span>)</h3>
 <p>
 Midbrain delivers signals to rectus muscles.
 Equilibrium signals are delivered at a steady rate
