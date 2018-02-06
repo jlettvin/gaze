@@ -153,7 +153,7 @@ The 3D position information is sufficient to adjust lens focal distance.
 			DM    : {data:newFilledArray (edge, 0),pulse:[0,0]},
 			DL    : {data:newFilledArray (edge, 0),pulse:[0,0]},
 			text  : HERE(function() {/*
-<h3>Pane&nbsp;6 (<span id="frame5">motor</span>)</h3>
+<h3>Pane&nbsp;6 (<span id="frame6">motor</span>)</h3>
 <p>
 Midbrain delivers signals to rectus muscles.
 Equilibrium signals are delivered at a steady rate
@@ -177,6 +177,24 @@ The vertical graph lines in orange illustrate signals delivered to
 		*/})
 //The rate of graph update should not depend on whether tracking/verging are on.
 //The interval variation on differential angle should vary for each muscle.
+		}
+	],
+	[[  0,  0,  0],'twitch', 
+		{
+			corner: {x:0,y:0},
+			center: {x:0,y:0},
+			axes  : ['x','z'],
+			start : 0,
+			SL    : {data:newFilledArray (edge, 0)},
+			SM    : {data:newFilledArray (edge, 0)},
+			DM    : {data:newFilledArray (edge, 0)},
+			DL    : {data:newFilledArray (edge, 0)},
+			text  : HERE(function() {/*
+<h3>Pane&nbsp;6 (<span id="frame7">twitch</span>)</h3>
+<p>
+Twitch units in cross-section
+</p>
+		*/})
 		}
 	],
 ];

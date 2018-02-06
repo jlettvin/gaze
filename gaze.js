@@ -35,6 +35,7 @@ var session = {
 	storage   : sessionStorage,  //window.localStorage;
 	timeout   : null,
 	verbose   : false,
+	pulsed    : {SL:false,SM:false,DM:false,DL:false},
 };
 
 // optician S(inister) = left, D(exter) = right
@@ -432,6 +433,7 @@ var displayAll = function ()
 		'displayLines',
 		'displayVerge',
 		'displayMotor',
+		'displayTwitch',
 		'displayExperiment',
 		'displayAxes',
 		'displayPoints',    // last to keep point above other content
@@ -694,10 +696,9 @@ var displayEyeballs = function ()
 			var L = pane[index.motor][2][_L].data[offset];
 			var M = pane[index.motor][2][_M].data[offset];
 			var force = sign * (L * +1 + M * -1);
-		} else {
-			// Angle of eye rotation
-			point = axial - Math.atan2 (adx,ady);
 		}
+		// Angle of eye rotation
+		point = axial - Math.atan2 (adx,ady);
 
 		// Angle difference between axial and point
 		session.drift[letter] = point;
@@ -883,6 +884,7 @@ var displayMotor = function ()
 	//var v = pane[index.motor][2].SL.data[offset];
 
 	var x8 = x0 / 8;
+	var sequence = 0;
 	for (var datum of data)
 	{
 		var zero   = datum[0];
@@ -892,8 +894,9 @@ var displayMotor = function ()
 		var lbl    = letter + side;
 		var off    = pane[index.motor][2].start;
 
-		var modulo = session.sequence % (8 + eye[letter].muscle[side]);
+		var modulo = (sequence + session.sequence) % (8 + eye[letter].muscle[side]);
 		var pulse = modulo ? 0 : 1;
+		session[lbl] = pulse;
 		arr[off] = pulse;
 		//eye[letter].change = 
 
@@ -913,6 +916,7 @@ var displayMotor = function ()
 		// Label the muscle signals
 		session.context.fillStyle = '#ffffff';
 		session.context.fillText (lbl, zero-10, paney + edge - 10);
+		++sequence;
 	}
 
 	pane[index.motor][2].start = (
@@ -932,6 +936,52 @@ var displayPoints = function ()
 		disk (scenario.point.x, scenario.point.y, 2, '#ff0000');
 	}
 } // displayPoints
+
+
+//------------------------------------------------------------------------------
+var displayTwitch = function ()
+//------------------------------------------------------------------------------
+{
+	var paney = index.twitch * session.pane.y;
+
+	// Calculate the midlines for vertical plotting
+	var xSL = parseInt (x0 - 3 * x0 / 4);  // Left  Lateral Rectus
+	var xSM = parseInt (x0 - 1 * x0 / 4);  // Left  Medial  Rectus
+	var xDM = parseInt (x0 + 1 * x0 / 4);  // Right Medial  Rectus
+	var xDL = parseInt (x0 + 3 * x0 / 4);  // Right Lateral Rectus
+
+	// Get local references to data
+	var SL = pane[index.motor][2].SL;
+	var SM = pane[index.motor][2].SM;
+	var DM = pane[index.motor][2].DM;
+	var DL = pane[index.motor][2].DL;
+
+	// Create a loopable map
+	var data = [
+		[xSL, SL, 'S', 'L'],
+		[xSM, SM, 'S', 'M'],
+		[xDM, DM, 'D', 'M'],
+		[xDL, DL, 'D', 'L'],
+	];
+
+	for (var datum of data)
+	{
+		var zero   = datum[0];
+		var arr    = datum[1].data;
+		var letter = datum[2];
+		var side   = datum[3];
+		var lbl    = letter + side;
+		var off    = pane[index.motor][2].start;
+		var pulse  = session[lbl];
+		var color  = pulse ? '#ff0000' : '#330000';
+
+		// Label the muscle signals
+		session.context.fillStyle = '#ffffff';
+		session.context.fillText (lbl, zero-10, paney + edge - 10);
+
+		disk (datum[0],y0+paney,radius,color);
+	}
+}
 
 
 //------------------------------------------------------------------------------
