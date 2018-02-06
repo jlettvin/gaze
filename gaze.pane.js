@@ -190,9 +190,11 @@ The vertical graph lines in orange illustrate signals delivered to
 			DM    : {data:newFilledArray (edge, 0)},
 			DL    : {data:newFilledArray (edge, 0)},
 			text  : HERE(function() {/*
-<h3>Pane&nbsp;6 (<span id="frame7">twitch</span>)</h3>
+<h3>Pane&nbsp;7 (<span id="frame7">muscle cross section</span>)</h3>
 <p>
-Twitch units in cross-section
+Initially, these are shown as full-muscle twitches.
+The goal is to show a series of quasi-random equal-count twitching units
+within the full-muscle as small white circles.
 </p>
 		*/})
 		}
