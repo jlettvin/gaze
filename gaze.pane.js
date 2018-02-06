@@ -172,7 +172,6 @@ The vertical graph lines in orange illustrate signals delivered to
 <tr><td>DM</td><td align="right">Right</td><td align="left">Medial rectus muscle</td></tr>
 <tr><td>DL</td><td align="right">Right</td><td align="left">Lateral rectus muscle</td></tr>
 </table>
-</p><p>
 </p>
 		*/})
 //The rate of graph update should not depend on whether tracking/verging are on.
@@ -192,9 +191,14 @@ The vertical graph lines in orange illustrate signals delivered to
 			text  : HERE(function() {/*
 <h3>Pane&nbsp;7 (<span id="frame7">muscle cross section</span>)</h3>
 <p>
-Initially, these are shown as full-muscle twitches.
-The goal is to show a series of quasi-random equal-count twitching units
-within the full-muscle as small white circles.
+Pulses must be delivered to rectus muscle twitch units in a sequence
+that guarantees maximum duty cycle recovery time for a given unit
+while distributing the signal evenly over its 2D (cross-sectional)
+by generating dynamic patterns.
+</p><p>
+In addition, the number of twitch units per unit time determines
+the tonus of the muscle.
+This is adjustable internally, but not offered for variation in this version.
 </p>
 		*/})
 		}

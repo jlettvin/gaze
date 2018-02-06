@@ -884,7 +884,6 @@ var displayMotor = function ()
 	//var v = pane[index.motor][2].SL.data[offset];
 
 	var x8 = x0 / 8;
-	var sequence = 0;
 	for (var datum of data)
 	{
 		var zero   = datum[0];
@@ -894,7 +893,7 @@ var displayMotor = function ()
 		var lbl    = letter + side;
 		var off    = pane[index.motor][2].start;
 
-		var modulo = (sequence + session.sequence) % (8 + eye[letter].muscle[side]);
+		var modulo = (session.sequence) % (8 + eye[letter].muscle[side]);
 		var pulse = modulo ? 0 : 1;
 		session[lbl] = pulse;
 		arr[off] = pulse;
@@ -916,7 +915,6 @@ var displayMotor = function ()
 		// Label the muscle signals
 		session.context.fillStyle = '#ffffff';
 		session.context.fillText (lbl, zero-10, paney + edge - 10);
-		++sequence;
 	}
 
 	pane[index.motor][2].start = (
@@ -973,13 +971,22 @@ var displayTwitch = function ()
 		var lbl    = letter + side;
 		var off    = pane[index.motor][2].start;
 		var pulse  = session[lbl];
-		var color  = pulse ? '#ff0000' : '#330000';
 
 		// Label the muscle signals
 		session.context.fillStyle = '#ffffff';
 		session.context.fillText (lbl, zero-10, paney + edge - 10);
 
-		disk (datum[0],y0+paney,radius,color);
+		disk (datum[0],y0+paney,radius,'#660000');
+		var tonus = 8 * (1 + 2 * parseInt (pulse));
+		//if (pulse)
+		{
+			for (var n=0;n<tonus;++n)
+			{
+				var xy = xyTwitch.data[xyTwitch.index++];
+				disk (datum[0]+xy[0],paney + y0 + xy[1],2,'#ff0000');
+			}
+		}
+		xyTwitch.index %= xyTwitch.size;
 	}
 }
 
