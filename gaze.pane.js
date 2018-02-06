@@ -199,6 +199,16 @@ by generating dynamic patterns.
 In addition, the number of twitch units per unit time determines
 the tonus of the muscle.
 This is adjustable internally, but not offered for variation in this version.
+</p><p>
+Pulse patterns are only dynamic for Scenario&nbsp;3.
+Like the pulse trains shown in the next pane above,
+the intervals are currently tied to the rate of mouse move events.
+So, while the mouse is moving, the pulse patterns update rapidly,
+but they are slow.
+</p><p>
+Note, specifically, that the rectus muscle patterns are denser for
+the rectus muscle on the side of the line of sight for that eye.
+The density becomes the same when vergence is complete.
 </p>
 		*/})
 		}
