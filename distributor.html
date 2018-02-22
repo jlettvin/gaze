@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+        <meta charset="UTF-8">
+<style>
+body {
+	font-family:
+            Courier New, Courier,
+            Lucida Sans Typewriter, Lucida Typewriter,
+            monospace;
+	font-size: 10px;
+	font-style: bold;
+	font-variant: normal;
+	font-weight: 200;
+	line-height: 10px;
+}
+h3 {
+    font-size: 20px;
+}
+table, th, td {
+	border: 1px solid black;
+	border-collapse: collapse;
+	vertical-align: middle;
+	text-align: center;
+}
+td {  width: 50px; }
+tr { height: 50px; }
+</style>
+<script type="text/javascript">
+var active = 17;
+var indices = 293;
+var cell  = [23, 282, 171, 47, 225, 140, 281, 33, 250, 190, 334, 97, 230, 86, 354, 161, 258, 121, 72, 272, 329, 351, 211, 114, 241, 215, 157, 204, 199, 201, 91, 12, 217, 167, 172, 32, 108, 87, 61, 79, 117, 130, 277, 149, 212, 206, 28, 129, 231, 181, 106, 166, 257, 80, 218, 194, 65, 160, 42, 31, 90, 99, 203, 127, 59, 143, 224, 283, 207, 271, 155, 25, 183, 308, 262, 233, 294, 52, 51, 255, 274, 158, 261, 45, 78, 188, 168, 235, 135, 184, 165, 301, 64, 60, 77, 62, 145, 200, 137, 191, 26, 350, 336, 104, 267, 138, 41, 192, 10, 164, 6, 290, 111, 50, 102, 352, 297, 170, 103, 296, 134, 67, 228, 186, 159, 153, 100, 68, 353, 238, 197, 202, 182, 221, 142, 292, 162, 180, 176, 279, 88, 348, 254, 264, 273, 335, 226, 249, 132, 7, 174, 227, 327, 208, 291, 193, 131, 141, 93, 115, 278, 63, 195, 84, 309, 189, 311, 248, 44, 276, 8, 213, 318, 81, 24, 268, 122, 332, 151, 85, 289, 96, 256, 179, 136, 144, 175, 30, 177, 242, 128, 319, 43, 253, 331, 287, 229, 116, 178, 152, 236, 154, 139, 313, 293, 89, 185, 48, 71, 119, 234, 270, 163, 73, 232, 101, 280, 70, 219, 98, 328, 245, 105, 333, 118, 66, 109, 107, 120, 46, 300, 196, 9, 125, 173, 133, 222, 187, 337, 259, 243, 146, 263, 314, 112, 307, 92, 27, 83, 312, 315, 299, 123, 205, 223, 82, 246, 124, 240, 147, 295, 269, 310, 53, 169, 29, 69, 317, 110, 148, 251, 260, 209, 275, 298, 349, 216, 220, 156, 237, 214, 150, 239, 49, 126, 330, 252, 244, 210, 288, 11, 316, 198];
+var index = 0;
+var timer = null;
+var running  = false;
+var interval = 100;
+var inverses = [];
+var colors = [['#552222','white'], ['#ff6666','white']];
+
+function eRun (e)
+{
+    running = !running;
+    if (running) { timer = setInterval (loop, interval); }
+    else         { clearInterval (timer); timer = null;  }
+}
+
+function reColor (className,scheme)
+{
+    var colorPair = colors[scheme];
+    //console.log (scheme, className);
+    var elements = document.getElementsByClassName (className);
+    for (element of elements)
+    {
+        element.style.backgroundColor = colorPair[0];
+        element.style.color           = colorPair[1];
+    }
+}
+
+function loop ()
+{
+    //console.log (inverses);
+    for (classname of inverses)
+    {
+        reColor (classname, 0);
+    }
+    inverses = [];
+
+    var date = new Date ();
+    var odd = (date.getSeconds () & 1);
+    var strength = 1 + 4 * odd;
+    for (var i=0, I=active * strength; i<I; ++i)
+    {
+        index = (index + 1) % indices;
+        var classname = 'i' + cell[index];
+
+        inverses.push (classname);
+        reColor (classname, 1);
+    }
+    var state = document.getElementById ('state');
+    state.innerHTML = odd ? 'STRONG' : 'weak';
+}
+
+function main ()
+{
+    eRun ();
+}
+
+window.onload = function ()
+{
+    main ();
+}
+</script>
+	</head>
+	<body>
+        <div align="center">
+        <h3>Twitch Distributor Visualization</h3>
+        <i>Copyright&copy;2018 Jonathan D. Lettvin, All Rights Reserved.</i>
+        <p>
+        This model simplifies neurons and muscles,
+        but not to the point of unnatural.
+        </p><p>
+        Twitch units generate a shortening force.
+        The visualization below shows a cross-section of the muscle
+        where each square is a model of a muscle fiber's cut end.
+        </p><p>
+        The model shows twitching sarcomeres as light red.
+        Sarcomeres at rest or recovering are shown in dark red.
+        </p><p>
+        Muscles are composed from hierarchical bundles of muscle fibers.
+        Twitch units are single muscle fibers
+        running end-to-end and excited by a single motor neuron.
+        </p><p>
+        A motor neuron attaches at many points along a single twitch unit.
+        A twitch signal is sent simultaneously to
+        all neuromuscular junctions along a single muscle fiber.
+        </p><p>
+        The shape of the remote dendrite for the neuron feeding a muscle fiber
+        has a complex shape implementing a sampler of a regular sweeping pattern.
+        The dendrite hosts a fixed set of pre-randomized dendritic spines.
+        As the pattern passes across the dendritic spines
+        those which sample a boundary in the pattern twitch their sarcomeres.
+        </p><p>
+        As long as the pattern delivered is reliable,
+        twitch unit duty cycle timing requirements are satisfied.
+        This strategy guarantees maximum recovery time for all muscle fibers.
+        </p><p>
+        The illustration below shows this behavior.
+        The code driving this image is logically equivalent to
+        the proposed pre-randomized sampling of a regular pattern.
+        Note the (0,0) coordinates at the center of the muscle.
+        </p><p>
+        The pattern shows a repeating weak/STRONG tonus for 1 second each.
+        This simple demonstration illustrates a logical economy
+        enabling implementations to ignore parallelism and simply
+        act concurrently on all actual delivered pulses,
+        whether they are dense or sparse,
+        without the burden of unnecessary calculation.
+        </p><p>
+        This is one of the economies expected in vivo.
+        </p>
+        <table><caption><h3>Muscle Cross Section</h3></caption>
+<tr><td colspan="19">tonus<h2 id="state"></h2></td>
+</tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td class="i6">6<br /><br /><br />(-3,+9)</td><td class="i7">7<br /><br /><br />(-2,+9)</td><td class="i8">8<br /><br /><br />(-1,+9)</td><td class="i9">9<br /><br /><br />(+0,+9)</td><td class="i10">10<br /><br /><br />(+1,+9)</td><td class="i11">11<br /><br /><br />(+2,+9)</td><td class="i12">12<br /><br /><br />(+3,+9)</td><td></td><td></td><td></td><td></td><td></td><td></td>
+</tr><tr><td></td><td></td><td></td><td></td><td class="i23">23<br /><br /><br />(-5,+8)</td><td class="i24">24<br /><br /><br />(-4,+8)</td><td class="i25">25<br /><br /><br />(-3,+8)</td><td class="i26">26<br /><br /><br />(-2,+8)</td><td class="i27">27<br /><br /><br />(-1,+8)</td><td class="i28">28<br /><br /><br />(+0,+8)</td><td class="i29">29<br /><br /><br />(+1,+8)</td><td class="i30">30<br /><br /><br />(+2,+8)</td><td class="i31">31<br /><br /><br />(+3,+8)</td><td class="i32">32<br /><br /><br />(+4,+8)</td><td class="i33">33<br /><br /><br />(+5,+8)</td><td></td><td></td><td></td><td></td>
+</tr><tr><td></td><td></td><td></td><td class="i41">41<br /><br /><br />(-6,+7)</td><td class="i42">42<br /><br /><br />(-5,+7)</td><td class="i43">43<br /><br /><br />(-4,+7)</td><td class="i44">44<br /><br /><br />(-3,+7)</td><td class="i45">45<br /><br /><br />(-2,+7)</td><td class="i46">46<br /><br /><br />(-1,+7)</td><td class="i47">47<br /><br /><br />(+0,+7)</td><td class="i48">48<br /><br /><br />(+1,+7)</td><td class="i49">49<br /><br /><br />(+2,+7)</td><td class="i50">50<br /><br /><br />(+3,+7)</td><td class="i51">51<br /><br /><br />(+4,+7)</td><td class="i52">52<br /><br /><br />(+5,+7)</td><td class="i53">53<br /><br /><br />(+6,+7)</td><td></td><td></td><td></td>
+</tr><tr><td></td><td></td><td class="i59">59<br /><br /><br />(-7,+6)</td><td class="i60">60<br /><br /><br />(-6,+6)</td><td class="i61">61<br /><br /><br />(-5,+6)</td><td class="i62">62<br /><br /><br />(-4,+6)</td><td class="i63">63<br /><br /><br />(-3,+6)</td><td class="i64">64<br /><br /><br />(-2,+6)</td><td class="i65">65<br /><br /><br />(-1,+6)</td><td class="i66">66<br /><br /><br />(+0,+6)</td><td class="i67">67<br /><br /><br />(+1,+6)</td><td class="i68">68<br /><br /><br />(+2,+6)</td><td class="i69">69<br /><br /><br />(+3,+6)</td><td class="i70">70<br /><br /><br />(+4,+6)</td><td class="i71">71<br /><br /><br />(+5,+6)</td><td class="i72">72<br /><br /><br />(+6,+6)</td><td class="i73">73<br /><br /><br />(+7,+6)</td><td></td><td></td>
+</tr><tr><td></td><td class="i77">77<br /><br /><br />(-8,+5)</td><td class="i78">78<br /><br /><br />(-7,+5)</td><td class="i79">79<br /><br /><br />(-6,+5)</td><td class="i80">80<br /><br /><br />(-5,+5)</td><td class="i81">81<br /><br /><br />(-4,+5)</td><td class="i82">82<br /><br /><br />(-3,+5)</td><td class="i83">83<br /><br /><br />(-2,+5)</td><td class="i84">84<br /><br /><br />(-1,+5)</td><td class="i85">85<br /><br /><br />(+0,+5)</td><td class="i86">86<br /><br /><br />(+1,+5)</td><td class="i87">87<br /><br /><br />(+2,+5)</td><td class="i88">88<br /><br /><br />(+3,+5)</td><td class="i89">89<br /><br /><br />(+4,+5)</td><td class="i90">90<br /><br /><br />(+5,+5)</td><td class="i91">91<br /><br /><br />(+6,+5)</td><td class="i92">92<br /><br /><br />(+7,+5)</td><td class="i93">93<br /><br /><br />(+8,+5)</td><td></td>
+</tr><tr><td></td><td class="i96">96<br /><br /><br />(-8,+4)</td><td class="i97">97<br /><br /><br />(-7,+4)</td><td class="i98">98<br /><br /><br />(-6,+4)</td><td class="i99">99<br /><br /><br />(-5,+4)</td><td class="i100">100<br /><br /><br />(-4,+4)</td><td class="i101">101<br /><br /><br />(-3,+4)</td><td class="i102">102<br /><br /><br />(-2,+4)</td><td class="i103">103<br /><br /><br />(-1,+4)</td><td class="i104">104<br /><br /><br />(+0,+4)</td><td class="i105">105<br /><br /><br />(+1,+4)</td><td class="i106">106<br /><br /><br />(+2,+4)</td><td class="i107">107<br /><br /><br />(+3,+4)</td><td class="i108">108<br /><br /><br />(+4,+4)</td><td class="i109">109<br /><br /><br />(+5,+4)</td><td class="i110">110<br /><br /><br />(+6,+4)</td><td class="i111">111<br /><br /><br />(+7,+4)</td><td class="i112">112<br /><br /><br />(+8,+4)</td><td></td>
+</tr><tr><td class="i114">114<br /><br /><br />(-9,+3)</td><td class="i115">115<br /><br /><br />(-8,+3)</td><td class="i116">116<br /><br /><br />(-7,+3)</td><td class="i117">117<br /><br /><br />(-6,+3)</td><td class="i118">118<br /><br /><br />(-5,+3)</td><td class="i119">119<br /><br /><br />(-4,+3)</td><td class="i120">120<br /><br /><br />(-3,+3)</td><td class="i121">121<br /><br /><br />(-2,+3)</td><td class="i122">122<br /><br /><br />(-1,+3)</td><td class="i123">123<br /><br /><br />(+0,+3)</td><td class="i124">124<br /><br /><br />(+1,+3)</td><td class="i125">125<br /><br /><br />(+2,+3)</td><td class="i126">126<br /><br /><br />(+3,+3)</td><td class="i127">127<br /><br /><br />(+4,+3)</td><td class="i128">128<br /><br /><br />(+5,+3)</td><td class="i129">129<br /><br /><br />(+6,+3)</td><td class="i130">130<br /><br /><br />(+7,+3)</td><td class="i131">131<br /><br /><br />(+8,+3)</td><td class="i132">132<br /><br /><br />(+9,+3)</td>
+</tr><tr><td class="i133">133<br /><br /><br />(-9,+2)</td><td class="i134">134<br /><br /><br />(-8,+2)</td><td class="i135">135<br /><br /><br />(-7,+2)</td><td class="i136">136<br /><br /><br />(-6,+2)</td><td class="i137">137<br /><br /><br />(-5,+2)</td><td class="i138">138<br /><br /><br />(-4,+2)</td><td class="i139">139<br /><br /><br />(-3,+2)</td><td class="i140">140<br /><br /><br />(-2,+2)</td><td class="i141">141<br /><br /><br />(-1,+2)</td><td class="i142">142<br /><br /><br />(+0,+2)</td><td class="i143">143<br /><br /><br />(+1,+2)</td><td class="i144">144<br /><br /><br />(+2,+2)</td><td class="i145">145<br /><br /><br />(+3,+2)</td><td class="i146">146<br /><br /><br />(+4,+2)</td><td class="i147">147<br /><br /><br />(+5,+2)</td><td class="i148">148<br /><br /><br />(+6,+2)</td><td class="i149">149<br /><br /><br />(+7,+2)</td><td class="i150">150<br /><br /><br />(+8,+2)</td><td class="i151">151<br /><br /><br />(+9,+2)</td>
+</tr><tr><td class="i152">152<br /><br /><br />(-9,+1)</td><td class="i153">153<br /><br /><br />(-8,+1)</td><td class="i154">154<br /><br /><br />(-7,+1)</td><td class="i155">155<br /><br /><br />(-6,+1)</td><td class="i156">156<br /><br /><br />(-5,+1)</td><td class="i157">157<br /><br /><br />(-4,+1)</td><td class="i158">158<br /><br /><br />(-3,+1)</td><td class="i159">159<br /><br /><br />(-2,+1)</td><td class="i160">160<br /><br /><br />(-1,+1)</td><td class="i161">161<br /><br /><br />(+0,+1)</td><td class="i162">162<br /><br /><br />(+1,+1)</td><td class="i163">163<br /><br /><br />(+2,+1)</td><td class="i164">164<br /><br /><br />(+3,+1)</td><td class="i165">165<br /><br /><br />(+4,+1)</td><td class="i166">166<br /><br /><br />(+5,+1)</td><td class="i167">167<br /><br /><br />(+6,+1)</td><td class="i168">168<br /><br /><br />(+7,+1)</td><td class="i169">169<br /><br /><br />(+8,+1)</td><td class="i170">170<br /><br /><br />(+9,+1)</td>
+</tr><tr><td class="i171">171<br /><br /><br />(-9,+0)</td><td class="i172">172<br /><br /><br />(-8,+0)</td><td class="i173">173<br /><br /><br />(-7,+0)</td><td class="i174">174<br /><br /><br />(-6,+0)</td><td class="i175">175<br /><br /><br />(-5,+0)</td><td class="i176">176<br /><br /><br />(-4,+0)</td><td class="i177">177<br /><br /><br />(-3,+0)</td><td class="i178">178<br /><br /><br />(-2,+0)</td><td class="i179">179<br /><br /><br />(-1,+0)</td><td class="i180">180<br /><br /><br />(+0,+0)</td><td class="i181">181<br /><br /><br />(+1,+0)</td><td class="i182">182<br /><br /><br />(+2,+0)</td><td class="i183">183<br /><br /><br />(+3,+0)</td><td class="i184">184<br /><br /><br />(+4,+0)</td><td class="i185">185<br /><br /><br />(+5,+0)</td><td class="i186">186<br /><br /><br />(+6,+0)</td><td class="i187">187<br /><br /><br />(+7,+0)</td><td class="i188">188<br /><br /><br />(+8,+0)</td><td class="i189">189<br /><br /><br />(+9,+0)</td>
+</tr><tr><td class="i190">190<br /><br /><br />(-9,-1)</td><td class="i191">191<br /><br /><br />(-8,-1)</td><td class="i192">192<br /><br /><br />(-7,-1)</td><td class="i193">193<br /><br /><br />(-6,-1)</td><td class="i194">194<br /><br /><br />(-5,-1)</td><td class="i195">195<br /><br /><br />(-4,-1)</td><td class="i196">196<br /><br /><br />(-3,-1)</td><td class="i197">197<br /><br /><br />(-2,-1)</td><td class="i198">198<br /><br /><br />(-1,-1)</td><td class="i199">199<br /><br /><br />(+0,-1)</td><td class="i200">200<br /><br /><br />(+1,-1)</td><td class="i201">201<br /><br /><br />(+2,-1)</td><td class="i202">202<br /><br /><br />(+3,-1)</td><td class="i203">203<br /><br /><br />(+4,-1)</td><td class="i204">204<br /><br /><br />(+5,-1)</td><td class="i205">205<br /><br /><br />(+6,-1)</td><td class="i206">206<br /><br /><br />(+7,-1)</td><td class="i207">207<br /><br /><br />(+8,-1)</td><td class="i208">208<br /><br /><br />(+9,-1)</td>
+</tr><tr><td class="i209">209<br /><br /><br />(-9,-2)</td><td class="i210">210<br /><br /><br />(-8,-2)</td><td class="i211">211<br /><br /><br />(-7,-2)</td><td class="i212">212<br /><br /><br />(-6,-2)</td><td class="i213">213<br /><br /><br />(-5,-2)</td><td class="i214">214<br /><br /><br />(-4,-2)</td><td class="i215">215<br /><br /><br />(-3,-2)</td><td class="i216">216<br /><br /><br />(-2,-2)</td><td class="i217">217<br /><br /><br />(-1,-2)</td><td class="i218">218<br /><br /><br />(+0,-2)</td><td class="i219">219<br /><br /><br />(+1,-2)</td><td class="i220">220<br /><br /><br />(+2,-2)</td><td class="i221">221<br /><br /><br />(+3,-2)</td><td class="i222">222<br /><br /><br />(+4,-2)</td><td class="i223">223<br /><br /><br />(+5,-2)</td><td class="i224">224<br /><br /><br />(+6,-2)</td><td class="i225">225<br /><br /><br />(+7,-2)</td><td class="i226">226<br /><br /><br />(+8,-2)</td><td class="i227">227<br /><br /><br />(+9,-2)</td>
+</tr><tr><td class="i228">228<br /><br /><br />(-9,-3)</td><td class="i229">229<br /><br /><br />(-8,-3)</td><td class="i230">230<br /><br /><br />(-7,-3)</td><td class="i231">231<br /><br /><br />(-6,-3)</td><td class="i232">232<br /><br /><br />(-5,-3)</td><td class="i233">233<br /><br /><br />(-4,-3)</td><td class="i234">234<br /><br /><br />(-3,-3)</td><td class="i235">235<br /><br /><br />(-2,-3)</td><td class="i236">236<br /><br /><br />(-1,-3)</td><td class="i237">237<br /><br /><br />(+0,-3)</td><td class="i238">238<br /><br /><br />(+1,-3)</td><td class="i239">239<br /><br /><br />(+2,-3)</td><td class="i240">240<br /><br /><br />(+3,-3)</td><td class="i241">241<br /><br /><br />(+4,-3)</td><td class="i242">242<br /><br /><br />(+5,-3)</td><td class="i243">243<br /><br /><br />(+6,-3)</td><td class="i244">244<br /><br /><br />(+7,-3)</td><td class="i245">245<br /><br /><br />(+8,-3)</td><td class="i246">246<br /><br /><br />(+9,-3)</td>
+</tr><tr><td></td><td class="i248">248<br /><br /><br />(-8,-4)</td><td class="i249">249<br /><br /><br />(-7,-4)</td><td class="i250">250<br /><br /><br />(-6,-4)</td><td class="i251">251<br /><br /><br />(-5,-4)</td><td class="i252">252<br /><br /><br />(-4,-4)</td><td class="i253">253<br /><br /><br />(-3,-4)</td><td class="i254">254<br /><br /><br />(-2,-4)</td><td class="i255">255<br /><br /><br />(-1,-4)</td><td class="i256">256<br /><br /><br />(+0,-4)</td><td class="i257">257<br /><br /><br />(+1,-4)</td><td class="i258">258<br /><br /><br />(+2,-4)</td><td class="i259">259<br /><br /><br />(+3,-4)</td><td class="i260">260<br /><br /><br />(+4,-4)</td><td class="i261">261<br /><br /><br />(+5,-4)</td><td class="i262">262<br /><br /><br />(+6,-4)</td><td class="i263">263<br /><br /><br />(+7,-4)</td><td class="i264">264<br /><br /><br />(+8,-4)</td><td></td>
+</tr><tr><td></td><td class="i267">267<br /><br /><br />(-8,-5)</td><td class="i268">268<br /><br /><br />(-7,-5)</td><td class="i269">269<br /><br /><br />(-6,-5)</td><td class="i270">270<br /><br /><br />(-5,-5)</td><td class="i271">271<br /><br /><br />(-4,-5)</td><td class="i272">272<br /><br /><br />(-3,-5)</td><td class="i273">273<br /><br /><br />(-2,-5)</td><td class="i274">274<br /><br /><br />(-1,-5)</td><td class="i275">275<br /><br /><br />(+0,-5)</td><td class="i276">276<br /><br /><br />(+1,-5)</td><td class="i277">277<br /><br /><br />(+2,-5)</td><td class="i278">278<br /><br /><br />(+3,-5)</td><td class="i279">279<br /><br /><br />(+4,-5)</td><td class="i280">280<br /><br /><br />(+5,-5)</td><td class="i281">281<br /><br /><br />(+6,-5)</td><td class="i282">282<br /><br /><br />(+7,-5)</td><td class="i283">283<br /><br /><br />(+8,-5)</td><td></td>
+</tr><tr><td></td><td></td><td class="i287">287<br /><br /><br />(-7,-6)</td><td class="i288">288<br /><br /><br />(-6,-6)</td><td class="i289">289<br /><br /><br />(-5,-6)</td><td class="i290">290<br /><br /><br />(-4,-6)</td><td class="i291">291<br /><br /><br />(-3,-6)</td><td class="i292">292<br /><br /><br />(-2,-6)</td><td class="i293">293<br /><br /><br />(-1,-6)</td><td class="i294">294<br /><br /><br />(+0,-6)</td><td class="i295">295<br /><br /><br />(+1,-6)</td><td class="i296">296<br /><br /><br />(+2,-6)</td><td class="i297">297<br /><br /><br />(+3,-6)</td><td class="i298">298<br /><br /><br />(+4,-6)</td><td class="i299">299<br /><br /><br />(+5,-6)</td><td class="i300">300<br /><br /><br />(+6,-6)</td><td class="i301">301<br /><br /><br />(+7,-6)</td><td></td><td></td>
+</tr><tr><td></td><td></td><td></td><td class="i307">307<br /><br /><br />(-6,-7)</td><td class="i308">308<br /><br /><br />(-5,-7)</td><td class="i309">309<br /><br /><br />(-4,-7)</td><td class="i310">310<br /><br /><br />(-3,-7)</td><td class="i311">311<br /><br /><br />(-2,-7)</td><td class="i312">312<br /><br /><br />(-1,-7)</td><td class="i313">313<br /><br /><br />(+0,-7)</td><td class="i314">314<br /><br /><br />(+1,-7)</td><td class="i315">315<br /><br /><br />(+2,-7)</td><td class="i316">316<br /><br /><br />(+3,-7)</td><td class="i317">317<br /><br /><br />(+4,-7)</td><td class="i318">318<br /><br /><br />(+5,-7)</td><td class="i319">319<br /><br /><br />(+6,-7)</td><td></td><td></td><td></td>
+</tr><tr><td></td><td></td><td></td><td></td><td class="i327">327<br /><br /><br />(-5,-8)</td><td class="i328">328<br /><br /><br />(-4,-8)</td><td class="i329">329<br /><br /><br />(-3,-8)</td><td class="i330">330<br /><br /><br />(-2,-8)</td><td class="i331">331<br /><br /><br />(-1,-8)</td><td class="i332">332<br /><br /><br />(+0,-8)</td><td class="i333">333<br /><br /><br />(+1,-8)</td><td class="i334">334<br /><br /><br />(+2,-8)</td><td class="i335">335<br /><br /><br />(+3,-8)</td><td class="i336">336<br /><br /><br />(+4,-8)</td><td class="i337">337<br /><br /><br />(+5,-8)</td><td></td><td></td><td></td><td></td>
+</tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td class="i348">348<br /><br /><br />(-3,-9)</td><td class="i349">349<br /><br /><br />(-2,-9)</td><td class="i350">350<br /><br /><br />(-1,-9)</td><td class="i351">351<br /><br /><br />(+0,-9)</td><td class="i352">352<br /><br /><br />(+1,-9)</td><td class="i353">353<br /><br /><br />(+2,-9)</td><td class="i354">354<br /><br /><br />(+3,-9)</td><td></td><td></td><td></td><td></td><td></td><td></td>
+</tr></table>
+        </div>
+	</body>
+</html>
+
