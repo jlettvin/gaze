@@ -30,13 +30,22 @@ td { height: 40px; width: 50px, text-color: 'white'; }
 var active = 13;
 var strong = 2;
 var indices = 293;
-var cell  = [229, 227, 211, 149, 62, 157, 233, 68, 172, 86, 24, 287, 272, 163, 331, 165, 173, 174, 136, 260, 88, 123, 275, 206, 241, 49, 118, 64, 334, 240, 46, 32, 332, 288, 258, 162, 103, 126, 213, 336, 53, 160, 154, 183, 29, 317, 310, 189, 31, 312, 77, 61, 28, 12, 52, 253, 116, 120, 106, 208, 274, 348, 100, 279, 97, 192, 168, 153, 182, 65, 224, 170, 45, 107, 259, 23, 143, 135, 81, 121, 127, 218, 140, 196, 349, 278, 283, 246, 105, 249, 139, 122, 204, 202, 87, 72, 327, 313, 248, 328, 291, 329, 315, 238, 210, 159, 90, 319, 295, 188, 270, 251, 134, 48, 33, 124, 215, 195, 167, 101, 335, 83, 181, 129, 43, 47, 166, 354, 152, 70, 296, 114, 252, 225, 138, 220, 200, 175, 267, 179, 236, 290, 51, 109, 209, 194, 268, 222, 353, 27, 293, 110, 71, 137, 141, 237, 82, 261, 91, 289, 330, 93, 256, 250, 92, 337, 228, 178, 190, 280, 197, 26, 201, 244, 6, 158, 193, 67, 89, 198, 41, 144, 352, 299, 219, 151, 234, 226, 164, 84, 271, 186, 96, 79, 281, 85, 298, 205, 223, 264, 59, 187, 30, 273, 98, 176, 214, 80, 150, 180, 297, 177, 115, 314, 309, 133, 161, 262, 203, 73, 78, 145, 128, 156, 66, 255, 69, 318, 50, 184, 117, 231, 294, 148, 282, 7, 25, 243, 147, 102, 125, 292, 217, 132, 207, 239, 301, 257, 245, 11, 63, 130, 221, 44, 350, 119, 277, 131, 311, 191, 185, 351, 308, 169, 60, 199, 307, 10, 235, 263, 232, 155, 254, 112, 269, 333, 142, 230, 316, 111, 99, 104, 8, 212, 300, 276, 242, 108, 42, 146, 216, 9, 171];
+var cell  = [177, 87, 297, 98, 186, 209, 283, 155, 121, 122, 101, 207, 134, 165, 178, 105, 48, 148, 227, 350, 235, 224, 203, 174, 248, 236, 152, 67, 136, 282, 30, 264, 259, 112, 130, 272, 298, 261, 334, 229, 6, 167, 176, 255, 28, 231, 116, 146, 65, 85, 243, 43, 352, 230, 46, 197, 117, 249, 333, 150, 192, 44, 223, 71, 125, 307, 88, 208, 184, 318, 245, 7, 79, 128, 68, 140, 210, 187, 329, 164, 157, 252, 97, 147, 289, 92, 273, 330, 191, 132, 158, 33, 220, 160, 52, 124, 212, 171, 66, 242, 294, 53, 49, 309, 232, 319, 73, 108, 27, 205, 288, 168, 9, 149, 268, 47, 83, 310, 204, 196, 290, 274, 221, 217, 292, 244, 151, 80, 238, 239, 31, 32, 81, 199, 211, 253, 119, 114, 109, 281, 141, 8, 287, 312, 180, 228, 179, 311, 26, 103, 51, 353, 317, 175, 332, 269, 12, 280, 256, 250, 293, 182, 200, 296, 313, 69, 61, 222, 131, 331, 77, 137, 24, 50, 59, 278, 270, 166, 194, 99, 183, 127, 348, 64, 201, 45, 202, 153, 135, 173, 257, 84, 145, 301, 129, 63, 42, 291, 62, 10, 162, 193, 133, 328, 263, 188, 91, 89, 86, 82, 185, 206, 90, 271, 156, 181, 161, 234, 267, 72, 218, 237, 100, 314, 300, 142, 351, 327, 315, 213, 195, 102, 120, 254, 276, 169, 216, 225, 107, 106, 78, 60, 198, 126, 111, 233, 226, 93, 246, 159, 251, 241, 11, 337, 335, 41, 219, 295, 144, 96, 275, 23, 336, 104, 214, 115, 189, 354, 170, 154, 110, 316, 260, 143, 29, 172, 279, 262, 70, 308, 138, 258, 299, 215, 349, 240, 190, 277, 123, 25, 118, 163, 139];
 var index = 0;
 var timer = null;
 var running  = true;
 var interval = 5;
 var inverses = [];
 var colors = [['#552222','white'], ['#ff6666','white']];
+
+function eButton (e)
+{
+    var id = e.target.id;
+    var key = document.getElementById (id).innerHTML;
+    var val = document.distributor[key];
+    var tgt = document.getElementById ('info');
+    tgt.value = val;
+}
 
 function eRun (e)
 {
@@ -83,8 +92,72 @@ function loop ()
     state.innerHTML = odd ? 'STRONG' : 'weak';
 }
 
+function info ()
+{
+    document.distributor = {};
+
+    document.distributor['Abstract'   ] = '\
+This model simplifies neurons and muscles.\n\
+It shows a cross-section of 292 muscle fibers in a muscle fiber bundle.\n\
+Muscle fibers are twitch units which generate a shortening force.\n\
+The twitch is transient, and cannot be repeated until after unit recovery.\n\
+A square represents the cut end of a muscle fiber.\n\
+Squares are identified by sequence numbers and center-based coordinates.\n\
+Note the (0,0) coordinates at the center of the muscle.\
+';
+
+    document.distributor['Running'   ] = '\
+Try using the "RUN" button to watch an animation of reliable activations.\n\
+When running, the model shows twitching muscle fibers as light red\n\
+while muscle fibers at rest or recovering are shown in dark red.\n\
+Twitch units run end-to-end and are excited by a single motor neuron.\n\
+Twitch patterns show a repeating weak/STRONG tonus for 1 second each.\
+';
+
+    document.distributor['Axon' ] = '\
+A motor neuron attaches at many points along a single twitch unit.\n\
+A twitch signal is sent to all neuromuscular junctions in a muscle fiber.\n\
+A twitch unit is activated end-to-end with a single signal.\
+';
+
+    document.distributor['Dendrite' ] = '\
+The remote dendrite shape for a motor neuron feeding a muscle fiber\n\
+has a complex shape implementing a sampler of a regular sweeping pattern.\n\
+The dendrite hosts a fixed set of pre-randomized dendritic spines.\n\
+As the sweeping pattern passes across the dendritic spines\n\
+those which sample a boundary in the pattern twitch their muscle fibers.\
+';
+
+    document.distributor['Coincidence' ] = '\
+The remote dendrite for each motor neuron expresses a pattern\n\
+which makes its gradient detectors unique within the sampled pattern.\n\
+It most likely samples the pattern in multiple places and uses the\n\
+coincidence of samples to trigger the pulse that activates a muscle fiber.\
+';
+
+    document.distributor['Discussion' ] = '\
+As long as the pattern delivered is reliable,\n\
+twitch unit duty cycle timing requirements are satisfied.\n\
+This strategy guarantees maximum recovery time for all muscle fibers.\n\
+The illustration below shows this behavior.\n\
+The code driving this image is logically equivalent to\n\
+the proposed pre-randomized sampling of a regular pattern.\
+';
+
+    document.distributor['Conclusions'] = '\
+This simple demonstration illustrates a logical economy\n\
+enabling implementations to ignore parallelism and simply\n\
+act concurrently on all actual delivered pulses,\n\
+whether they are dense or sparse,\n\
+without the burden of unnecessary calculation.\n\
+This is one of the economies expected in vivo.\
+';
+
+}
+
 function main ()
 {
+    info ();
     eRun ();
 }
 
@@ -98,7 +171,18 @@ window.onload = function ()
         <div align="center">
         <h3>Twitch Distributor Visualization</h3>
         <i>Copyright&copy; 2018 Jonathan D. Lettvin, All Rights Reserved.</i>
+        <br /><textarea id="info" rows="7" cols="80">
+        Click the buttons under here to fill this area with information.
+        </textarea><br />
+        <button id="button0" onclick="eButton(event)">Abstract</button>
+        <button id="button1" onclick="eButton(event)">Running</button>
+        <button id="button2" onclick="eButton(event)">Axon</button>
+        <button id="button3" onclick="eButton(event)">Dendrite</button>
+        <button id="button4" onclick="eButton(event)">Coincidence</button>
+        <button id="button5" onclick="eButton(event)">Discussion</button>
+        <button id="button6" onclick="eButton(event)">Conclusions</button>
         <div align="left">
+        <!--
         <p>
         This model simplifies neurons and muscles,
         but not to the point of unnatural.
@@ -149,6 +233,7 @@ window.onload = function ()
         </p><p>
         This is one of the economies expected in vivo.
         </p>
+        -->
         </div>
         <table><caption><h3>Muscle Fiber Bundle Cross Section</h3><h5>(each square is the cut end of a muscle fiber)</h5></caption>
 <td colspan="19"><button id="pause" onclick="eRun(event)">STOP</button> <- Click here to observe active distribution (or pause)</td><tr><td colspan="19">tonus<h2 id="state">None</h2></td>
