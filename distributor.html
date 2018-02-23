@@ -15,12 +15,10 @@ body {
 	line-height: 10px;
         background-color: #ffffcc;
 }
-h3 {
-    font-size: 20px;
-}
+h1 { font-size: 30px; }
+h2 { font-size: 25px; }
+h3 { font-size: 20px; }
 table, th, td {
-	/* border: 1px solid black;
-	border-collapse: collapse; */
 	vertical-align: middle;
 	text-align: center;
 }
@@ -31,13 +29,13 @@ textarea { resize: none; }
 var active = 11;
 var strong = 2;
 var indices = 137;
-var cell  = [47, 22, 120, 37, 61, 112, 30, 62, 64, 74, 136, 56, 113, 95, 153, 49, 57, 81, 150, 140, 134, 53, 131, 164, 20, 161, 36, 76, 82, 99, 108, 43, 133, 44, 75, 52, 135, 7, 23, 71, 8, 68, 107, 33, 128, 94, 15, 93, 163, 90, 63, 118, 31, 34, 58, 109, 101, 50, 88, 114, 151, 73, 111, 19, 92, 69, 54, 123, 17, 110, 29, 106, 121, 149, 32, 115, 27, 21, 127, 132, 77, 87, 45, 28, 72, 85, 59, 6, 126, 139, 42, 122, 89, 78, 55, 66, 98, 86, 18, 5, 67, 60, 137, 104, 105, 4, 80, 65, 40, 162, 141, 79, 84, 124, 146, 125, 91, 160, 152, 16, 138, 97, 100, 116, 35, 83, 96, 147, 102, 70, 46, 119, 41, 103, 48, 145, 148];
+var cell  = [149, 115, 42, 89, 99, 40, 37, 35, 106, 63, 58, 152, 6, 134, 122, 69, 97, 7, 19, 135, 84, 123, 132, 54, 116, 57, 27, 77, 148, 29, 108, 98, 96, 131, 147, 138, 105, 52, 56, 46, 109, 8, 113, 68, 102, 15, 101, 23, 107, 88, 60, 73, 163, 151, 43, 31, 61, 33, 137, 141, 78, 95, 22, 50, 145, 81, 120, 121, 71, 128, 21, 110, 28, 112, 92, 18, 79, 62, 87, 111, 85, 16, 72, 4, 80, 162, 93, 119, 104, 153, 30, 161, 118, 125, 75, 90, 160, 150, 76, 20, 5, 70, 74, 100, 124, 140, 32, 103, 17, 146, 55, 45, 127, 49, 65, 47, 64, 59, 44, 48, 136, 82, 139, 91, 83, 86, 34, 36, 126, 53, 164, 67, 41, 94, 114, 66, 133];
 var index = 0;
 var timer = null;
 var running  = true;
 var interval = 5;
 var inverses = [];
-var colors = [['#552222','white'], ['#ff6666','white']];
+var colors = [['#552222','white'], ['#bb6666','white']];
 
 function eButton (e)
 {
@@ -76,7 +74,7 @@ function makeButtons (names)
     for (name of names)
     {
         var id = 'button' + i++;
-        text += '<button id="' + id + '" onclick="eButton(event)">' +                 name +                 '</button>';
+        text += '<button id="' + id + '" onmouseover="eButton(event)">' +                 name +                 '</button>';
     }
     var element = document.getElementById ('buttons');
     element.innerHTML = text;
@@ -122,8 +120,8 @@ Note the (0,0) coordinates at the center of the muscle.\
 
     document.distributor['Running'   ] = '\
 Try using the "RUN" button to watch an animation of reliable activations.\n\
-When running, the model shows twitching muscle fibers as light red\n\
-while muscle fibers at rest or recovering are shown in dark red.\n\
+When running, the model shows twitching muscle fibers as light brown\n\
+while muscle fibers at rest or recovering are shown in dark brown.\n\
 Twitch units run end-to-end and are excited by a single motor neuron.\n\
 Twitch patterns show a repeating weak/STRONG tonus for 1 second each.\
 ';
@@ -187,14 +185,14 @@ window.onload = function ()
 	</head>
 	<body>
         <div align="center">
-        <h3>Twitch Distributor Visualization</h3>
+        <h1>Twitch Distributor Visualization</h1>
         <i>Copyright&copy; 2018 Jonathan D. Lettvin, All Rights Reserved.</i>
         <br /><span id="buttons"></span>
-        <br /><textarea id="info" rows="7" cols="82" readonly>
-        Click the above buttons to fill this area with information.
+        <br /><textarea id="info" rows="7" cols="84" readonly>
+        Hover over the above buttons to fill this area with information.
         </textarea><br />
         <table><caption align="bottom"><h3>Muscle Fiber Bundle Cross Section</h3></caption>
-<td colspan="13" bgcolor="black"><button id="pause" onclick="eRun(event)">STOP</button> Click here to observe active distribution (or pause)</td><tr><td colspan="13" bgcolor="#333333">tonus<h2 id="state">None</h2></td>
+<td colspan="13" bgcolor="black"><button id="pause" onclick="eRun(event)">STOP</button> Click here to observe active distribution (or pause)</td><tr><td colspan="13" bgcolor="#333333">tonus<h3 id="state">None</h3></td>
 </tr><tr><td></td><td></td><td></td><td></td><td class="i4" style="color:white;" bgcolor="#552222">0<br /><br />(-2,+6)</td><td class="i5" style="color:white;" bgcolor="#552222">1<br /><br />(-1,+6)</td><td class="i6" style="color:white;" bgcolor="#552222">2<br /><br />(+0,+6)</td><td class="i7" style="color:white;" bgcolor="#552222">3<br /><br />(+1,+6)</td><td class="i8" style="color:white;" bgcolor="#552222">4<br /><br />(+2,+6)</td><td></td><td></td><td></td><td></td>
 </tr><tr><td></td><td></td><td class="i15" style="color:white;" bgcolor="#552222">5<br /><br />(-4,+5)</td><td class="i16" style="color:white;" bgcolor="#552222">6<br /><br />(-3,+5)</td><td class="i17" style="color:white;" bgcolor="#552222">7<br /><br />(-2,+5)</td><td class="i18" style="color:white;" bgcolor="#552222">8<br /><br />(-1,+5)</td><td class="i19" style="color:white;" bgcolor="#552222">9<br /><br />(+0,+5)</td><td class="i20" style="color:white;" bgcolor="#552222">10<br /><br />(+1,+5)</td><td class="i21" style="color:white;" bgcolor="#552222">11<br /><br />(+2,+5)</td><td class="i22" style="color:white;" bgcolor="#552222">12<br /><br />(+3,+5)</td><td class="i23" style="color:white;" bgcolor="#552222">13<br /><br />(+4,+5)</td><td></td><td></td>
 </tr><tr><td></td><td class="i27" style="color:white;" bgcolor="#552222">14<br /><br />(-5,+4)</td><td class="i28" style="color:white;" bgcolor="#552222">15<br /><br />(-4,+4)</td><td class="i29" style="color:white;" bgcolor="#552222">16<br /><br />(-3,+4)</td><td class="i30" style="color:white;" bgcolor="#552222">17<br /><br />(-2,+4)</td><td class="i31" style="color:white;" bgcolor="#552222">18<br /><br />(-1,+4)</td><td class="i32" style="color:white;" bgcolor="#552222">19<br /><br />(+0,+4)</td><td class="i33" style="color:white;" bgcolor="#552222">20<br /><br />(+1,+4)</td><td class="i34" style="color:white;" bgcolor="#552222">21<br /><br />(+2,+4)</td><td class="i35" style="color:white;" bgcolor="#552222">22<br /><br />(+3,+4)</td><td class="i36" style="color:white;" bgcolor="#552222">23<br /><br />(+4,+4)</td><td class="i37" style="color:white;" bgcolor="#552222">24<br /><br />(+5,+4)</td><td></td>
