@@ -340,7 +340,7 @@ function main ()
         cell    :   %s,
         colors  :       [['#552222','white'], ['#bb3333','white']],
         delay:  3,
-        interval:       [3, 10, 33, 100, 333],
+        interval:       [3, 10, 33, 100, 333, 1000],
         index   :    0,
         indices :   %d,
         inverses:   [],
