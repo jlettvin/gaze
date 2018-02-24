@@ -28,7 +28,7 @@ def table (radius):
 
     retval += '<td colspan="%d" bgcolor="black">' % (diameter-4)
     retval += '<button id="pause" onclick="eRun(event)">STOP</button>'
-    retval += ' Click here to observe active distribution or '
+    retval += ' Click to observe active distribution or '
     retval += '<button id="reload" onclick="location.reload (true)">' \
             'reload</button>'
     retval += '</td>'
