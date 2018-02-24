@@ -258,7 +258,12 @@ function loop ()
         reColor (classname, 1);
     }
     var state = document.getElementById ('state');
-    state.innerHTML = odd ? 'STRONG' : 'weak';
+    if (document.distributor.strong == 0)
+    {
+        state.innerHTML = 'same';
+    } else {
+        state.innerHTML = odd ? 'STRONG' : 'weak';
+    }
 }
 
 //-------------------------------------------------------------------------------
