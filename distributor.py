@@ -20,7 +20,7 @@ def table (radius):
     retval += '</caption>\n'
 
     retval += '<tr><td colspan="2" bgcolor="#333333" valign="top">'
-    retval += 'interval<br /><br /><br />'
+    retval += 'interval (ms)<br /><br /><br />'
     retval += '<button id="neg" onclick="eSlower (event)">-</button>'
     retval += '<b id="interval"></b>'
     retval += '<button id="pos" onclick="eFaster (event)">+</button>'
