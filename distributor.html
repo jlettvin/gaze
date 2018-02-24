@@ -28,32 +28,41 @@ textarea { resize: none; }
 .button { padding: 5px; }
 </style>
 
-<script type="text/javascript">//<!--
+<script type="text/javascript">
+
+//-------------------------------------------------------------------------------
+function eDelay (direction)
+//-------------------------------------------------------------------------------
+{
+    var interval = document.getElementById ("interval");
+    if (document.distributor.running)
+    {
+        var N = document.distributor.interval.length - 1;
+        if (
+            (direction == -1 && document.distributor.delay > 0) ||
+            (direction == +1 && document.distributor.delay < N) )
+        {
+            document.distributor.delay += direction;
+            clearInterval (document.distributor.timer);
+            document.distributor.timer = setInterval (
+                loop, document.distributor.interval[document.distributor.delay]);
+        }
+    }
+    interval.innerHTML = ' ' +         document.distributor.interval[document.distributor.delay] +         ' ';
+}
 
 //-------------------------------------------------------------------------------
 function eSlower (e)
 //-------------------------------------------------------------------------------
 {
-    if (document.distributor.running) {
-        document.distributor.delay -=             (document.distributor.delay > 0);
-        document.getElementById ("interval").innerHTML = ' ' +             document.distributor.interval[document.distributor.delay] +             ' ';
-        clearInterval (document.distributor.timer);
-        document.distributor.timer = setInterval (
-            loop, document.distributor.interval[document.distributor.delay]);
-    }
+    eDelay (-1);
 }
 
 //-------------------------------------------------------------------------------
 function eFaster (e)
 //-------------------------------------------------------------------------------
 {
-    if (document.distributor.running) {
-        document.distributor.delay +=             (document.distributor.delay < document.distributor.interval.length-1);
-        document.getElementById ("interval").innerHTML = ' ' +             document.distributor.interval[document.distributor.delay] +             ' ';
-        clearInterval (document.distributor.timer);
-        document.distributor.timer = setInterval (
-            loop, document.distributor.interval[document.distributor.delay]);
-    }
+    eDelay (+1);
 }
 
 //-------------------------------------------------------------------------------
@@ -214,7 +223,7 @@ function main ()
 {
     document.distributor = {
         active  :   11,
-        cell    :   [83, 88, 30, 91, 8, 135, 145, 57, 98, 147, 103, 115, 52, 20, 111, 41, 31, 42, 48, 124, 45, 106, 66, 27, 132, 113, 90, 149, 40, 53, 80, 160, 138, 69, 23, 136, 123, 28, 141, 164, 70, 161, 37, 29, 92, 5, 85, 120, 72, 60, 107, 86, 140, 128, 76, 84, 112, 67, 162, 82, 78, 59, 94, 64, 102, 63, 56, 65, 73, 61, 104, 134, 152, 126, 163, 100, 33, 105, 79, 99, 16, 43, 137, 6, 95, 54, 121, 116, 133, 47, 81, 108, 131, 151, 109, 4, 71, 58, 119, 44, 114, 125, 150, 35, 110, 74, 32, 34, 148, 93, 50, 7, 18, 19, 118, 146, 127, 46, 96, 36, 139, 77, 153, 89, 15, 75, 21, 62, 87, 22, 55, 49, 122, 68, 101, 17, 97],
+        cell    :   [61, 91, 53, 132, 121, 81, 22, 116, 75, 41, 87, 28, 122, 71, 80, 138, 47, 34, 36, 103, 139, 58, 16, 23, 82, 152, 120, 153, 140, 145, 76, 113, 69, 32, 30, 109, 44, 79, 162, 108, 150, 21, 105, 33, 5, 96, 49, 101, 151, 97, 110, 62, 89, 52, 63, 94, 77, 123, 106, 31, 114, 4, 50, 19, 100, 67, 15, 45, 163, 90, 147, 55, 124, 7, 149, 160, 128, 127, 64, 135, 17, 59, 126, 133, 88, 102, 83, 134, 66, 40, 57, 146, 65, 161, 60, 86, 131, 37, 29, 107, 35, 78, 137, 27, 74, 148, 46, 48, 43, 18, 93, 111, 84, 92, 73, 8, 54, 20, 98, 164, 85, 72, 56, 136, 70, 125, 95, 6, 104, 118, 42, 119, 115, 112, 99, 141, 68],
         colors  :       [['#552222','white'], ['#bb6666','white']],
         delay:  3,
         interval:       [3, 10, 33, 100, 333],
@@ -238,7 +247,7 @@ window.onload = function ()
     main ();
 }
 
-//--></script>
+</script>
 
 	</head>
 	<body>

@@ -96,38 +96,43 @@ textarea { resize: none; }
 .button { padding: 5px; }
 </style>
 
-<script type="text/javascript">//<!--
+<script type="text/javascript">
+
+//-------------------------------------------------------------------------------
+function eDelay (direction)
+//-------------------------------------------------------------------------------
+{
+    var interval = document.getElementById ("interval");
+    if (document.distributor.running)
+    {
+        var N = document.distributor.interval.length - 1;
+        if (
+            (direction == -1 && document.distributor.delay > 0) ||
+            (direction == +1 && document.distributor.delay < N) )
+        {
+            document.distributor.delay += direction;
+            clearInterval (document.distributor.timer);
+            document.distributor.timer = setInterval (
+                loop, document.distributor.interval[document.distributor.delay]);
+        }
+    }
+    interval.innerHTML = ' ' + \
+        document.distributor.interval[document.distributor.delay] + \
+        ' ';
+}
 
 //-------------------------------------------------------------------------------
 function eSlower (e)
 //-------------------------------------------------------------------------------
 {
-    if (document.distributor.running) {
-        document.distributor.delay -= \
-            (document.distributor.delay > 0);
-        document.getElementById ("interval").innerHTML = ' ' + \
-            document.distributor.interval[document.distributor.delay] + \
-            ' ';
-        clearInterval (document.distributor.timer);
-        document.distributor.timer = setInterval (
-            loop, document.distributor.interval[document.distributor.delay]);
-    }
+    eDelay (-1);
 }
 
 //-------------------------------------------------------------------------------
 function eFaster (e)
 //-------------------------------------------------------------------------------
 {
-    if (document.distributor.running) {
-        document.distributor.delay += \
-            (document.distributor.delay < document.distributor.interval.length-1);
-        document.getElementById ("interval").innerHTML = ' ' + \
-            document.distributor.interval[document.distributor.delay] + \
-            ' ';
-        clearInterval (document.distributor.timer);
-        document.distributor.timer = setInterval (
-            loop, document.distributor.interval[document.distributor.delay]);
-    }
+    eDelay (+1);
 }
 
 //-------------------------------------------------------------------------------
@@ -318,7 +323,7 @@ window.onload = function ()
     main ();
 }
 
-//--></script>
+</script>
 
 	</head>
 	<body>
