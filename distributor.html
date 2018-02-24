@@ -25,10 +25,27 @@ table, th, td {
 }
 td { height: 45px; width: 45px; color: white; }
 textarea { resize: none; }
-.button { padding: 5px; }
+button { padding: 2px; margin: 2px; }
 </style>
 
 <script type="text/javascript">
+
+//-------------------------------------------------------------------------------
+function ePower (direction)
+//-------------------------------------------------------------------------------
+{
+    var strength = document.getElementById ("strength");
+    if (document.distributor.running)
+    {
+        if (
+            (direction == -1 && document.distributor.strong > 0) ||
+            (direction == +1 && document.distributor.strong < 4) )
+        {
+            document.distributor.strong += direction;
+        }
+    }
+    strength.innerHTML = ' ' + document.distributor.strong + ' ';
+}
 
 //-------------------------------------------------------------------------------
 function eDelay (direction)
@@ -49,6 +66,20 @@ function eDelay (direction)
         }
     }
     interval.innerHTML = ' ' +         document.distributor.interval[document.distributor.delay] +         ' ';
+}
+
+//-------------------------------------------------------------------------------
+function eSofter (e)
+//-------------------------------------------------------------------------------
+{
+    ePower (-1);
+}
+
+//-------------------------------------------------------------------------------
+function eHarder (e)
+//-------------------------------------------------------------------------------
+{
+    ePower (+1);
 }
 
 //-------------------------------------------------------------------------------
@@ -89,7 +120,7 @@ function eRun (e)
         document.distributor.timer = null;
     }
     var button = document.getElementById ("pause");
-    button.innerHTML = document.distributor.running ? "BLOCK" : "START";
+    button.innerHTML = document.distributor.running ? "PAUSE" : "START";
 }
 
 //-------------------------------------------------------------------------------
@@ -223,7 +254,7 @@ function main ()
 {
     document.distributor = {
         active  :   11,
-        cell    :   [102, 36, 35, 95, 82, 40, 108, 103, 43, 107, 126, 121, 17, 53, 60, 146, 113, 69, 131, 135, 132, 6, 68, 111, 73, 86, 21, 61, 30, 148, 160, 92, 152, 55, 163, 88, 34, 94, 66, 150, 140, 137, 90, 42, 5, 96, 29, 4, 31, 64, 114, 128, 138, 37, 125, 162, 151, 112, 7, 8, 59, 70, 106, 77, 74, 120, 136, 81, 124, 109, 15, 54, 27, 57, 105, 161, 80, 119, 83, 58, 56, 45, 44, 101, 23, 33, 98, 123, 79, 145, 115, 149, 76, 72, 93, 91, 67, 127, 32, 62, 75, 63, 16, 87, 49, 71, 104, 110, 41, 116, 97, 85, 20, 18, 52, 147, 28, 99, 164, 65, 141, 47, 133, 118, 84, 19, 46, 139, 78, 22, 89, 134, 153, 100, 122, 50, 48],
+        cell    :   [70, 94, 107, 78, 45, 35, 80, 50, 95, 27, 105, 52, 21, 131, 116, 101, 136, 145, 49, 106, 56, 126, 139, 43, 132, 127, 20, 146, 82, 74, 58, 22, 71, 41, 90, 140, 103, 68, 111, 47, 6, 104, 76, 42, 54, 150, 151, 163, 30, 66, 161, 75, 122, 119, 65, 98, 137, 152, 115, 15, 133, 62, 59, 91, 84, 123, 60, 36, 93, 108, 114, 89, 128, 153, 73, 102, 72, 63, 88, 138, 147, 81, 31, 79, 99, 86, 134, 69, 121, 110, 148, 120, 61, 100, 29, 97, 87, 118, 124, 44, 8, 33, 18, 135, 64, 23, 5, 96, 55, 160, 92, 83, 48, 112, 162, 125, 141, 53, 113, 67, 149, 16, 46, 109, 7, 37, 28, 164, 85, 40, 77, 34, 17, 32, 57, 4, 19],
         colors  :       [['#552222','white'], ['#bb3333','white']],
         delay:  3,
         interval:       [3, 10, 33, 100, 333],
@@ -237,6 +268,7 @@ function main ()
 
     info ();
     eSlower ();
+    eSofter ();
     eRun ();
 }
 
@@ -259,7 +291,7 @@ window.onload = function ()
         Hover over the above buttons to fill this area with information.
         </textarea><br />
         <table><caption align="bottom"><h3>Muscle Fiber Bundle Cross Section</h3></caption>
-<tr><td colspan="2" bgcolor="#333333" valign="top">interval (ms)<br /><br /><br /><button id="neg" onclick="eSlower (event)">-</button><b id="interval"></b><button id="pos" onclick="eFaster (event)">+</button></td><td colspan="9" bgcolor="black"><button id="pause" onclick="eRun(event)">STOP</button> Click to observe active distribution or <button id="reload" onclick="location.reload (true)">reload</button></td><td colspan="2" bgcolor="#333333">tonus<h3 id="state">None</h3></td>
+<tr><td colspan="7" bgcolor="black"><button id="pause" onclick="eRun(event)">STOP</button> animation, or <button id="reload" onclick="location.reload (true)">reload</button></td><td colspan="2" bgcolor="#333333" valign="top">interval (ms)<br /><br /><br /><button id="neg" onclick="eSlower (event)">-</button><b id="interval"></b><button id="pos" onclick="eFaster (event)">+</button></td><td colspan="2" bgcolor="#333333" valign="top">strength<br /><br /><br /><button id="pown" onclick="eSofter (event)">-</button><b id="strength">2</b><button id="powp" onclick="eHarder (event)">+</button></td><td colspan="2" bgcolor="#333333">tonus<h3 id="state">None</h3></td>
 </tr><tr><td bgcolor="white"></td><td bgcolor="white"></td><td bgcolor="white"></td><td bgcolor="white"></td><td class="i4" style="color:white;" bgcolor="#552222">0<br /><br />(-2,+6)</td><td class="i5" style="color:white;" bgcolor="#552222">1<br /><br />(-1,+6)</td><td class="i6" style="color:white;" bgcolor="#552222">2<br /><br />(+0,+6)</td><td class="i7" style="color:white;" bgcolor="#552222">3<br /><br />(+1,+6)</td><td class="i8" style="color:white;" bgcolor="#552222">4<br /><br />(+2,+6)</td><td bgcolor="white"></td><td bgcolor="white"></td><td bgcolor="white"></td><td bgcolor="white"></td>
 </tr><tr><td bgcolor="white"></td><td bgcolor="white"></td><td class="i15" style="color:white;" bgcolor="#552222">5<br /><br />(-4,+5)</td><td class="i16" style="color:white;" bgcolor="#552222">6<br /><br />(-3,+5)</td><td class="i17" style="color:white;" bgcolor="#552222">7<br /><br />(-2,+5)</td><td class="i18" style="color:white;" bgcolor="#552222">8<br /><br />(-1,+5)</td><td class="i19" style="color:white;" bgcolor="#552222">9<br /><br />(+0,+5)</td><td class="i20" style="color:white;" bgcolor="#552222">10<br /><br />(+1,+5)</td><td class="i21" style="color:white;" bgcolor="#552222">11<br /><br />(+2,+5)</td><td class="i22" style="color:white;" bgcolor="#552222">12<br /><br />(+3,+5)</td><td class="i23" style="color:white;" bgcolor="#552222">13<br /><br />(+4,+5)</td><td bgcolor="white"></td><td bgcolor="white"></td>
 </tr><tr><td bgcolor="white"></td><td class="i27" style="color:white;" bgcolor="#552222">14<br /><br />(-5,+4)</td><td class="i28" style="color:white;" bgcolor="#552222">15<br /><br />(-4,+4)</td><td class="i29" style="color:white;" bgcolor="#552222">16<br /><br />(-3,+4)</td><td class="i30" style="color:white;" bgcolor="#552222">17<br /><br />(-2,+4)</td><td class="i31" style="color:white;" bgcolor="#552222">18<br /><br />(-1,+4)</td><td class="i32" style="color:white;" bgcolor="#552222">19<br /><br />(+0,+4)</td><td class="i33" style="color:white;" bgcolor="#552222">20<br /><br />(+1,+4)</td><td class="i34" style="color:white;" bgcolor="#552222">21<br /><br />(+2,+4)</td><td class="i35" style="color:white;" bgcolor="#552222">22<br /><br />(+3,+4)</td><td class="i36" style="color:white;" bgcolor="#552222">23<br /><br />(+4,+4)</td><td class="i37" style="color:white;" bgcolor="#552222">24<br /><br />(+5,+4)</td><td bgcolor="white"></td>

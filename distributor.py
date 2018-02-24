@@ -17,20 +17,27 @@ def table (radius):
     retval = '<table>'
     retval += '<caption align="bottom">'
     retval += '<h3>Muscle Fiber Bundle Cross Section</h3>'
-    retval += '</caption>\n'
+    retval += '</caption>\n<tr>'
 
-    retval += '<tr><td colspan="2" bgcolor="#333333" valign="top">'
+    retval += '<td colspan="%d" bgcolor="black">' % (diameter-6)
+    retval += '<button id="pause" onclick="eRun(event)">STOP</button>'
+    retval += ' animation, or '
+    retval += '<button id="reload" onclick="location.reload (true)">' \
+            'reload</button>'
+    retval += '</td>'
+
+    retval += '<td colspan="2" bgcolor="#333333" valign="top">'
     retval += 'interval (ms)<br /><br /><br />'
     retval += '<button id="neg" onclick="eSlower (event)">-</button>'
     retval += '<b id="interval"></b>'
     retval += '<button id="pos" onclick="eFaster (event)">+</button>'
     retval += '</td>'
 
-    retval += '<td colspan="%d" bgcolor="black">' % (diameter-4)
-    retval += '<button id="pause" onclick="eRun(event)">STOP</button>'
-    retval += ' Click to observe active distribution or '
-    retval += '<button id="reload" onclick="location.reload (true)">' \
-            'reload</button>'
+    retval += '<td colspan="2" bgcolor="#333333" valign="top">'
+    retval += 'strength<br /><br /><br />'
+    retval += '<button id="pown" onclick="eSofter (event)">-</button>'
+    retval += '<b id="strength">2</b>'
+    retval += '<button id="powp" onclick="eHarder (event)">+</button>'
     retval += '</td>'
 
     retval += '<td colspan="2" bgcolor="#333333">'
@@ -93,10 +100,27 @@ table, th, td {
 }
 td { height: 45px; width: 45px; color: white; }
 textarea { resize: none; }
-.button { padding: 5px; }
+button { padding: 2px; margin: 2px; }
 </style>
 
 <script type="text/javascript">
+
+//-------------------------------------------------------------------------------
+function ePower (direction)
+//-------------------------------------------------------------------------------
+{
+    var strength = document.getElementById ("strength");
+    if (document.distributor.running)
+    {
+        if (
+            (direction == -1 && document.distributor.strong > 0) ||
+            (direction == +1 && document.distributor.strong < 4) )
+        {
+            document.distributor.strong += direction;
+        }
+    }
+    strength.innerHTML = ' ' + document.distributor.strong + ' ';
+}
 
 //-------------------------------------------------------------------------------
 function eDelay (direction)
@@ -119,6 +143,20 @@ function eDelay (direction)
     interval.innerHTML = ' ' + \
         document.distributor.interval[document.distributor.delay] + \
         ' ';
+}
+
+//-------------------------------------------------------------------------------
+function eSofter (e)
+//-------------------------------------------------------------------------------
+{
+    ePower (-1);
+}
+
+//-------------------------------------------------------------------------------
+function eHarder (e)
+//-------------------------------------------------------------------------------
+{
+    ePower (+1);
 }
 
 //-------------------------------------------------------------------------------
@@ -159,7 +197,7 @@ function eRun (e)
         document.distributor.timer = null;
     }
     var button = document.getElementById ("pause");
-    button.innerHTML = document.distributor.running ? "BLOCK" : "START";
+    button.innerHTML = document.distributor.running ? "PAUSE" : "START";
 }
 
 //-------------------------------------------------------------------------------
@@ -313,6 +351,7 @@ function main ()
 
     info ();
     eSlower ();
+    eSofter ();
     eRun ();
 }
 
