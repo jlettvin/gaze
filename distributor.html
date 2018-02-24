@@ -3,6 +3,7 @@
 <html>
 	<head>
         <meta charset="UTF-8">
+
 <style>
 body {
 	font-family:
@@ -24,40 +25,69 @@ table, th, td {
 }
 td { height: 45px; width: 45px; color: white; }
 textarea { resize: none; }
+.button { padding: 5px; }
 </style>
-<script type="text/javascript">
-var active = 11;
-var strong = 2;
-var indices = 137;
-var cell  = [109, 55, 37, 77, 106, 78, 107, 58, 20, 19, 66, 41, 30, 104, 86, 105, 27, 57, 153, 82, 152, 50, 64, 131, 76, 164, 103, 88, 31, 99, 90, 49, 45, 113, 52, 138, 46, 7, 91, 33, 22, 65, 118, 162, 94, 124, 70, 34, 69, 134, 98, 112, 150, 61, 127, 73, 100, 108, 23, 126, 15, 135, 16, 18, 6, 163, 17, 116, 137, 102, 63, 149, 87, 125, 136, 62, 43, 83, 119, 48, 128, 121, 96, 145, 59, 47, 89, 5, 115, 151, 28, 110, 72, 68, 71, 4, 132, 21, 35, 75, 29, 85, 92, 79, 141, 139, 97, 133, 56, 53, 67, 111, 122, 42, 148, 123, 120, 147, 114, 81, 146, 36, 8, 101, 54, 84, 74, 32, 60, 80, 40, 93, 160, 95, 140, 44, 161];
-var index = 0;
-var timer = null;
-var running  = true;
-var interval = 5;
-var inverses = [];
-var colors = [['#552222','white'], ['#bb6666','white']];
 
+<script type="text/javascript">//<!--
+
+//-------------------------------------------------------------------------------
+function eSlower (e)
+//-------------------------------------------------------------------------------
+{
+    if (document.distributor.running) {
+        document.distributor.delay -=             (document.distributor.delay > 0);
+        document.getElementById ("interval").innerHTML = ' ' +             document.distributor.interval[document.distributor.delay] +             ' ';
+        clearInterval (document.distributor.timer);
+        document.distributor.timer = setInterval (
+            loop, document.distributor.interval[document.distributor.delay]);
+    }
+}
+
+//-------------------------------------------------------------------------------
+function eFaster (e)
+//-------------------------------------------------------------------------------
+{
+    if (document.distributor.running) {
+        document.distributor.delay +=             (document.distributor.delay < document.distributor.interval.length-1);
+        document.getElementById ("interval").innerHTML = ' ' +             document.distributor.interval[document.distributor.delay] +             ' ';
+        clearInterval (document.distributor.timer);
+        document.distributor.timer = setInterval (
+            loop, document.distributor.interval[document.distributor.delay]);
+    }
+}
+
+//-------------------------------------------------------------------------------
 function eButton (e)
+//-------------------------------------------------------------------------------
 {
     var id = e.target.id;
     var key = document.getElementById (id).innerHTML;
-    var val = document.distributor[key];
+    var val = document.distributor.info[key];
     var tgt = document.getElementById ('info');
     tgt.value = val;
 }
 
+//-------------------------------------------------------------------------------
 function eRun (e)
+//-------------------------------------------------------------------------------
 {
-    running = !running;
-    if (running) { timer = setInterval (loop, interval); }
-    else         { clearInterval (timer); timer = null;  }
+    document.distributor.running = !document.distributor.running;
+    if (document.distributor.running) {
+        document.distributor.timer = setInterval (
+            loop, document.distributor.interval[document.distributor.delay]);
+    } else {
+        clearInterval (document.distributor.timer);
+        document.distributor.timer = null;
+    }
     var button = document.getElementById ("pause");
-    button.innerHTML = running ? "BLOCK" : "START";
+    button.innerHTML = document.distributor.running ? "BLOCK" : "START";
 }
 
+//-------------------------------------------------------------------------------
 function reColor (className,scheme)
+//-------------------------------------------------------------------------------
 {
-    var colorPair = colors[scheme];
+    var colorPair = document.distributor.colors[scheme];
     //console.log (scheme, className);
     var elements = document.getElementsByClassName (className);
     for (element of elements)
@@ -67,7 +97,9 @@ function reColor (className,scheme)
     }
 }
 
+//-------------------------------------------------------------------------------
 function makeButtons (names)
+//-------------------------------------------------------------------------------
 {
     var text = '';
     var i = 0;
@@ -80,35 +112,39 @@ function makeButtons (names)
     element.innerHTML = text;
 }
 
+//-------------------------------------------------------------------------------
 function loop ()
+//-------------------------------------------------------------------------------
 {
-    //console.log (inverses);
-    for (classname of inverses)
+    //console.log (document.distributor.inverses);
+    for (classname of document.distributor.inverses)
     {
         reColor (classname, 0);
     }
-    inverses = [];
+    document.distributor.inverses = [];
 
     var date = new Date ();
     var odd = (date.getSeconds () & 1);
-    var strength = 1 + strong * odd;
-    for (var i=0, I=active * strength; i<I; ++i)
+    var strength = 1 + document.distributor.strong * odd;
+    for (var i=0, I=document.distributor.active * strength; i<I; ++i)
     {
-        index = (index + 1) % indices;
-        var classname = 'i' + cell[index];
+        document.distributor.index = (document.distributor.index + 1) %                 document.distributor.indices;
+        var classname = 'i' + document.distributor.cell[document.distributor.index];
 
-        inverses.push (classname);
+        document.distributor.inverses.push (classname);
         reColor (classname, 1);
     }
     var state = document.getElementById ('state');
     state.innerHTML = odd ? 'STRONG' : 'weak';
 }
 
+//-------------------------------------------------------------------------------
 function info ()
+//-------------------------------------------------------------------------------
 {
-    document.distributor = {};
+    document.distributor.info= {};
 
-    document.distributor['Abstract'   ] = '\
+    document.distributor.info['Abstract'   ] = '\
 This model simplifies neurons and muscles.\n\
 It shows a cross-section of many muscle fibers in a muscle fiber bundle.\n\
 Muscle fibers are twitch units which generate a shortening force.\n\
@@ -118,7 +154,7 @@ Squares are identified by sequence numbers and center-based coordinates.\n\
 Note the (0,0) coordinates at the center of the muscle.\
 ';
 
-    document.distributor['Running'   ] = '\
+    document.distributor.info['Running'   ] = '\
 Try using the "RUN" button to watch an animation of reliable activations.\n\
 When running, the model shows twitching muscle fibers as light brown\n\
 while muscle fibers at rest or recovering are shown in dark brown.\n\
@@ -126,13 +162,13 @@ Twitch units run end-to-end and are excited by a single motor neuron.\n\
 Twitch patterns show a repeating weak/STRONG tonus for 1 second each.\
 ';
 
-    document.distributor['Axon' ] = '\
+    document.distributor.info['Axon' ] = '\
 A motor neuron attaches at many points along a single twitch unit.\n\
 A twitch signal is sent to all neuromuscular junctions in a muscle fiber.\n\
 A twitch unit is activated end-to-end with a single signal.\
 ';
 
-    document.distributor['Dendrite' ] = '\
+    document.distributor.info['Dendrite' ] = '\
 The remote dendrite shape for a motor neuron feeding a muscle fiber\n\
 has a complex shape implementing a sampler of a regular sweeping pattern.\n\
 The dendrite hosts a fixed set of pre-randomized dendritic spines.\n\
@@ -140,14 +176,14 @@ As the sweeping pattern passes across the dendritic spines\n\
 those which sample a boundary in the pattern twitch their muscle fibers.\
 ';
 
-    document.distributor['Coincidence' ] = '\
+    document.distributor.info['Coincidence' ] = '\
 The remote dendrite for each motor neuron expresses a pattern\n\
 which makes its gradient detectors unique within the sampled pattern.\n\
 It most likely samples the pattern in multiple places and uses the\n\
 coincidence of samples to trigger the pulse that activates a muscle fiber.\
 ';
 
-    document.distributor['Discussion' ] = '\
+    document.distributor.info['Discussion' ] = '\
 As long as the pattern delivered is reliable,\n\
 twitch unit duty cycle timing requirements are satisfied.\n\
 This strategy guarantees maximum recovery time for all muscle fibers.\n\
@@ -157,7 +193,7 @@ the proposed pre-randomized sampling of a regular pattern.\n\
 Twitch is "all or none": tonus measures average twitches per unit time.\
 ';
 
-    document.distributor['Conclusions'] = '\
+    document.distributor.info['Conclusions'] = '\
 This simple demonstration illustrates a logical economy\n\
 enabling implementations to ignore parallelism and simply\n\
 act concurrently on all actual delivered pulses,\n\
@@ -167,22 +203,43 @@ This is one of the economies expected in vivo.\
 ';
 
     var keys = [];
-    for (key in document.distributor) keys.push (key);
+    for (key in document.distributor.info) keys.push (key);
     makeButtons (keys);
 
 }
 
+//-------------------------------------------------------------------------------
 function main ()
+//-------------------------------------------------------------------------------
 {
+    document.distributor = {
+        active  :   11,
+        cell    :   [147, 91, 60, 45, 6, 16, 22, 36, 127, 73, 88, 19, 112, 148, 65, 100, 76, 98, 105, 163, 4, 102, 115, 164, 81, 107, 37, 162, 161, 32, 92, 15, 78, 69, 53, 40, 43, 136, 123, 44, 110, 109, 145, 122, 90, 34, 17, 58, 79, 121, 128, 67, 124, 118, 106, 152, 135, 5, 99, 89, 137, 83, 120, 97, 125, 35, 111, 119, 103, 21, 7, 31, 29, 151, 149, 66, 141, 18, 72, 139, 138, 33, 114, 153, 80, 95, 62, 68, 132, 52, 64, 74, 160, 28, 108, 54, 87, 8, 96, 61, 55, 86, 71, 42, 75, 23, 49, 134, 47, 94, 116, 101, 41, 85, 82, 27, 146, 57, 30, 126, 77, 150, 70, 133, 56, 59, 93, 131, 48, 63, 84, 46, 113, 20, 140, 50, 104],
+        colors  :       [['#552222','white'], ['#bb6666','white']],
+        delay:  3,
+        interval:       [3, 10, 33, 100, 333],
+        index   :    0,
+        indices :   137,
+        inverses:   [],
+        running : true,
+        strong  :    2,
+        timer   : null,
+    };
+
     info ();
+    eSlower ();
     eRun ();
 }
 
+//-------------------------------------------------------------------------------
 window.onload = function ()
+//-------------------------------------------------------------------------------
 {
     main ();
 }
-</script>
+
+//--></script>
+
 	</head>
 	<body>
         <div align="center">
@@ -193,7 +250,7 @@ window.onload = function ()
         Hover over the above buttons to fill this area with information.
         </textarea><br />
         <table><caption align="bottom"><h3>Muscle Fiber Bundle Cross Section</h3></caption>
-<td colspan="11" bgcolor="black"><button id="pause" onclick="eRun(event)">STOP</button> Click here to observe active distribution or <button id="reload" onclick="location.reload (true)">reload</button></td><td colspan="2" bgcolor="#333333">tonus<h3 id="state">None</h3></td>
+<tr><td colspan="2" bgcolor="#333333" valign="top">interval<br /><br /><br /><button id="neg" onclick="eSlower (event)">-</button><b id="interval"></b><button id="pos" onclick="eFaster (event)">+</button></td><td colspan="9" bgcolor="black"><button id="pause" onclick="eRun(event)">STOP</button> Click here to observe active distribution or <button id="reload" onclick="location.reload (true)">reload</button></td><td colspan="2" bgcolor="#333333">tonus<h3 id="state">None</h3></td>
 </tr><tr><td bgcolor="white"></td><td bgcolor="white"></td><td bgcolor="white"></td><td bgcolor="white"></td><td class="i4" style="color:white;" bgcolor="#552222">0<br /><br />(-2,+6)</td><td class="i5" style="color:white;" bgcolor="#552222">1<br /><br />(-1,+6)</td><td class="i6" style="color:white;" bgcolor="#552222">2<br /><br />(+0,+6)</td><td class="i7" style="color:white;" bgcolor="#552222">3<br /><br />(+1,+6)</td><td class="i8" style="color:white;" bgcolor="#552222">4<br /><br />(+2,+6)</td><td bgcolor="white"></td><td bgcolor="white"></td><td bgcolor="white"></td><td bgcolor="white"></td>
 </tr><tr><td bgcolor="white"></td><td bgcolor="white"></td><td class="i15" style="color:white;" bgcolor="#552222">5<br /><br />(-4,+5)</td><td class="i16" style="color:white;" bgcolor="#552222">6<br /><br />(-3,+5)</td><td class="i17" style="color:white;" bgcolor="#552222">7<br /><br />(-2,+5)</td><td class="i18" style="color:white;" bgcolor="#552222">8<br /><br />(-1,+5)</td><td class="i19" style="color:white;" bgcolor="#552222">9<br /><br />(+0,+5)</td><td class="i20" style="color:white;" bgcolor="#552222">10<br /><br />(+1,+5)</td><td class="i21" style="color:white;" bgcolor="#552222">11<br /><br />(+2,+5)</td><td class="i22" style="color:white;" bgcolor="#552222">12<br /><br />(+3,+5)</td><td class="i23" style="color:white;" bgcolor="#552222">13<br /><br />(+4,+5)</td><td bgcolor="white"></td><td bgcolor="white"></td>
 </tr><tr><td bgcolor="white"></td><td class="i27" style="color:white;" bgcolor="#552222">14<br /><br />(-5,+4)</td><td class="i28" style="color:white;" bgcolor="#552222">15<br /><br />(-4,+4)</td><td class="i29" style="color:white;" bgcolor="#552222">16<br /><br />(-3,+4)</td><td class="i30" style="color:white;" bgcolor="#552222">17<br /><br />(-2,+4)</td><td class="i31" style="color:white;" bgcolor="#552222">18<br /><br />(-1,+4)</td><td class="i32" style="color:white;" bgcolor="#552222">19<br /><br />(+0,+4)</td><td class="i33" style="color:white;" bgcolor="#552222">20<br /><br />(+1,+4)</td><td class="i34" style="color:white;" bgcolor="#552222">21<br /><br />(+2,+4)</td><td class="i35" style="color:white;" bgcolor="#552222">22<br /><br />(+3,+4)</td><td class="i36" style="color:white;" bgcolor="#552222">23<br /><br />(+4,+4)</td><td class="i37" style="color:white;" bgcolor="#552222">24<br /><br />(+5,+4)</td><td bgcolor="white"></td>
