@@ -105,6 +105,19 @@ button { padding: 2px; margin: 2px; }
 
 <script type="text/javascript">
 
+//------------------------------------------------------------------------------
+// PHP style HEREDOC
+var HERE = function (f)
+//------------------------------------------------------------------------------
+{
+	return f.
+		toString().
+		split('\\n').
+		slice(1,-1).
+		join('\\n').
+		normalize('NFC');
+}; // HERE
+
 //-------------------------------------------------------------------------------
 function ePower (direction)
 //-------------------------------------------------------------------------------
@@ -270,68 +283,72 @@ function loop ()
 function info ()
 //-------------------------------------------------------------------------------
 {
-    document.distributor.info= {};
+    var info = document.distributor.info= {};
 
-    document.distributor.info['Abstract'   ] = '\\
-This model simplifies neurons and muscles.\\n\\
-It shows a cross-section of many muscle fibers in a muscle fiber bundle.\\n\\
-Muscle fibers are twitch units which generate a shortening force.\\n\\
-The twitch is transient, and cannot be repeated until after unit recovery.\\n\\
-A square represents the cut end of a muscle fiber.\\n\\
-Squares are identified by sequence numbers and center-based coordinates.\\n\\
-Note the (0,0) coordinates at the center of the muscle.\\
-';
+    info['Abstract'] = HERE(function () {/*
+   A muscle fiber bundle model is shown in cross section (each fiber a square).
+A muscle fiber is a twitch unit which generates a shortening force.
+A muscle fiber runs end-to-end and is excited by a single motor neuron.
+After twitching a fiber needs time to recover before the next twitch.
+   This model shows that the time between fiber activations can be maximized
+while activations are uniformly distributed within the bundle.
+    */});
 
-    document.distributor.info['Running'   ] = '\\
-Try using the "RUN" button to watch an animation of reliable activations.\\n\\
-When running, the model shows twitching muscle fibers as red\\n\\
-while muscle fibers at rest or recovering are shown in brown.\\n\\
-Twitch units run end-to-end and are excited by a single motor neuron.\\n\\
-Twitch patterns show a repeating weak/STRONG tonus for 1 second each.\\
-';
 
-    document.distributor.info['Axon' ] = '\\
-A motor neuron attaches at many points along a single twitch unit.\\n\\
-A twitch signal is sent to all neuromuscular junctions in a muscle fiber.\\n\\
-A twitch unit is activated end-to-end with a single signal.\\
-';
+    info['Running'] = HERE(function () {/*
+   START/PAUSE animates the model.  Buttons control the interval and strength 
+Hovering over buttons above the info box causes text like this to be shown.
+   When running, the model shows twitching/resting muscle fibers as red/brown.
+Twitch patterns show a repeating weak/STRONG tonus for 1 second each.
+   Squares are identified by sequence numbers and center-based coordinates.
+Note the (0,0) coordinates at the center of the bundle.
+    */});
 
-    document.distributor.info['Dendrite' ] = '\\
-The remote dendrite shape for a motor neuron feeding a muscle fiber\\n\\
-has a complex shape implementing a sampler of a regular sweeping pattern.\\n\\
-The dendrite hosts a fixed set of pre-randomized dendritic spines.\\n\\
-As the sweeping pattern passes across the dendritic spines\\n\\
-those which sample a boundary in the pattern twitch their muscle fibers.\\
-';
+    info['Axon'] = HERE(function () {/*
+   A motor neuron attaches at many points along a single twitch unit.
+A twitch signal is sent to all neuromuscular junctions in a muscle fiber.
+A twitch unit is activated end-to-end with a single signal.
+The entire length of the twitch unit contracts at the same time.
+Motor neuron axon terminal arbor shapes guarantee simultaneous activation.
+    */});
 
-    document.distributor.info['Coincidence' ] = '\\
-The remote dendrite for each motor neuron expresses a pattern\\n\\
-which makes its gradient detectors unique within the sampled pattern.\\n\\
-It most likely samples the pattern in multiple places and uses the\\n\\
-coincidence of samples to trigger the pulse that activates a muscle fiber.\\
-';
+    info['Dendrite'] = HERE(function () {/*
+   The remote dendrite shape for a motor neuron feeding a muscle fiber
+is shaped to sample passing gradients in a transient sweeping pattern.
+Each motor neuron dendrite is shaped to detect gradients ignored by others.
+   The dendrite hosts a fixed set of pre-randomized dendritic spines.
+As the sweeping pattern passes across the dendritic spines
+those which sample a boundary in the pattern twitch their muscle fibers.
+    */});
 
-    document.distributor.info['Discussion' ] = '\\
-As long as the pattern delivered is reliable,\\n\\
-twitch unit duty cycle timing requirements are satisfied.\\n\\
-This strategy guarantees maximum recovery time for all muscle fibers.\\n\\
-The illustration below shows this behavior.\\n\\
-The code driving this image is logically equivalent to\\n\\
-the proposed pre-randomized sampling of a regular pattern.\\n\\
-Twitch is "all or none": tonus measures average twitches per unit time.\\
-';
+    info['Coincidences'] = HERE(function () {/*
+   The remote dendrite for each motor neuron expresses a pattern
+which makes its gradient detectors unique within sampled patterns.
+It most likely samples the pattern in multiple places and uses
+coincidence of samples to trigger the pulse that activates a muscle fiber.
+    */});
 
-    document.distributor.info['Conclusions'] = '\\
-This simple demonstration illustrates a logical economy\\n\\
-enabling implementations to ignore parallelism and simply\\n\\
-act concurrently on all actual delivered pulses,\\n\\
-whether they are dense or sparse,\\n\\
-without the burden of unnecessary calculation.\\n\\
-This is one of the economies expected in vivo.\\
-';
+    info['Discussion'] = HERE(function () {/*
+   As long as the pattern delivered is reliable,
+twitch unit duty cycle timing requirements are satisfied.
+This strategy guarantees maximum recovery time for all muscle fibers.
+   The animated model below illustrates this behavior.
+The code driving this image is logically equivalent to
+the proposed pre-randomized sampling of a regular pattern.
+   Twitch is "all or none": tonus measures average twitches per unit time.
+    */});
+
+    info['Conclusions'] = HERE(function () {/*
+   This simple demonstration illustrates a logical economy
+enabling implementations to ignore parallelism and simply
+act concurrently on all actual delivered pulses,
+whether they are dense or sparse,
+without the burden of unnecessary calculation.
+   This is one of the economies expected in vivo.
+    */});
 
     var keys = [];
-    for (key in document.distributor.info) keys.push (key);
+    for (key in info) keys.push (key);
     makeButtons (keys);
 
 }
