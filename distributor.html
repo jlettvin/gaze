@@ -165,8 +165,8 @@ Note the (0,0) coordinates at the center of the muscle.\
 
     document.distributor.info['Running'   ] = '\
 Try using the "RUN" button to watch an animation of reliable activations.\n\
-When running, the model shows twitching muscle fibers as light brown\n\
-while muscle fibers at rest or recovering are shown in dark brown.\n\
+When running, the model shows twitching muscle fibers as red\n\
+while muscle fibers at rest or recovering are shown in brown.\n\
 Twitch units run end-to-end and are excited by a single motor neuron.\n\
 Twitch patterns show a repeating weak/STRONG tonus for 1 second each.\
 ';
@@ -223,8 +223,8 @@ function main ()
 {
     document.distributor = {
         active  :   11,
-        cell    :   [61, 91, 53, 132, 121, 81, 22, 116, 75, 41, 87, 28, 122, 71, 80, 138, 47, 34, 36, 103, 139, 58, 16, 23, 82, 152, 120, 153, 140, 145, 76, 113, 69, 32, 30, 109, 44, 79, 162, 108, 150, 21, 105, 33, 5, 96, 49, 101, 151, 97, 110, 62, 89, 52, 63, 94, 77, 123, 106, 31, 114, 4, 50, 19, 100, 67, 15, 45, 163, 90, 147, 55, 124, 7, 149, 160, 128, 127, 64, 135, 17, 59, 126, 133, 88, 102, 83, 134, 66, 40, 57, 146, 65, 161, 60, 86, 131, 37, 29, 107, 35, 78, 137, 27, 74, 148, 46, 48, 43, 18, 93, 111, 84, 92, 73, 8, 54, 20, 98, 164, 85, 72, 56, 136, 70, 125, 95, 6, 104, 118, 42, 119, 115, 112, 99, 141, 68],
-        colors  :       [['#552222','white'], ['#bb6666','white']],
+        cell    :   [102, 36, 35, 95, 82, 40, 108, 103, 43, 107, 126, 121, 17, 53, 60, 146, 113, 69, 131, 135, 132, 6, 68, 111, 73, 86, 21, 61, 30, 148, 160, 92, 152, 55, 163, 88, 34, 94, 66, 150, 140, 137, 90, 42, 5, 96, 29, 4, 31, 64, 114, 128, 138, 37, 125, 162, 151, 112, 7, 8, 59, 70, 106, 77, 74, 120, 136, 81, 124, 109, 15, 54, 27, 57, 105, 161, 80, 119, 83, 58, 56, 45, 44, 101, 23, 33, 98, 123, 79, 145, 115, 149, 76, 72, 93, 91, 67, 127, 32, 62, 75, 63, 16, 87, 49, 71, 104, 110, 41, 116, 97, 85, 20, 18, 52, 147, 28, 99, 164, 65, 141, 47, 133, 118, 84, 19, 46, 139, 78, 22, 89, 134, 153, 100, 122, 50, 48],
+        colors  :       [['#552222','white'], ['#bb3333','white']],
         delay:  3,
         interval:       [3, 10, 33, 100, 333],
         index   :    0,

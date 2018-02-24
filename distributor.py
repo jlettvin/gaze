@@ -241,8 +241,8 @@ Note the (0,0) coordinates at the center of the muscle.\\
 
     document.distributor.info['Running'   ] = '\\
 Try using the "RUN" button to watch an animation of reliable activations.\\n\\
-When running, the model shows twitching muscle fibers as light brown\\n\\
-while muscle fibers at rest or recovering are shown in dark brown.\\n\\
+When running, the model shows twitching muscle fibers as red\\n\\
+while muscle fibers at rest or recovering are shown in brown.\\n\\
 Twitch units run end-to-end and are excited by a single motor neuron.\\n\\
 Twitch patterns show a repeating weak/STRONG tonus for 1 second each.\\
 ';
@@ -300,7 +300,7 @@ function main ()
     document.distributor = {
         active  :   11,
         cell    :   %s,
-        colors  :       [['#552222','white'], ['#bb6666','white']],
+        colors  :       [['#552222','white'], ['#bb3333','white']],
         delay:  3,
         interval:       [3, 10, 33, 100, 333],
         index   :    0,
