@@ -135,6 +135,48 @@ function ePower (direction)
     strength.innerHTML = ' ' + document.distributor.strong + ' ';
 }
 
+
+
+
+//-------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
+// create audio context, masterGain and nodeGain1 nodes
+
+var audioContext = new (window.AudioContext || window.webkitAudioContext)();
+//  ( "Webkit/blink browsers need prefix, Safari won't work without window.")
+
+var masterGain = audioContext.createGain();
+masterGain.gain.value = 0.5;
+masterGain.connect(audioContext.destination);
+
+var nodeGain1 = audioContext.createGain();
+nodeGain1.gain.value = 0.5;
+nodeGain1.connect(masterGain);
+
+function clickBuzz( frequency, length) {
+    //var oscillatorNode = new AudioContext.createOscillator ();
+    //oscillatorNode.type = 'square';
+    var oscillatorNode = new OscillatorNode(audioContext, {type: 'square'});
+    oscillatorNode.frequency.value = frequency;
+    oscillatorNode.connect( nodeGain1);
+    oscillatorNode.start(audioContext.currentTime);
+    //setTimeout( function(){oscillatorNode.stop();}, length*1000);
+    // TODO consider length of 1 square wave.
+    oscillatorNode.stop( audioContext.currentTime + length);
+}
+
+//function volume1( rangeInput) {
+    //masterGain.gain.value = +rangeInput.value;
+//}
+
+//function volume2( rangeInput) {
+    //nodeGain1.gain.value= +rangeInput.value;
+//}
+//-------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
+
+
+
 //-------------------------------------------------------------------------------
 function eDelay (direction)
 //-------------------------------------------------------------------------------
@@ -251,17 +293,22 @@ function makeButtons (names)
 function loop ()
 //-------------------------------------------------------------------------------
 {
+    var date = new Date ();
+    var odd = (date.getSeconds () & 1);
+    var strength = 1 + document.distributor.strong * odd;
+    var I = document.distributor.active * strength;
+
     //console.log (document.distributor.inverses);
+    clickBuzz (
+        I * 2000 /
+        document.distributor.interval[document.distributor.delay], 0.01);
     for (classname of document.distributor.inverses)
     {
         reColor (classname, 0);
     }
     document.distributor.inverses = [];
 
-    var date = new Date ();
-    var odd = (date.getSeconds () & 1);
-    var strength = 1 + document.distributor.strong * odd;
-    for (var i=0, I=document.distributor.active * strength; i<I; ++i)
+    for (var i=0; i<I; ++i)
     {
         document.distributor.index = (document.distributor.index + 1) %% \
                 document.distributor.indices;

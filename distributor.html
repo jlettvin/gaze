@@ -60,6 +60,48 @@ function ePower (direction)
     strength.innerHTML = ' ' + document.distributor.strong + ' ';
 }
 
+
+
+
+//-------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
+// create audio context, masterGain and nodeGain1 nodes
+
+var audioContext = new (window.AudioContext || window.webkitAudioContext)();
+//  ( "Webkit/blink browsers need prefix, Safari won't work without window.")
+
+var masterGain = audioContext.createGain();
+masterGain.gain.value = 0.5;
+masterGain.connect(audioContext.destination);
+
+var nodeGain1 = audioContext.createGain();
+nodeGain1.gain.value = 0.5;
+nodeGain1.connect(masterGain);
+
+function clickBuzz( frequency, length) {
+    //var oscillatorNode = new AudioContext.createOscillator ();
+    //oscillatorNode.type = 'square';
+    var oscillatorNode = new OscillatorNode(audioContext, {type: 'square'});
+    oscillatorNode.frequency.value = frequency;
+    oscillatorNode.connect( nodeGain1);
+    oscillatorNode.start(audioContext.currentTime);
+    //setTimeout( function(){oscillatorNode.stop();}, length*1000);
+    // TODO consider length of 1 square wave.
+    oscillatorNode.stop( audioContext.currentTime + length);
+}
+
+//function volume1( rangeInput) {
+    //masterGain.gain.value = +rangeInput.value;
+//}
+
+//function volume2( rangeInput) {
+    //nodeGain1.gain.value= +rangeInput.value;
+//}
+//-------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
+
+
+
 //-------------------------------------------------------------------------------
 function eDelay (direction)
 //-------------------------------------------------------------------------------
@@ -169,17 +211,22 @@ function makeButtons (names)
 function loop ()
 //-------------------------------------------------------------------------------
 {
+    var date = new Date ();
+    var odd = (date.getSeconds () & 1);
+    var strength = 1 + document.distributor.strong * odd;
+    var I = document.distributor.active * strength;
+
     //console.log (document.distributor.inverses);
+    clickBuzz (
+        I * 2000 /
+        document.distributor.interval[document.distributor.delay], 0.01);
     for (classname of document.distributor.inverses)
     {
         reColor (classname, 0);
     }
     document.distributor.inverses = [];
 
-    var date = new Date ();
-    var odd = (date.getSeconds () & 1);
-    var strength = 1 + document.distributor.strong * odd;
-    for (var i=0, I=document.distributor.active * strength; i<I; ++i)
+    for (var i=0; i<I; ++i)
     {
         document.distributor.index = (document.distributor.index + 1) %                 document.distributor.indices;
         var classname = 'i' + document.distributor.cell[document.distributor.index];
@@ -276,7 +323,7 @@ function main ()
 {
     document.distributor = {
         active  :   11,
-        cell    :   [116, 37, 66, 71, 163, 17, 18, 134, 63, 60, 20, 97, 21, 161, 73, 107, 93, 4, 122, 139, 95, 108, 70, 88, 41, 78, 29, 89, 48, 40, 69, 91, 150, 98, 32, 118, 92, 125, 80, 131, 19, 121, 124, 44, 50, 114, 35, 148, 55, 106, 42, 102, 120, 77, 59, 111, 86, 160, 8, 96, 81, 52, 54, 126, 85, 138, 101, 141, 100, 87, 62, 94, 74, 30, 64, 6, 109, 128, 82, 132, 22, 47, 137, 27, 36, 164, 152, 31, 68, 149, 28, 56, 133, 99, 72, 119, 67, 7, 75, 104, 65, 103, 123, 23, 45, 147, 83, 57, 127, 115, 162, 140, 79, 153, 58, 90, 15, 113, 33, 84, 136, 112, 49, 5, 151, 61, 43, 46, 76, 53, 105, 146, 16, 110, 34, 145, 135],
+        cell    :   [70, 59, 20, 33, 40, 37, 28, 17, 116, 73, 96, 133, 57, 76, 21, 132, 97, 65, 150, 127, 99, 137, 61, 104, 8, 98, 16, 105, 107, 18, 145, 112, 121, 161, 93, 85, 58, 152, 140, 5, 45, 29, 75, 128, 134, 115, 36, 118, 114, 31, 43, 102, 71, 80, 35, 151, 48, 74, 4, 15, 34, 52, 6, 49, 111, 44, 138, 79, 125, 141, 160, 153, 46, 164, 135, 82, 119, 113, 19, 126, 78, 131, 110, 162, 84, 95, 55, 42, 108, 22, 106, 23, 64, 27, 87, 66, 89, 69, 146, 50, 67, 124, 53, 149, 92, 30, 100, 136, 56, 60, 47, 120, 122, 147, 163, 41, 109, 88, 77, 7, 63, 123, 86, 54, 101, 62, 72, 32, 81, 68, 90, 83, 91, 139, 103, 148, 94],
         colors  :       [['#552222','white'], ['#bb3333','white']],
         delay:  3,
         interval:       [3, 10, 33, 100, 333, 1000],
