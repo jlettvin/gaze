@@ -30,7 +30,7 @@ button   { padding: 2px; margin: 2px; }
 h1 { font-size: 30px; }
 h2 { font-size: 25px; }
 h3 { font-size: 20px; }
-.square { height: 45px; width: 45px; color: white; }
+/*.square { height: 45px; width: 45px; color: white; } */
 .title { height: 30px; font-size: 30px; color:black; background-color: white; }
 .subtitle { height: 20px; font-size: 16px; color:black; background-color: white; }
 .copyright { height: 10px; font-size: 8px; color:black; background-color: white; }
@@ -334,12 +334,45 @@ without the burden of unnecessary calculation.
 
 
 //-------------------------------------------------------------------------------
+// stackoverflow.com/questions/1409225/changing-a-css-rule-set-from-javascript
+function getCSSRule(ruleName) {
+//-------------------------------------------------------------------------------
+    ruleName = ruleName.toLowerCase();
+    var result = null;
+    var find = Array.prototype.find;
+
+    find.call(document.styleSheets, styleSheet => {
+		//var rules = styleSheet.cssRules || sheet.rules;
+		//var rules = styleSheet.cssRules || sheet.rules;
+        //result = find.call(rules, cssRule => {
+        result = find.call(styleSheet.cssRules, cssRule => {
+            return cssRule instanceof CSSStyleRule 
+                && cssRule.selectorText.toLowerCase() == ruleName;
+        });
+        return result != null;
+    });
+    return result;
+} // getCSSRule
+
+
+function addCSSRule(sheet, selector, rules, index) {
+	if("insertRule" in sheet) {
+		sheet.insertRule(selector + "{" + rules + "}", index);
+	}
+	else if("addRule" in sheet) {
+		sheet.addRule(selector, rules, index);
+	}
+}
+
+
+//-------------------------------------------------------------------------------
 function main ()
 //-------------------------------------------------------------------------------
 {
     var audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
     document.distributor = {
+		xylabel :   false,
         active  :   11,
         colors  :       [['#552222','white'], ['#bb3333','white']],
         delay   :    3,
@@ -354,11 +387,16 @@ function main ()
         nodeGain1   : audioContext.createGain(),
     };
 	var the = document.distributor;
-	the.radius = 5;  // Must be 5 or greater (diameter - 6 is used)
+	the.radius = 6;  // Must be 5 or greater (diameter - 6 is used)
 
 	the.diameter = 1 + 2 * the.radius;
 	the.coordinates = [];
 	the.cell = [];
+
+	var sheet = document.styleSheets[0];
+	var px = the.xylabel ? 45 : 35;
+	addCSSRule (sheet,
+		".square", "height: " + px + "px; width: " + px + "px; color: white;");
 
 	// Generate the table from the coordinates
 	// Once this is done, distributor.py is no longer needed.
@@ -390,9 +428,13 @@ function main ()
 			var r = Math.sqrt (x*x + y*y);
 			var cell = row.insertCell (-1);
 			cell.classList.add ('square');
-			cell.innerHTML = '' + the.cell.length + '<br /><br />';
-			cell.innerHTML += '(' + xsign + x + ',' + ysign + -y + ')';
-			if (r < (the.radius + 0.5)) {
+			cell.innerHTML = '' + the.cell.length
+			if (the.xylabel) {
+				cell.innerHTML += '<br /><br />';
+				cell.innerHTML += '(' + xsign + x + ',' + ysign + -y + ')';
+			}
+			//console.log ('"'+cell.innerHTML+'"');
+			if (r < (the.radius + 0.3)) {
 				within = true;
 				the.cell.push (index);
 				the.coordinates.push ([y,-x,index]);
@@ -470,7 +512,7 @@ window.onload = function ()
 		animation, or
 		<button id="reload" onclick="location.reload (true)">reload</button>
 	</td><td colspan="2" bgcolor="#333333" valign="top">
-		interval (ms)<br /><br /><br />
+		interval(ms)<br /><br /><br />
 		<button id="neg" onclick="eSlower (event)">-</button>
 		<b id="interval"></b>
 		<button id="pos" onclick="eFaster (event)">+</button>
