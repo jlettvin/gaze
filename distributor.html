@@ -172,6 +172,17 @@ function eRun (e)
 
 
 //-------------------------------------------------------------------------------
+function eStep (e)
+//-------------------------------------------------------------------------------
+{
+	var the = document.distributor;
+	if (the.timer == null) {
+		loop ();
+	}
+} // eStep
+
+
+//-------------------------------------------------------------------------------
 function reColor (className,scheme)
 //-------------------------------------------------------------------------------
 {
@@ -370,7 +381,7 @@ function main ()
         nodeGain1   : audioContext.createGain(),
     };
 	var the = document.distributor;
-	the.radius = 5;  // Must be 5 or greater (diameter - 6 is used)
+	the.radius = 7;  // Must be 5 or greater (diameter - 6 is used)
 
 	the.diameter = 1 + 2 * the.radius;
 	the.coordinates = [];
@@ -444,6 +455,12 @@ function main ()
     info ();
     eSlower ();
     eSofter ();
+
+	document.addEventListener('keypress', (event) => {
+  		//const keyName = event.key;
+		eStep (event);
+	});
+
     eRun ();
 } // main
 
