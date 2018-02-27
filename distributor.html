@@ -229,8 +229,8 @@ function loop ()
     {
         the.index =
 			(the.index + 1) %
-			the.cell.length;
-        var classname = 'i' + the.cell[the.index];
+			the.fiber.length;
+        var classname = 'i' + the.fiber[the.index];
 
         the.inverses.push (classname);
         reColor (classname, 1);
@@ -393,7 +393,7 @@ function main ()
 
 	the.diameter = 1 + 2 * the.radius;
 	the.coordinates = [];
-	the.cell = [];
+	the.fiber = [];
 
 	var sheet = document.styleSheets[0];
 	var px = the.xylabel ? 45 : 34;
@@ -421,35 +421,35 @@ function main ()
 		var row = tbody.insertRow (-1);
 		var ysign = (y<0) ? '+' : '';
 		for (x = -the.radius; x <= +the.radius; ++x) {
-			// Generate the cell data here
-			// index is the order number for the current cell
-			// the.cell is an enumeration of all visible cell indices
-			// the.cell is shuffled and used to identify cells by class
+			// Generate the fiber data here
+			// index is the order number for the current fiber
+			// the.fiber is an enumeration of all visible fiber indices
+			// the.fiber is shuffled and used to identify fibers by class
 			var xsign = (x>=0) ? '+' : '';
 			var within = false;
 			var r = Math.sqrt (x*x + y*y);
-			var cell = row.insertCell (-1);
-			cell.classList.add ('square');
-			cell.innerHTML = '' + the.cell.length
+			var fiber = row.insertCell (-1);
+			fiber.classList.add ('square');
+			fiber.innerHTML = '' + the.fiber.length
 			if (the.xylabel) {
-				cell.innerHTML += '<br /><br />';
-				cell.innerHTML += '(' + xsign + x + ',' + ysign + -y + ')';
+				fiber.innerHTML += '<br /><br />';
+				fiber.innerHTML += '(' + xsign + x + ',' + ysign + -y + ')';
 			}
 			if (r < (the.radius + 0.3)) {
 				within = true;
-				the.cell.push (index);
+				the.fiber.push (index);
 				the.coordinates.push ([y,-x,index]);
-				// generate visible cell
+				// generate visible fiber
 			} else {
 				// generate invisible cell
 			}
 			var id = (within ? 'i' : 'x') + index++;
-			cell.classList.add (id);
-			cell.style.backgroundColor = within ? "#552222" : "white";
-			cell.style.color = "white";
+			fiber.classList.add (id);
+			fiber.style.backgroundColor = within ? "#552222" : "white";
+			fiber.style.color = "white";
 		}
 	}
-	shuffle (the.cell);
+	shuffle (the.fiber);
 
     var masterGain   = document.distributor.masterGain;
     var nodeGain1    = document.distributor.nodeGain1;
