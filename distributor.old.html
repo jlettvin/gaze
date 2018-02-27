@@ -5,10 +5,6 @@
         <meta charset="UTF-8">
 
 <style>
-/*******************************************************************************/
-/*******************************************************************************/
-/*******************************************************************************/
-
 body {
 	font-family:
             Courier New, Courier,
@@ -19,45 +15,24 @@ body {
 	font-weight: 200;
 	line-height: 10px;
         background-color: #ffffcc;
-} /* body */
-table, th, td {
-	vertical-align: middle;
-	text-align: center;
-} /* table */
-td       { height: 45px; width: 45px; color: white; }
-textarea { resize: none; }
-button   { padding: 2px; margin: 2px; }
+}
 h1 { font-size: 30px; }
 h2 { font-size: 25px; }
 h3 { font-size: 20px; }
-
-/*******************************************************************************/
-/*******************************************************************************/
-/*******************************************************************************/
+table, th, td {
+	vertical-align: middle;
+	text-align: center;
+}
+td { height: 45px; width: 45px; color: white; }
+textarea { resize: none; }
+button { padding: 2px; margin: 2px; }
 </style>
 
 <script type="text/javascript" src="utility.js"></script>
-
 <script type="text/javascript">
-/////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////
-
-//-------------------------------------------------------------------------------
-function clickBuzz (frequency, length) {
-//-------------------------------------------------------------------------------
-    // use stored audio context, masterGain and nodeGain1 nodes
-    var audioContext = document.distributor.audioContext;
-    var masterGain   = document.distributor.masterGain;
-    var nodeGain1    = document.distributor.nodeGain1;
-
-    var oscillatorNode = new OscillatorNode (audioContext, {type: 'square'});
-    oscillatorNode.frequency.value = frequency;
-    oscillatorNode.connect ( nodeGain1);
-    oscillatorNode.start (audioContext.currentTime);
-    oscillatorNode.stop  (audioContext.currentTime + length);
-} // clickBuzz
-
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 
 //-------------------------------------------------------------------------------
 function ePower (direction)
@@ -75,6 +50,22 @@ function ePower (direction)
     }
     strength.innerHTML = ' ' + document.distributor.strong + ' ';
 } // ePower
+
+
+//-------------------------------------------------------------------------------
+function clickBuzz (frequency, length) {
+//-------------------------------------------------------------------------------
+    // use stored audio context, masterGain and nodeGain1 nodes
+    var audioContext = document.distributor.audioContext;
+    var masterGain   = document.distributor.masterGain;
+    var nodeGain1    = document.distributor.nodeGain1;
+
+    var oscillatorNode = new OscillatorNode (audioContext, {type: 'square'});
+    oscillatorNode.frequency.value = frequency;
+    oscillatorNode.connect ( nodeGain1);
+    oscillatorNode.start (audioContext.currentTime);
+    oscillatorNode.stop  (audioContext.currentTime + length);
+} // clickBuzz
 
 
 //-------------------------------------------------------------------------------
@@ -165,6 +156,7 @@ function reColor (className,scheme)
 //-------------------------------------------------------------------------------
 {
     var colorPair = document.distributor.colors[scheme];
+    //console.log (scheme, className);
     var elements = document.getElementsByClassName (className);
     for (element of elements)
     {
@@ -307,15 +299,14 @@ function main ()
 //-------------------------------------------------------------------------------
 {
     var audioContext = new (window.AudioContext || window.webkitAudioContext)();
-
     document.distributor = {
-		radius  :    6,
         active  :   11,
+        cell    :   [50, 54, 80, 28, 77, 5, 74, 115, 86, 38, 41, 40, 95, 106, 36, 48, 24, 34, 70, 7, 87, 75, 39, 43, 19, 46, 81, 82, 30, 76, 53, 72, 4, 52, 101, 6, 79, 117, 63, 116, 44, 102, 66, 84, 103, 94, 42, 26, 114, 67, 65, 55, 58, 68, 16, 25, 15, 45, 93, 49, 33, 91, 97, 78, 37, 62, 14, 57, 73, 60, 71, 13, 31, 90, 85, 29, 59, 51, 92, 61, 56, 64, 17, 18, 113, 23, 89, 83, 69, 105, 27, 104, 107, 35, 47, 3, 96],
         colors  :       [['#552222','white'], ['#bb3333','white']],
         delay   :    3,
         interval:       [3, 10, 33, 100, 333, 1000],
         index   :    0,
-        comb    :  137,
+        comb    :   97,
         inverses:   [],
         running : true,
         strong  :    2,
@@ -324,56 +315,6 @@ function main ()
         masterGain  : audioContext.createGain(),
         nodeGain1   : audioContext.createGain(),
     };
-	var parm = document.distributor;
-	parm.radius = 6;  // Must be 5 or greater (diameter - 6 is used)
-	parm.diameter = 1 + 2 * parm.radius;
-	parm.coordinates = [];
-	parm.cell = [];
-	parm.count = 0;
-
-	// TODO Generate the table from the coordinates
-	// Once this is done, distributor.py is no longer needed.
-	// The table id = "bundle".
-	// Generate the metadata here.
-
-	var table    = document.getElementById ("bundle");
-	var tbody    = document.getElementById ("tbody");
-	var animator = document.getElementById ("animator");
-
-	tbody.innerHTML = '';
-
-	animator.colspan = parm.diameter;
-	var X = 0, Y = 0, index = 0;
-
-	for (y = -parm.radius; y <= +parm.radius; ++y) {
-		// Generate the table rows here
-		var row = tbody.insertRow (-1);
-		var ysign = (y<0) ? '+' : '';
-		for (x = -parm.radius; x <= +parm.radius; ++x) {
-			// Generate the cell data here
-			var within = false;
-			var r = Math.sqrt (x*x + y*y);
-			var cell = row.insertCell (-1);
-			if (r < (parm.radius + 0.5)) {
-				within = true;
-				parm.cell.push (parm.count);
-				parm.coordinates.push ([y,-x,parm.count]);
-				// generate visible cell
-			} else {
-				// generate invisible cell
-			}
-			var id = (within ? 'i' : 'x') + index++;
-			var xsign = (x>=0) ? '+' : '';
-			cell.innerHTML = '' + parm.count + '<br /><br />';
-			cell.innerHTML += '(' + xsign + x + ',' + ysign + -y + ')';
-			cell.setAttribute ('class', id);
-			cell.style.backgroundColor = within ? "#552222" : "white";
-			cell.style.color = "white";
-
-			parm.count++;
-		}
-	}
-	shuffle (parm.cell);
 
     var masterGain   = document.distributor.masterGain;
     var nodeGain1    = document.distributor.nodeGain1;
@@ -398,9 +339,9 @@ window.onload = function ()
     main ();
 } // window.onload
 
-/////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 </script>
 
 	</head>
@@ -412,32 +353,20 @@ window.onload = function ()
         <br /><textarea id="info" rows="7" cols="84" readonly>
         Hover over the above buttons to fill this area with information.
         </textarea><br />
-            <table id="bundle">
-			    <caption align="bottom">
-				    <h3>Muscle Fiber Bundle Cross Section</h3>
-			    </caption>
-			    <thead>
-<tr>
-	<td id="animator" colspan="7" bgcolor="black">
-		<button id="pause" onclick="eRun(event)">STOP</button>
-		animation, or
-		<button id="reload" onclick="location.reload (true)">reload</button>
-	</td><td colspan="2" bgcolor="#333333" valign="top">
-		interval (ms)<br /><br /><br />
-		<button id="neg" onclick="eSlower (event)">-</button>
-		<b id="interval"></b>
-		<button id="pos" onclick="eFaster (event)">+</button>
-	</td><td colspan="2" bgcolor="#333333" valign="top">
-		strength<br /><br /><br />
-		<button id="pown" onclick="eSofter (event)">-</button>
-		<b id="strength">2</b>
-		<button id="powp" onclick="eHarder (event)">+</button>
-	</td><td colspan="2" bgcolor="#333333">tonus<h3 id="state">None</h3></td>
-</tr>
-			    </thead>
-			    <tbody id="tbody">
-			    </tbody>
-            </table>
+        <table><caption align="bottom"><h3>Muscle Fiber Bundle Cross Section</h3></caption>
+<tr><td colspan="5" bgcolor="black"><button id="pause" onclick="eRun(event)">STOP</button> twitching, or <button id="reload" onclick="location.reload (true)">reload</button></td><td colspan="2" bgcolor="#333333" valign="top">interval (ms)<br /><br /><br /><button id="neg" onclick="eSlower (event)">-</button><b id="interval"></b><button id="pos" onclick="eFaster (event)">+</button></td><td colspan="2" bgcolor="#333333" valign="top">strength<br /><br /><br /><button id="pown" onclick="eSofter (event)">-</button><b id="strength">2</b><button id="powp" onclick="eHarder (event)">+</button></td><td colspan="2" bgcolor="#333333">tonus<h3 id="state">None</h3></td>
+</tr><tr><td bgcolor="white"></td><td bgcolor="white"></td><td bgcolor="white"></td><td class="i3" style="color:white;" bgcolor="#552222">0<br /><br />(-2,+5)</td><td class="i4" style="color:white;" bgcolor="#552222">1<br /><br />(-1,+5)</td><td class="i5" style="color:white;" bgcolor="#552222">2<br /><br />(+0,+5)</td><td class="i6" style="color:white;" bgcolor="#552222">3<br /><br />(+1,+5)</td><td class="i7" style="color:white;" bgcolor="#552222">4<br /><br />(+2,+5)</td><td bgcolor="white"></td><td bgcolor="white"></td><td bgcolor="white"></td>
+</tr><tr><td bgcolor="white"></td><td bgcolor="white"></td><td class="i13" style="color:white;" bgcolor="#552222">5<br /><br />(-3,+4)</td><td class="i14" style="color:white;" bgcolor="#552222">6<br /><br />(-2,+4)</td><td class="i15" style="color:white;" bgcolor="#552222">7<br /><br />(-1,+4)</td><td class="i16" style="color:white;" bgcolor="#552222">8<br /><br />(+0,+4)</td><td class="i17" style="color:white;" bgcolor="#552222">9<br /><br />(+1,+4)</td><td class="i18" style="color:white;" bgcolor="#552222">10<br /><br />(+2,+4)</td><td class="i19" style="color:white;" bgcolor="#552222">11<br /><br />(+3,+4)</td><td bgcolor="white"></td><td bgcolor="white"></td>
+</tr><tr><td bgcolor="white"></td><td class="i23" style="color:white;" bgcolor="#552222">12<br /><br />(-4,+3)</td><td class="i24" style="color:white;" bgcolor="#552222">13<br /><br />(-3,+3)</td><td class="i25" style="color:white;" bgcolor="#552222">14<br /><br />(-2,+3)</td><td class="i26" style="color:white;" bgcolor="#552222">15<br /><br />(-1,+3)</td><td class="i27" style="color:white;" bgcolor="#552222">16<br /><br />(+0,+3)</td><td class="i28" style="color:white;" bgcolor="#552222">17<br /><br />(+1,+3)</td><td class="i29" style="color:white;" bgcolor="#552222">18<br /><br />(+2,+3)</td><td class="i30" style="color:white;" bgcolor="#552222">19<br /><br />(+3,+3)</td><td class="i31" style="color:white;" bgcolor="#552222">20<br /><br />(+4,+3)</td><td bgcolor="white"></td>
+</tr><tr><td class="i33" style="color:white;" bgcolor="#552222">21<br /><br />(-5,+2)</td><td class="i34" style="color:white;" bgcolor="#552222">22<br /><br />(-4,+2)</td><td class="i35" style="color:white;" bgcolor="#552222">23<br /><br />(-3,+2)</td><td class="i36" style="color:white;" bgcolor="#552222">24<br /><br />(-2,+2)</td><td class="i37" style="color:white;" bgcolor="#552222">25<br /><br />(-1,+2)</td><td class="i38" style="color:white;" bgcolor="#552222">26<br /><br />(+0,+2)</td><td class="i39" style="color:white;" bgcolor="#552222">27<br /><br />(+1,+2)</td><td class="i40" style="color:white;" bgcolor="#552222">28<br /><br />(+2,+2)</td><td class="i41" style="color:white;" bgcolor="#552222">29<br /><br />(+3,+2)</td><td class="i42" style="color:white;" bgcolor="#552222">30<br /><br />(+4,+2)</td><td class="i43" style="color:white;" bgcolor="#552222">31<br /><br />(+5,+2)</td>
+</tr><tr><td class="i44" style="color:white;" bgcolor="#552222">32<br /><br />(-5,+1)</td><td class="i45" style="color:white;" bgcolor="#552222">33<br /><br />(-4,+1)</td><td class="i46" style="color:white;" bgcolor="#552222">34<br /><br />(-3,+1)</td><td class="i47" style="color:white;" bgcolor="#552222">35<br /><br />(-2,+1)</td><td class="i48" style="color:white;" bgcolor="#552222">36<br /><br />(-1,+1)</td><td class="i49" style="color:white;" bgcolor="#552222">37<br /><br />(+0,+1)</td><td class="i50" style="color:white;" bgcolor="#552222">38<br /><br />(+1,+1)</td><td class="i51" style="color:white;" bgcolor="#552222">39<br /><br />(+2,+1)</td><td class="i52" style="color:white;" bgcolor="#552222">40<br /><br />(+3,+1)</td><td class="i53" style="color:white;" bgcolor="#552222">41<br /><br />(+4,+1)</td><td class="i54" style="color:white;" bgcolor="#552222">42<br /><br />(+5,+1)</td>
+</tr><tr><td class="i55" style="color:white;" bgcolor="#552222">43<br /><br />(-5,+0)</td><td class="i56" style="color:white;" bgcolor="#552222">44<br /><br />(-4,+0)</td><td class="i57" style="color:white;" bgcolor="#552222">45<br /><br />(-3,+0)</td><td class="i58" style="color:white;" bgcolor="#552222">46<br /><br />(-2,+0)</td><td class="i59" style="color:white;" bgcolor="#552222">47<br /><br />(-1,+0)</td><td class="i60" style="color:white;" bgcolor="#552222">48<br /><br />(+0,+0)</td><td class="i61" style="color:white;" bgcolor="#552222">49<br /><br />(+1,+0)</td><td class="i62" style="color:white;" bgcolor="#552222">50<br /><br />(+2,+0)</td><td class="i63" style="color:white;" bgcolor="#552222">51<br /><br />(+3,+0)</td><td class="i64" style="color:white;" bgcolor="#552222">52<br /><br />(+4,+0)</td><td class="i65" style="color:white;" bgcolor="#552222">53<br /><br />(+5,+0)</td>
+</tr><tr><td class="i66" style="color:white;" bgcolor="#552222">54<br /><br />(-5,-1)</td><td class="i67" style="color:white;" bgcolor="#552222">55<br /><br />(-4,-1)</td><td class="i68" style="color:white;" bgcolor="#552222">56<br /><br />(-3,-1)</td><td class="i69" style="color:white;" bgcolor="#552222">57<br /><br />(-2,-1)</td><td class="i70" style="color:white;" bgcolor="#552222">58<br /><br />(-1,-1)</td><td class="i71" style="color:white;" bgcolor="#552222">59<br /><br />(+0,-1)</td><td class="i72" style="color:white;" bgcolor="#552222">60<br /><br />(+1,-1)</td><td class="i73" style="color:white;" bgcolor="#552222">61<br /><br />(+2,-1)</td><td class="i74" style="color:white;" bgcolor="#552222">62<br /><br />(+3,-1)</td><td class="i75" style="color:white;" bgcolor="#552222">63<br /><br />(+4,-1)</td><td class="i76" style="color:white;" bgcolor="#552222">64<br /><br />(+5,-1)</td>
+</tr><tr><td class="i77" style="color:white;" bgcolor="#552222">65<br /><br />(-5,-2)</td><td class="i78" style="color:white;" bgcolor="#552222">66<br /><br />(-4,-2)</td><td class="i79" style="color:white;" bgcolor="#552222">67<br /><br />(-3,-2)</td><td class="i80" style="color:white;" bgcolor="#552222">68<br /><br />(-2,-2)</td><td class="i81" style="color:white;" bgcolor="#552222">69<br /><br />(-1,-2)</td><td class="i82" style="color:white;" bgcolor="#552222">70<br /><br />(+0,-2)</td><td class="i83" style="color:white;" bgcolor="#552222">71<br /><br />(+1,-2)</td><td class="i84" style="color:white;" bgcolor="#552222">72<br /><br />(+2,-2)</td><td class="i85" style="color:white;" bgcolor="#552222">73<br /><br />(+3,-2)</td><td class="i86" style="color:white;" bgcolor="#552222">74<br /><br />(+4,-2)</td><td class="i87" style="color:white;" bgcolor="#552222">75<br /><br />(+5,-2)</td>
+</tr><tr><td bgcolor="white"></td><td class="i89" style="color:white;" bgcolor="#552222">76<br /><br />(-4,-3)</td><td class="i90" style="color:white;" bgcolor="#552222">77<br /><br />(-3,-3)</td><td class="i91" style="color:white;" bgcolor="#552222">78<br /><br />(-2,-3)</td><td class="i92" style="color:white;" bgcolor="#552222">79<br /><br />(-1,-3)</td><td class="i93" style="color:white;" bgcolor="#552222">80<br /><br />(+0,-3)</td><td class="i94" style="color:white;" bgcolor="#552222">81<br /><br />(+1,-3)</td><td class="i95" style="color:white;" bgcolor="#552222">82<br /><br />(+2,-3)</td><td class="i96" style="color:white;" bgcolor="#552222">83<br /><br />(+3,-3)</td><td class="i97" style="color:white;" bgcolor="#552222">84<br /><br />(+4,-3)</td><td bgcolor="white"></td>
+</tr><tr><td bgcolor="white"></td><td bgcolor="white"></td><td class="i101" style="color:white;" bgcolor="#552222">85<br /><br />(-3,-4)</td><td class="i102" style="color:white;" bgcolor="#552222">86<br /><br />(-2,-4)</td><td class="i103" style="color:white;" bgcolor="#552222">87<br /><br />(-1,-4)</td><td class="i104" style="color:white;" bgcolor="#552222">88<br /><br />(+0,-4)</td><td class="i105" style="color:white;" bgcolor="#552222">89<br /><br />(+1,-4)</td><td class="i106" style="color:white;" bgcolor="#552222">90<br /><br />(+2,-4)</td><td class="i107" style="color:white;" bgcolor="#552222">91<br /><br />(+3,-4)</td><td bgcolor="white"></td><td bgcolor="white"></td>
+</tr><tr><td bgcolor="white"></td><td bgcolor="white"></td><td bgcolor="white"></td><td class="i113" style="color:white;" bgcolor="#552222">92<br /><br />(-2,-5)</td><td class="i114" style="color:white;" bgcolor="#552222">93<br /><br />(-1,-5)</td><td class="i115" style="color:white;" bgcolor="#552222">94<br /><br />(+0,-5)</td><td class="i116" style="color:white;" bgcolor="#552222">95<br /><br />(+1,-5)</td><td class="i117" style="color:white;" bgcolor="#552222">96<br /><br />(+2,-5)</td><td bgcolor="white"></td><td bgcolor="white"></td><td bgcolor="white"></td>
+</tr></table>
         </div>
 	</body>
 </html>

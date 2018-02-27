@@ -1,3 +1,90 @@
+#!/usr/bin/env python
+
+from itertools import product
+from random    import shuffle
+from math      import sqrt
+
+def compile (radius):
+    diameter = 1 + 2 * radius
+    coordinates = [
+            (y,-x)
+            for (x,y) in product (xrange (-radius, radius+1), repeat=2)
+            ]
+
+    # table will be the HTML table hosting the twitch unit cut-ends.
+    # comb will be a fixed randomized sequence of indices into table.
+    # It is intended to be equivalent to one dendrite per comb tooth.
+    # Marching round-robin sequentially through this comb provides a
+    # guarantee of maximizing the time between individual specific
+    # twitch unit activations.
+    # TODO implement entirely in javascript.
+    # utility.js already has a Fisher-Yates shuffle.
+    # itertools.product is easily reimplemented as a nested (y,x) loop.
+    # a comprehension to exclude cells outside the radius is simple.
+    # generating the table is all that remains before this python is retired.
+    table = ''
+    comb = []
+
+    last = None
+    table = '<table>'
+    table += '<caption align="bottom">'
+    table += '<h3>Muscle Fiber Bundle Cross Section</h3>'
+    table += '</caption>\n<tr>'
+
+    table += '<td colspan="%d" bgcolor="black">' % (diameter-6)
+    table += '<button id="pause" onclick="eRun(event)">STOP</button>'
+    table += ' twitching, or '
+    table += '<button id="reload" onclick="location.reload (true)">' \
+            'reload</button>'
+    table += '</td>'
+
+    table += '<td colspan="2" bgcolor="#333333" valign="top">'
+    table += 'interval (ms)<br /><br /><br />'
+    table += '<button id="neg" onclick="eSlower (event)">-</button>'
+    table += '<b id="interval"></b>'
+    table += '<button id="pos" onclick="eFaster (event)">+</button>'
+    table += '</td>'
+
+    table += '<td colspan="2" bgcolor="#333333" valign="top">'
+    table += 'strength<br /><br /><br />'
+    table += '<button id="pown" onclick="eSofter (event)">-</button>'
+    table += '<b id="strength">2</b>'
+    table += '<button id="powp" onclick="eHarder (event)">+</button>'
+    table += '</td>'
+
+    table += '<td colspan="2" bgcolor="#333333">'
+    table += 'tonus<h3 id="state">None</h3>'
+    table += '</td>';
+
+    j = 0
+    for i,(x,y) in enumerate (coordinates):
+        within = (sqrt (x*x + y*y) <= (radius+0.5))
+        bgcolor = 'white'
+        id = 'x'
+        if within:
+            id = 'i'
+            bgcolor = '#552222'
+            comb += [i]
+        id = 'i' if within else 'x'
+        if (y != last):
+            table += '\n</tr><tr>'
+            last = y
+        if within:
+            table += '<td class="%s%d" style="color:white;" bgcolor="%s">%d' % (
+                    id, i, bgcolor, j)
+            j += 1
+            table += '<br /><br />(%+2d,%+2d)</td>' % (x,y)
+        else:
+            table += '<td bgcolor="white"></td>'
+    table += '\n</tr></table>'
+
+    shuffle (comb)
+    return (comb, table)
+
+def main ():
+    comb, muscle = compile (5)
+    ordered = ['<b class="i%d">%d</b>' % (i,o) for (i,o) in enumerate (comb)]
+    print '''\
 <!DOCTYPE html>
 
 <html>
@@ -5,10 +92,6 @@
         <meta charset="UTF-8">
 
 <style>
-/*******************************************************************************/
-/*******************************************************************************/
-/*******************************************************************************/
-
 body {
 	font-family:
             Courier New, Courier,
@@ -19,45 +102,24 @@ body {
 	font-weight: 200;
 	line-height: 10px;
         background-color: #ffffcc;
-} /* body */
-table, th, td {
-	vertical-align: middle;
-	text-align: center;
-} /* table */
-td       { height: 45px; width: 45px; color: white; }
-textarea { resize: none; }
-button   { padding: 2px; margin: 2px; }
+}
 h1 { font-size: 30px; }
 h2 { font-size: 25px; }
 h3 { font-size: 20px; }
-
-/*******************************************************************************/
-/*******************************************************************************/
-/*******************************************************************************/
+table, th, td {
+	vertical-align: middle;
+	text-align: center;
+}
+td { height: 45px; width: 45px; color: white; }
+textarea { resize: none; }
+button { padding: 2px; margin: 2px; }
 </style>
 
 <script type="text/javascript" src="utility.js"></script>
-
 <script type="text/javascript">
-/////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////
-
-//-------------------------------------------------------------------------------
-function clickBuzz (frequency, length) {
-//-------------------------------------------------------------------------------
-    // use stored audio context, masterGain and nodeGain1 nodes
-    var audioContext = document.distributor.audioContext;
-    var masterGain   = document.distributor.masterGain;
-    var nodeGain1    = document.distributor.nodeGain1;
-
-    var oscillatorNode = new OscillatorNode (audioContext, {type: 'square'});
-    oscillatorNode.frequency.value = frequency;
-    oscillatorNode.connect ( nodeGain1);
-    oscillatorNode.start (audioContext.currentTime);
-    oscillatorNode.stop  (audioContext.currentTime + length);
-} // clickBuzz
-
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 
 //-------------------------------------------------------------------------------
 function ePower (direction)
@@ -78,6 +140,22 @@ function ePower (direction)
 
 
 //-------------------------------------------------------------------------------
+function clickBuzz (frequency, length) {
+//-------------------------------------------------------------------------------
+    // use stored audio context, masterGain and nodeGain1 nodes
+    var audioContext = document.distributor.audioContext;
+    var masterGain   = document.distributor.masterGain;
+    var nodeGain1    = document.distributor.nodeGain1;
+
+    var oscillatorNode = new OscillatorNode (audioContext, {type: 'square'});
+    oscillatorNode.frequency.value = frequency;
+    oscillatorNode.connect ( nodeGain1);
+    oscillatorNode.start (audioContext.currentTime);
+    oscillatorNode.stop  (audioContext.currentTime + length);
+} // clickBuzz
+
+
+//-------------------------------------------------------------------------------
 function eDelay (direction)
 //-------------------------------------------------------------------------------
 {
@@ -95,7 +173,9 @@ function eDelay (direction)
                 loop, document.distributor.interval[document.distributor.delay]);
         }
     }
-    interval.innerHTML = ' ' +         document.distributor.interval[document.distributor.delay] +         ' ';
+    interval.innerHTML = ' ' + \
+        document.distributor.interval[document.distributor.delay] + \
+        ' ';
 } // eDelay
 
 
@@ -165,6 +245,7 @@ function reColor (className,scheme)
 //-------------------------------------------------------------------------------
 {
     var colorPair = document.distributor.colors[scheme];
+    //console.log (scheme, className);
     var elements = document.getElementsByClassName (className);
     for (element of elements)
     {
@@ -183,7 +264,12 @@ function makeButtons (names)
     for (name of names)
     {
         var id = 'button' + i++;
-        text += '<button id="' + id +                 '" onmouseover="eButton(event)"' +                 '" onclick="eButton(event)"' +                 '>' +                 name +                 '</button>';
+        text += '<button id="' + id + \
+                '" onmouseover="eButton(event)"' + \
+                '" onclick="eButton(event)"' + \
+                '>' + \
+                name + \
+                '</button>';
     }
     var element = document.getElementById ('buttons');
     element.innerHTML = text;
@@ -211,7 +297,8 @@ function loop ()
 
     for (var i=0; i<I; ++i)
     {
-        document.distributor.index = (document.distributor.index + 1) %                 document.distributor.comb;
+        document.distributor.index = (document.distributor.index + 1) %% \
+                document.distributor.comb;
         var classname = 'i' + document.distributor.cell[document.distributor.index];
 
         document.distributor.inverses.push (classname);
@@ -307,15 +394,14 @@ function main ()
 //-------------------------------------------------------------------------------
 {
     var audioContext = new (window.AudioContext || window.webkitAudioContext)();
-
     document.distributor = {
-		radius  :    6,
         active  :   11,
+        cell    :   %s,
         colors  :       [['#552222','white'], ['#bb3333','white']],
         delay   :    3,
         interval:       [3, 10, 33, 100, 333, 1000],
         index   :    0,
-        comb    :  137,
+        comb    :  %3d,
         inverses:   [],
         running : true,
         strong  :    2,
@@ -324,56 +410,6 @@ function main ()
         masterGain  : audioContext.createGain(),
         nodeGain1   : audioContext.createGain(),
     };
-	var parm = document.distributor;
-	parm.radius = 6;  // Must be 5 or greater (diameter - 6 is used)
-	parm.diameter = 1 + 2 * parm.radius;
-	parm.coordinates = [];
-	parm.cell = [];
-	parm.count = 0;
-
-	// TODO Generate the table from the coordinates
-	// Once this is done, distributor.py is no longer needed.
-	// The table id = "bundle".
-	// Generate the metadata here.
-
-	var table    = document.getElementById ("bundle");
-	var tbody    = document.getElementById ("tbody");
-	var animator = document.getElementById ("animator");
-
-	tbody.innerHTML = '';
-
-	animator.colspan = parm.diameter;
-	var X = 0, Y = 0, index = 0;
-
-	for (y = -parm.radius; y <= +parm.radius; ++y) {
-		// Generate the table rows here
-		var row = tbody.insertRow (-1);
-		var ysign = (y<0) ? '+' : '';
-		for (x = -parm.radius; x <= +parm.radius; ++x) {
-			// Generate the cell data here
-			var within = false;
-			var r = Math.sqrt (x*x + y*y);
-			var cell = row.insertCell (-1);
-			if (r < (parm.radius + 0.5)) {
-				within = true;
-				parm.cell.push (parm.count);
-				parm.coordinates.push ([y,-x,parm.count]);
-				// generate visible cell
-			} else {
-				// generate invisible cell
-			}
-			var id = (within ? 'i' : 'x') + index++;
-			var xsign = (x>=0) ? '+' : '';
-			cell.innerHTML = '' + parm.count + '<br /><br />';
-			cell.innerHTML += '(' + xsign + x + ',' + ysign + -y + ')';
-			cell.setAttribute ('class', id);
-			cell.style.backgroundColor = within ? "#552222" : "white";
-			cell.style.color = "white";
-
-			parm.count++;
-		}
-	}
-	shuffle (parm.cell);
 
     var masterGain   = document.distributor.masterGain;
     var nodeGain1    = document.distributor.nodeGain1;
@@ -398,9 +434,9 @@ window.onload = function ()
     main ();
 } // window.onload
 
-/////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 </script>
 
 	</head>
@@ -412,33 +448,11 @@ window.onload = function ()
         <br /><textarea id="info" rows="7" cols="84" readonly>
         Hover over the above buttons to fill this area with information.
         </textarea><br />
-            <table id="bundle">
-			    <caption align="bottom">
-				    <h3>Muscle Fiber Bundle Cross Section</h3>
-			    </caption>
-			    <thead>
-<tr>
-	<td id="animator" colspan="7" bgcolor="black">
-		<button id="pause" onclick="eRun(event)">STOP</button>
-		animation, or
-		<button id="reload" onclick="location.reload (true)">reload</button>
-	</td><td colspan="2" bgcolor="#333333" valign="top">
-		interval (ms)<br /><br /><br />
-		<button id="neg" onclick="eSlower (event)">-</button>
-		<b id="interval"></b>
-		<button id="pos" onclick="eFaster (event)">+</button>
-	</td><td colspan="2" bgcolor="#333333" valign="top">
-		strength<br /><br /><br />
-		<button id="pown" onclick="eSofter (event)">-</button>
-		<b id="strength">2</b>
-		<button id="powp" onclick="eHarder (event)">+</button>
-	</td><td colspan="2" bgcolor="#333333">tonus<h3 id="state">None</h3></td>
-</tr>
-			    </thead>
-			    <tbody id="tbody">
-			    </tbody>
-            </table>
+        %s
         </div>
 	</body>
 </html>
+''' % (comb, len(comb), muscle);
 
+if __name__ == "__main__":
+    main ()
