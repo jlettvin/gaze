@@ -52,10 +52,10 @@ function clickBuzz (frequency, length) {
     var nodeGain1    = document.distributor.nodeGain1;
 
     var oscillatorNode = new OscillatorNode (audioContext, {type: 'square'});
-    oscillatorNode.frequency.value = frequency;
-    oscillatorNode.connect ( nodeGain1);
-    oscillatorNode.start (audioContext.currentTime);
-    oscillatorNode.stop  (audioContext.currentTime + length);
+    oscillatorNode.frequency.setValueAtTime (frequency, audioContext.currentTime);
+    oscillatorNode.connect (nodeGain1);
+    oscillatorNode.start   (audioContext.currentTime);
+    oscillatorNode.stop    (audioContext.currentTime + length);
 } // clickBuzz
 
 
@@ -68,7 +68,7 @@ function ePower (direction)
     {
         if (
             (direction == -1 && document.distributor.strong > 0) ||
-            (direction == +1 && document.distributor.strong < 4) )
+            (direction == +1 && document.distributor.strong < 3) )
         {
             document.distributor.strong += direction;
         }
@@ -183,7 +183,10 @@ function makeButtons (names)
     for (name of names)
     {
         var id = 'button' + i++;
-        text += '<button id="' + id +                 '" onmouseover="eButton(event)"' +                 '" onclick="eButton(event)"' +                 '>' +                 name +                 '</button>';
+        text += '<button id="' + id +
+			'" onmouseover="eButton(event)"' +
+			'" onclick="eButton(event)"' + '>' +
+			name + '</button>';
     }
     var element = document.getElementById ('buttons');
     element.innerHTML = text;
@@ -211,7 +214,9 @@ function loop ()
 
     for (var i=0; i<I; ++i)
     {
-        document.distributor.index = (document.distributor.index + 1) %                 document.distributor.comb;
+        document.distributor.index =
+			(document.distributor.index + 1) %
+			document.distributor.cell.length;
         var classname = 'i' + document.distributor.cell[document.distributor.index];
 
         document.distributor.inverses.push (classname);
@@ -309,13 +314,11 @@ function main ()
     var audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
     document.distributor = {
-		radius  :    6,
         active  :   11,
         colors  :       [['#552222','white'], ['#bb3333','white']],
         delay   :    3,
         interval:       [3, 10, 33, 100, 333, 1000],
         index   :    0,
-        comb    :  137,
         inverses:   [],
         running : true,
         strong  :    2,
@@ -325,16 +328,19 @@ function main ()
         nodeGain1   : audioContext.createGain(),
     };
 	var parm = document.distributor;
-	parm.radius = 6;  // Must be 5 or greater (diameter - 6 is used)
+	// TODO fix that when radius is set to 5, some iterations do not highlight
+	parm.radius = 5;  // Must be 5 or greater (diameter - 6 is used)
+
 	parm.diameter = 1 + 2 * parm.radius;
 	parm.coordinates = [];
 	parm.cell = [];
-	parm.count = 0;
 
-	// TODO Generate the table from the coordinates
+	// Generate the table from the coordinates
 	// Once this is done, distributor.py is no longer needed.
 	// The table id = "bundle".
 	// Generate the metadata here.
+
+	var controlCols = 6;
 
 	var table    = document.getElementById ("bundle");
 	var tbody    = document.getElementById ("tbody");
@@ -342,7 +348,7 @@ function main ()
 
 	tbody.innerHTML = '';
 
-	animator.colspan = parm.diameter;
+	animator.colSpan = parm.diameter - controlCols;
 	var X = 0, Y = 0, index = 0;
 
 	for (y = -parm.radius; y <= +parm.radius; ++y) {
@@ -351,6 +357,9 @@ function main ()
 		var ysign = (y<0) ? '+' : '';
 		for (x = -parm.radius; x <= +parm.radius; ++x) {
 			// Generate the cell data here
+			// index is the order number for the current cell
+			// parm.cell is an enumeration of all visible cell indices
+			// parm.cell is shuffled and used to identify cells by class
 			var xsign = (x>=0) ? '+' : '';
 			var within = false;
 			var r = Math.sqrt (x*x + y*y);
@@ -359,8 +368,8 @@ function main ()
 			cell.innerHTML += '(' + xsign + x + ',' + ysign + -y + ')';
 			if (r < (parm.radius + 0.5)) {
 				within = true;
-				parm.cell.push (parm.count);
-				parm.coordinates.push ([y,-x,parm.count]);
+				parm.cell.push (index);
+				parm.coordinates.push ([y,-x,index]);
 				// generate visible cell
 			} else {
 				// generate invisible cell
@@ -369,19 +378,18 @@ function main ()
 			cell.setAttribute ('class', id);
 			cell.style.backgroundColor = within ? "#552222" : "white";
 			cell.style.color = "white";
-
-			parm.count++;
 		}
 	}
+	console.log (parm.cell);
 	shuffle (parm.cell);
 
     var masterGain   = document.distributor.masterGain;
     var nodeGain1    = document.distributor.nodeGain1;
 
-    masterGain.gain.value = 0.5;
+	masterGain.gain.setValueAtTime (0.5, audioContext.currentTime);
     masterGain.connect(audioContext.destination);
 
-    nodeGain1.gain.value = 0.5;
+	nodeGain1.gain.setValueAtTime (0.5, audioContext.currentTime);
     nodeGain1.connect(masterGain);
 
     info ();
