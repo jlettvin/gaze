@@ -139,42 +139,19 @@ function ePower (direction)
 
 
 //-------------------------------------------------------------------------------
+function clickBuzz (frequency, length) {
 //-------------------------------------------------------------------------------
-// create audio context, masterGain and nodeGain1 nodes
+    // use stored audio context, masterGain and nodeGain1 nodes
+    var audioContext = document.distributor.audioContext;
+    var masterGain   = document.distributor.masterGain;
+    var nodeGain1    = document.distributor.nodeGain1;
 
-var audioContext = new (window.AudioContext || window.webkitAudioContext)();
-//  ( "Webkit/blink browsers need prefix, Safari won't work without window.")
-
-var masterGain = audioContext.createGain();
-masterGain.gain.value = 0.5;
-masterGain.connect(audioContext.destination);
-
-var nodeGain1 = audioContext.createGain();
-nodeGain1.gain.value = 0.5;
-nodeGain1.connect(masterGain);
-
-function clickBuzz( frequency, length) {
-    //var oscillatorNode = new AudioContext.createOscillator ();
-    //oscillatorNode.type = 'square';
-    var oscillatorNode = new OscillatorNode(audioContext, {type: 'square'});
+    var oscillatorNode = new OscillatorNode (audioContext, {type: 'square'});
     oscillatorNode.frequency.value = frequency;
-    oscillatorNode.connect( nodeGain1);
-    oscillatorNode.start(audioContext.currentTime);
-    //setTimeout( function(){oscillatorNode.stop();}, length*1000);
-    // TODO consider length of 1 square wave.
-    oscillatorNode.stop( audioContext.currentTime + length);
+    oscillatorNode.connect ( nodeGain1);
+    oscillatorNode.start (audioContext.currentTime);
+    oscillatorNode.stop  (audioContext.currentTime + length);
 }
-
-//function volume1( rangeInput) {
-    //masterGain.gain.value = +rangeInput.value;
-//}
-
-//function volume2( rangeInput) {
-    //nodeGain1.gain.value= +rangeInput.value;
-//}
-//-------------------------------------------------------------------------------
-//-------------------------------------------------------------------------------
-
 
 
 //-------------------------------------------------------------------------------
@@ -301,7 +278,7 @@ function loop ()
     //console.log (document.distributor.inverses);
     clickBuzz (
         I * 2000 /
-        document.distributor.interval[document.distributor.delay], 0.01);
+        document.distributor.interval[document.distributor.delay], 0.02);
     for (classname of document.distributor.inverses)
     {
         reColor (classname, 0);
@@ -404,11 +381,12 @@ without the burden of unnecessary calculation.
 function main ()
 //-------------------------------------------------------------------------------
 {
+    var audioContext = new (window.AudioContext || window.webkitAudioContext)();
     document.distributor = {
         active  :   11,
         cell    :   %s,
         colors  :       [['#552222','white'], ['#bb3333','white']],
-        delay:  3,
+        delay   :    3,
         interval:       [3, 10, 33, 100, 333, 1000],
         index   :    0,
         indices :   %d,
@@ -416,7 +394,19 @@ function main ()
         running : true,
         strong  :    2,
         timer   : null,
+        audioContext: audioContext,
+        masterGain  : audioContext.createGain(),
+        nodeGain1   : audioContext.createGain(),
     };
+
+    var masterGain   = document.distributor.masterGain;
+    var nodeGain1    = document.distributor.nodeGain1;
+
+    masterGain.gain.value = 0.5;
+    masterGain.connect(audioContext.destination);
+
+    nodeGain1.gain.value = 0.5;
+    nodeGain1.connect(masterGain);
 
     info ();
     eSlower ();
