@@ -24,12 +24,16 @@ table, th, td {
 	vertical-align: middle;
 	text-align: center;
 } /* table */
-td       { height: 45px; width: 45px; color: white; }
+td       { color: white; }
 textarea { resize: none; }
 button   { padding: 2px; margin: 2px; }
 h1 { font-size: 30px; }
 h2 { font-size: 25px; }
 h3 { font-size: 20px; }
+.square { height: 45px; width: 45px; color: white; }
+.title { height: 30px; font-size: 30px; color:black; background-color: white; }
+.subtitle { height: 20px; font-size: 16px; color:black; background-color: white; }
+.copyright { height: 10px; font-size: 8px; color:black; background-color: white; }
 
 /*******************************************************************************/
 /*******************************************************************************/
@@ -247,14 +251,17 @@ function info ()
     var info = the.info= {};
 
 	info['Basic'] = HERE(function () {/*
-   When cutting across a muscle, all the individual muscle "fibers" are seen.
-An idle muscle has "tonus" (a little bit of persistent contraction).
-Each fiber contracts and releases quickly (a twitch).  Many twitches make tonus.
-Twitching exhausts a fiber. It must sit idle for a time before twitching again.
-   When more/less fibers twitch, contraction increases/decreases.
+   When a muscle is cut across, all the individual muscle "fibers" are seen.
+Each fiber contracts/releases quickly (a twitch).  Fibers don't stay contracted.
+An idle muscle has "tonus" (persistent contraction from many twitches).
+Twitching exhausts a fiber.  It must sit idle for a time before twitching again.
+   Tonus is when twitches are distributed evenly over fibers in a pattern
+that keeps the number of twitching fibers the same and
+maximizes time between twitches for any single fiber.
+   More twitches at the same time leads to stronger contraction.
 The nerve that drives twitches assigns one neuron to each fiber.
 The nervous system produces sequences of signals that do not exhaust fibers.
-	*/});
+*/});
 
     info['Abstract'] = HERE(function () {/*
    A muscle fiber bundle model is shown in cross section (each fiber a square).
@@ -263,8 +270,7 @@ A muscle fiber runs end-to-end and is excited by a single motor neuron.
 After twitching a fiber needs time to recover before the next twitch.
    This model shows that the time between fiber activations can be maximized
 while activations are uniformly distributed within the bundle.
-    */});
-
+*/});
 
     info['Running'] = HERE(function () {/*
    START/PAUSE animates the model.  Buttons control the interval and strength 
@@ -273,7 +279,9 @@ Hovering over buttons above the info box causes text like this to be shown.
 Twitch patterns show a repeating weak/STRONG tonus for 1 second each.
    Squares are identified by sequence numbers and center-based coordinates.
 Note the (0,0) coordinates at the center of the bundle.
-    */});
+   Muscles make sounds as fibers twitch, and the model is representative.
+When running, the sound frequency is in proportion to twitch activity.
+*/});
 
     info['Axon'] = HERE(function () {/*
    A motor neuron attaches at many points along a single twitch unit.
@@ -281,7 +289,7 @@ A twitch signal is sent to all neuromuscular junctions in a muscle fiber.
 A twitch unit is activated end-to-end with a single signal.
 The entire length of the twitch unit contracts at the same time.
 Motor neuron axon terminal arbor shapes guarantee simultaneous activation.
-    */});
+*/});
 
     info['Dendrite'] = HERE(function () {/*
    The remote dendrite shape for a motor neuron feeding a muscle fiber
@@ -290,14 +298,14 @@ Each motor neuron dendrite is shaped to detect gradients ignored by others.
    The dendrite hosts a fixed set of pre-randomized dendritic spines.
 As the sweeping pattern passes across the dendritic spines
 those which sample a boundary in the pattern twitch their muscle fibers.
-    */});
+*/});
 
     info['Coincidences'] = HERE(function () {/*
    The remote dendrite for each motor neuron expresses a pattern
 which makes its gradient detectors unique within sampled patterns.
 It most likely samples the pattern in multiple places and uses
 coincidence of samples to trigger the pulse that activates a muscle fiber.
-    */});
+*/});
 
     info['Discussion'] = HERE(function () {/*
    As long as the pattern delivered is reliable,
@@ -307,7 +315,7 @@ This strategy guarantees maximum recovery time for all muscle fibers.
 The code driving this image is logically equivalent to
 the proposed pre-randomized sampling of a regular pattern.
    Twitch is "all or none": tonus measures average twitches per unit time.
-    */});
+*/});
 
     info['Conclusions'] = HERE(function () {/*
    This simple demonstration illustrates a logical economy
@@ -316,7 +324,7 @@ act concurrently on all actual delivered pulses,
 whether they are dense or sparse,
 without the burden of unnecessary calculation.
    This is one of the economies expected in vivo.
-    */});
+*/});
 
     var keys = [];
     for (key in info) keys.push (key);
@@ -381,6 +389,7 @@ function main ()
 			var within = false;
 			var r = Math.sqrt (x*x + y*y);
 			var cell = row.insertCell (-1);
+			cell.classList.add ('square');
 			cell.innerHTML = '' + the.cell.length + '<br /><br />';
 			cell.innerHTML += '(' + xsign + x + ',' + ysign + -y + ')';
 			if (r < (the.radius + 0.5)) {
@@ -392,7 +401,7 @@ function main ()
 				// generate invisible cell
 			}
 			var id = (within ? 'i' : 'x') + index++;
-			cell.setAttribute ('class', id);
+			cell.classList.add (id);
 			cell.style.backgroundColor = within ? "#552222" : "white";
 			cell.style.color = "white";
 		}
@@ -431,17 +440,30 @@ window.onload = function ()
 	</head>
 	<body>
         <div align="center">
-        <h1><u>Twitch Distributor Visualization</u></h1>
+
+<table width="100%">
+	<tr><td class="title">
+		<u>Twitch Distributor Visualization</u>
+		</td></tr><tr><td class="subtitle">
+		Twitch Distributor: An element of the
+		<a href="http://www.brainbuildingkit.com">
+			<i>Brain Building Kit&trade;</i>
+		</a>
+	</td></tr><tr><td class="copyright">
         <i>Copyright&copy; 2018 Jonathan D. Lettvin, All Rights Reserved.</i>
+	</td></tr>
+</table>
+
         <br /><span id="buttons"></span>
-        <br /><textarea id="info" rows="7" cols="84" readonly>
-        Hover over the above buttons to fill this area with information.
+        <br /><textarea id="info" rows="10" cols="84" readonly>
+        Hover over the above buttons to show information in this area.
         </textarea><br />
-            <table id="bundle">
-			    <caption align="bottom">
-				    <h3>Muscle Fiber Bundle Cross Section</h3>
-			    </caption>
-			    <thead>
+
+ <table id="bundle">
+	<caption align="bottom">
+		<h3>Muscle Fiber Bundle Cross Section</h3>
+	</caption>
+	<thead>
 <tr>
 	<td id="animator" colspan="7" bgcolor="black">
 		<button id="pause" onclick="eRun(event)">STOP</button>
@@ -453,16 +475,17 @@ window.onload = function ()
 		<b id="interval"></b>
 		<button id="pos" onclick="eFaster (event)">+</button>
 	</td><td colspan="2" bgcolor="#333333" valign="top">
-		strength<br /><br /><br />
+		contraction<br /><br /><br />
 		<button id="pown" onclick="eSofter (event)">-</button>
 		<b id="strength">2</b>
 		<button id="powp" onclick="eHarder (event)">+</button>
 	</td><td colspan="2" bgcolor="#333333">tonus<h3 id="state">None</h3></td>
 </tr>
-			    </thead>
-			    <tbody id="tbody">
-			    </tbody>
-            </table>
+	</thead>
+
+	<tbody id="tbody"></tbody>
+</table>
+
         </div>
 	</body>
 </html>
