@@ -336,35 +336,16 @@ without the burden of unnecessary calculation.
 
 
 //-------------------------------------------------------------------------------
-// stackoverflow.com/questions/1409225/changing-a-css-rule-set-from-javascript
-function getCSSRule(ruleName) {
+// https://davidwalsh.name/add-rules-stylesheets
+function addCSSRules(sheet, selector, rules, index=0) {
 //-------------------------------------------------------------------------------
-    ruleName = ruleName.toLowerCase();
-    var result = null;
-    var find = Array.prototype.find;
-
-    find.call(document.styleSheets, styleSheet => {
-		//var rules = styleSheet.cssRules || sheet.rules;
-		//var rules = styleSheet.cssRules || sheet.rules;
-        //result = find.call(rules, cssRule => {
-        result = find.call(styleSheet.cssRules, cssRule => {
-            return cssRule instanceof CSSStyleRule 
-                && cssRule.selectorText.toLowerCase() == ruleName;
-        });
-        return result != null;
-    });
-    return result;
-} // getCSSRule
-
-
-function addCSSRule(sheet, selector, rules, index) {
 	if("insertRule" in sheet) {
 		sheet.insertRule(selector + "{" + rules + "}", index);
 	}
 	else if("addRule" in sheet) {
 		sheet.addRule(selector, rules, index);
 	}
-}
+} // addCSSRules
 
 
 //-------------------------------------------------------------------------------
@@ -397,7 +378,7 @@ function main ()
 
 	var sheet = document.styleSheets[0];
 	var px = the.xylabel ? 45 : 34;
-	addCSSRule (sheet,
+	addCSSRules (sheet,
 		".square", "height: " + px + "px; width: " + px + "px; color: white;");
 
 	// Generate the table from the coordinates
