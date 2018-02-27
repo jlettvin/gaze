@@ -47,9 +47,10 @@ h3 { font-size: 20px; }
 function clickBuzz (frequency, length) {
 //-------------------------------------------------------------------------------
     // use stored audio context, masterGain and nodeGain1 nodes
-    var audioContext = document.distributor.audioContext;
-    var masterGain   = document.distributor.masterGain;
-    var nodeGain1    = document.distributor.nodeGain1;
+	var the = document.distributor;
+    var audioContext = the.audioContext;
+    var masterGain   = the.masterGain;
+    var nodeGain1    = the.nodeGain1;
 
     var oscillatorNode = new OscillatorNode (audioContext, {type: 'square'});
     oscillatorNode.frequency.setValueAtTime (frequency, audioContext.currentTime);
@@ -63,17 +64,18 @@ function clickBuzz (frequency, length) {
 function ePower (direction)
 //-------------------------------------------------------------------------------
 {
+	var the = document.distributor;
     var strength = document.getElementById ("strength");
-    if (document.distributor.running)
+    if (the.running)
     {
         if (
-            (direction == -1 && document.distributor.strong > 0) ||
-            (direction == +1 && document.distributor.strong < 3) )
+            (direction == -1 && the.strong > 0) ||
+            (direction == +1 && the.strong < 3) )
         {
-            document.distributor.strong += direction;
+            the.strong += direction;
         }
     }
-    strength.innerHTML = ' ' + document.distributor.strong + ' ';
+    strength.innerHTML = ' ' + the.strong + ' ';
 } // ePower
 
 
@@ -81,21 +83,22 @@ function ePower (direction)
 function eDelay (direction)
 //-------------------------------------------------------------------------------
 {
+	var the = document.distributor;
     var interval = document.getElementById ("interval");
-    if (document.distributor.running)
+    if (the.running)
     {
-        var N = document.distributor.interval.length - 1;
+        var N = the.interval.length - 1;
         if (
-            (direction == -1 && document.distributor.delay > 0) ||
-            (direction == +1 && document.distributor.delay < N) )
+            (direction == -1 && the.delay > 0) ||
+            (direction == +1 && the.delay < N) )
         {
-            document.distributor.delay += direction;
-            clearInterval (document.distributor.timer);
-            document.distributor.timer = setInterval (
-                loop, document.distributor.interval[document.distributor.delay]);
+            the.delay += direction;
+            clearInterval (the.timer);
+            the.timer = setInterval (
+                loop, the.interval[the.delay]);
         }
     }
-    interval.innerHTML = ' ' +         document.distributor.interval[document.distributor.delay] +         ' ';
+    interval.innerHTML = ' ' + the.interval[the.delay] + ' ';
 } // eDelay
 
 
@@ -135,9 +138,10 @@ function eFaster (e)
 function eButton (e)
 //-------------------------------------------------------------------------------
 {
+	var the = document.distributor;
     var id = e.target.id;
     var key = document.getElementById (id).innerHTML;
-    var val = document.distributor.info[key];
+    var val = the.info[key];
     var tgt = document.getElementById ('info');
     tgt.value = val;
 } // eButton
@@ -147,16 +151,17 @@ function eButton (e)
 function eRun (e)
 //-------------------------------------------------------------------------------
 {
-    document.distributor.running = !document.distributor.running;
-    if (document.distributor.running) {
-        document.distributor.timer = setInterval (
-            loop, document.distributor.interval[document.distributor.delay]);
+	var the = document.distributor;
+    the.running = !the.running;
+    if (the.running) {
+        the.timer = setInterval (
+            loop, the.interval[the.delay]);
     } else {
-        clearInterval (document.distributor.timer);
-        document.distributor.timer = null;
+        clearInterval (the.timer);
+        the.timer = null;
     }
     var button = document.getElementById ("pause");
-    button.innerHTML = document.distributor.running ? "PAUSE" : "START";
+    button.innerHTML = the.running ? "PAUSE" : "START";
 } // eRun
 
 
@@ -164,7 +169,8 @@ function eRun (e)
 function reColor (className,scheme)
 //-------------------------------------------------------------------------------
 {
-    var colorPair = document.distributor.colors[scheme];
+	var the = document.distributor;
+    var colorPair = the.colors[scheme];
     var elements = document.getElementsByClassName (className);
     for (element of elements)
     {
@@ -197,33 +203,34 @@ function makeButtons (names)
 function loop ()
 //-------------------------------------------------------------------------------
 {
+	var the = document.distributor;
     var date = new Date ();
     var odd = (date.getSeconds () & 1);
-    var strength = 1 + document.distributor.strong * odd;
-    var I = document.distributor.active * strength;
+    var strength = 1 + the.strong * odd;
+    var I = the.active * strength;
 
-    //console.log (document.distributor.inverses);
+    //console.log (the.inverses);
     clickBuzz (
         I * 1000 /
-        document.distributor.interval[document.distributor.delay], 0.04);
-    for (classname of document.distributor.inverses)
+        the.interval[the.delay], 0.04);
+    for (classname of the.inverses)
     {
         reColor (classname, 0);
     }
-    document.distributor.inverses = [];
+    the.inverses = [];
 
     for (var i=0; i<I; ++i)
     {
-        document.distributor.index =
-			(document.distributor.index + 1) %
-			document.distributor.cell.length;
-        var classname = 'i' + document.distributor.cell[document.distributor.index];
+        the.index =
+			(the.index + 1) %
+			the.cell.length;
+        var classname = 'i' + the.cell[the.index];
 
-        document.distributor.inverses.push (classname);
+        the.inverses.push (classname);
         reColor (classname, 1);
     }
     var state = document.getElementById ('state');
-    if (document.distributor.strong == 0)
+    if (the.strong == 0)
     {
         state.innerHTML = 'same';
     } else {
@@ -236,7 +243,8 @@ function loop ()
 function info ()
 //-------------------------------------------------------------------------------
 {
-    var info = document.distributor.info= {};
+	var the = document.distributor;
+    var info = the.info= {};
 
     info['Abstract'] = HERE(function () {/*
    A muscle fiber bundle model is shown in cross section (each fiber a square).
@@ -327,13 +335,12 @@ function main ()
         masterGain  : audioContext.createGain(),
         nodeGain1   : audioContext.createGain(),
     };
-	var parm = document.distributor;
-	// TODO fix that when radius is set to 5, some iterations do not highlight
-	parm.radius = 5;  // Must be 5 or greater (diameter - 6 is used)
+	var the = document.distributor;
+	the.radius = 5;  // Must be 5 or greater (diameter - 6 is used)
 
-	parm.diameter = 1 + 2 * parm.radius;
-	parm.coordinates = [];
-	parm.cell = [];
+	the.diameter = 1 + 2 * the.radius;
+	the.coordinates = [];
+	the.cell = [];
 
 	// Generate the table from the coordinates
 	// Once this is done, distributor.py is no longer needed.
@@ -348,28 +355,28 @@ function main ()
 
 	tbody.innerHTML = '';
 
-	animator.colSpan = parm.diameter - controlCols;
+	animator.colSpan = the.diameter - controlCols;
 	var X = 0, Y = 0, index = 0;
 
-	for (y = -parm.radius; y <= +parm.radius; ++y) {
+	for (y = -the.radius; y <= +the.radius; ++y) {
 		// Generate the table rows here
 		var row = tbody.insertRow (-1);
 		var ysign = (y<0) ? '+' : '';
-		for (x = -parm.radius; x <= +parm.radius; ++x) {
+		for (x = -the.radius; x <= +the.radius; ++x) {
 			// Generate the cell data here
 			// index is the order number for the current cell
-			// parm.cell is an enumeration of all visible cell indices
-			// parm.cell is shuffled and used to identify cells by class
+			// the.cell is an enumeration of all visible cell indices
+			// the.cell is shuffled and used to identify cells by class
 			var xsign = (x>=0) ? '+' : '';
 			var within = false;
 			var r = Math.sqrt (x*x + y*y);
 			var cell = row.insertCell (-1);
-			cell.innerHTML = '' + parm.cell.length + '<br /><br />';
+			cell.innerHTML = '' + the.cell.length + '<br /><br />';
 			cell.innerHTML += '(' + xsign + x + ',' + ysign + -y + ')';
-			if (r < (parm.radius + 0.5)) {
+			if (r < (the.radius + 0.5)) {
 				within = true;
-				parm.cell.push (index);
-				parm.coordinates.push ([y,-x,index]);
+				the.cell.push (index);
+				the.coordinates.push ([y,-x,index]);
 				// generate visible cell
 			} else {
 				// generate invisible cell
@@ -380,8 +387,8 @@ function main ()
 			cell.style.color = "white";
 		}
 	}
-	console.log (parm.cell);
-	shuffle (parm.cell);
+	console.log (the.cell);
+	shuffle (the.cell);
 
     var masterGain   = document.distributor.masterGain;
     var nodeGain1    = document.distributor.nodeGain1;
