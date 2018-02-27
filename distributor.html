@@ -201,8 +201,8 @@ function loop ()
 
     //console.log (document.distributor.inverses);
     clickBuzz (
-        I * 2000 /
-        document.distributor.interval[document.distributor.delay], 0.02);
+        I * 1000 /
+        document.distributor.interval[document.distributor.delay], 0.04);
     for (classname of document.distributor.inverses)
     {
         reColor (classname, 0);
@@ -351,9 +351,12 @@ function main ()
 		var ysign = (y<0) ? '+' : '';
 		for (x = -parm.radius; x <= +parm.radius; ++x) {
 			// Generate the cell data here
+			var xsign = (x>=0) ? '+' : '';
 			var within = false;
 			var r = Math.sqrt (x*x + y*y);
 			var cell = row.insertCell (-1);
+			cell.innerHTML = '' + parm.cell.length + '<br /><br />';
+			cell.innerHTML += '(' + xsign + x + ',' + ysign + -y + ')';
 			if (r < (parm.radius + 0.5)) {
 				within = true;
 				parm.cell.push (parm.count);
@@ -363,9 +366,6 @@ function main ()
 				// generate invisible cell
 			}
 			var id = (within ? 'i' : 'x') + index++;
-			var xsign = (x>=0) ? '+' : '';
-			cell.innerHTML = '' + parm.count + '<br /><br />';
-			cell.innerHTML += '(' + xsign + x + ',' + ysign + -y + ')';
 			cell.setAttribute ('class', id);
 			cell.style.backgroundColor = within ? "#552222" : "white";
 			cell.style.color = "white";
