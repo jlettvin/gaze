@@ -23,10 +23,12 @@ body {
 table, th, td {
 	vertical-align: middle;
 	text-align: center;
+	padding: 0px;
+	border-spacing: 0px;
 } /* table */
 td       { color: white; }
 textarea { resize: none; }
-button   { padding: 2px; margin: 2px; }
+button   { border-spacing: 0px; padding: 0px; margin: 0px; }
 h1 { font-size: 30px; }
 h2 { font-size: 25px; }
 h3 { font-size: 20px; }
@@ -238,7 +240,7 @@ function loop ()
     {
         state.innerHTML = 'same';
     } else {
-        state.innerHTML = odd ? 'STRONG' : 'weak';
+        state.innerHTML = odd ? 'HARD' : 'soft';
     }
 } // loop
 
@@ -394,7 +396,7 @@ function main ()
 	the.cell = [];
 
 	var sheet = document.styleSheets[0];
-	var px = the.xylabel ? 45 : 35;
+	var px = the.xylabel ? 45 : 34;
 	addCSSRule (sheet,
 		".square", "height: " + px + "px; width: " + px + "px; color: white;");
 
@@ -433,7 +435,6 @@ function main ()
 				cell.innerHTML += '<br /><br />';
 				cell.innerHTML += '(' + xsign + x + ',' + ysign + -y + ')';
 			}
-			//console.log ('"'+cell.innerHTML+'"');
 			if (r < (the.radius + 0.3)) {
 				within = true;
 				the.cell.push (index);
@@ -448,7 +449,6 @@ function main ()
 			cell.style.color = "white";
 		}
 	}
-	console.log (the.cell);
 	shuffle (the.cell);
 
     var masterGain   = document.distributor.masterGain;
@@ -509,15 +509,15 @@ window.onload = function ()
 <tr>
 	<td id="animator" colspan="7" bgcolor="black">
 		<button id="pause" onclick="eRun(event)">STOP</button>
-		animation, or
+		action, or
 		<button id="reload" onclick="location.reload (true)">reload</button>
 	</td><td colspan="2" bgcolor="#333333" valign="top">
-		interval(ms)<br /><br /><br />
+		delay(ms)<br /><br /><br />
 		<button id="neg" onclick="eSlower (event)">-</button>
 		<b id="interval"></b>
 		<button id="pos" onclick="eFaster (event)">+</button>
 	</td><td colspan="2" bgcolor="#333333" valign="top">
-		contraction<br /><br /><br />
+		harder<br /><br /><br />
 		<button id="pown" onclick="eSofter (event)">-</button>
 		<b id="strength">2</b>
 		<button id="powp" onclick="eHarder (event)">+</button>
