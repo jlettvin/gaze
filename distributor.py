@@ -4,45 +4,57 @@ from itertools import product
 from random    import shuffle
 from math      import sqrt
 
-def table (radius):
+def compile (radius):
     diameter = 1 + 2 * radius
     coordinates = [
             (y,-x)
             for (x,y) in product (xrange (-radius, radius+1), repeat=2)
             ]
 
-    indices = []
-    retval = ''
+    # table will be the HTML table hosting the twitch unit cut-ends.
+    # comb will be a fixed randomized sequence of indices into table.
+    # It is intended to be equivalent to one dendrite per comb tooth.
+    # Marching round-robin sequentially through this comb provides a
+    # guarantee of maximizing the time between individual specific
+    # twitch unit activations.
+    # TODO implement entirely in javascript.
+    # utility.js already has a Fisher-Yates shuffle.
+    # itertools.product is easily reimplemented as a nested (y,x) loop.
+    # a comprehension to exclude cells outside the radius is simple.
+    # generating the table is all that remains before this python is retired.
+    table = ''
+    comb = []
+
     last = None
-    retval = '<table>'
-    retval += '<caption align="bottom">'
-    retval += '<h3>Muscle Fiber Bundle Cross Section</h3>'
-    retval += '</caption>\n<tr>'
+    table = '<table>'
+    table += '<caption align="bottom">'
+    table += '<h3>Muscle Fiber Bundle Cross Section</h3>'
+    table += '</caption>\n<tr>'
 
-    retval += '<td colspan="%d" bgcolor="black">' % (diameter-6)
-    retval += '<button id="pause" onclick="eRun(event)">STOP</button>'
-    retval += ' animation, or '
-    retval += '<button id="reload" onclick="location.reload (true)">' \
+    table += '<td colspan="%d" bgcolor="black">' % (diameter-6)
+    table += '<button id="pause" onclick="eRun(event)">STOP</button>'
+    table += ' twitching, or '
+    table += '<button id="reload" onclick="location.reload (true)">' \
             'reload</button>'
-    retval += '</td>'
+    table += '</td>'
 
-    retval += '<td colspan="2" bgcolor="#333333" valign="top">'
-    retval += 'interval (ms)<br /><br /><br />'
-    retval += '<button id="neg" onclick="eSlower (event)">-</button>'
-    retval += '<b id="interval"></b>'
-    retval += '<button id="pos" onclick="eFaster (event)">+</button>'
-    retval += '</td>'
+    table += '<td colspan="2" bgcolor="#333333" valign="top">'
+    table += 'interval (ms)<br /><br /><br />'
+    table += '<button id="neg" onclick="eSlower (event)">-</button>'
+    table += '<b id="interval"></b>'
+    table += '<button id="pos" onclick="eFaster (event)">+</button>'
+    table += '</td>'
 
-    retval += '<td colspan="2" bgcolor="#333333" valign="top">'
-    retval += 'strength<br /><br /><br />'
-    retval += '<button id="pown" onclick="eSofter (event)">-</button>'
-    retval += '<b id="strength">2</b>'
-    retval += '<button id="powp" onclick="eHarder (event)">+</button>'
-    retval += '</td>'
+    table += '<td colspan="2" bgcolor="#333333" valign="top">'
+    table += 'strength<br /><br /><br />'
+    table += '<button id="pown" onclick="eSofter (event)">-</button>'
+    table += '<b id="strength">2</b>'
+    table += '<button id="powp" onclick="eHarder (event)">+</button>'
+    table += '</td>'
 
-    retval += '<td colspan="2" bgcolor="#333333">'
-    retval += 'tonus<h3 id="state">None</h3>'
-    retval += '</td>';
+    table += '<td colspan="2" bgcolor="#333333">'
+    table += 'tonus<h3 id="state">None</h3>'
+    table += '</td>';
 
     j = 0
     for i,(x,y) in enumerate (coordinates):
@@ -52,26 +64,26 @@ def table (radius):
         if within:
             id = 'i'
             bgcolor = '#552222'
-            indices += [i]
+            comb += [i]
         id = 'i' if within else 'x'
         if (y != last):
-            retval += '\n</tr><tr>'
+            table += '\n</tr><tr>'
             last = y
         if within:
-            retval += '<td class="%s%d" style="color:white;" bgcolor="%s">%d' % (
+            table += '<td class="%s%d" style="color:white;" bgcolor="%s">%d' % (
                     id, i, bgcolor, j)
             j += 1
-            retval += '<br /><br />(%+2d,%+2d)</td>' % (x,y)
+            table += '<br /><br />(%+2d,%+2d)</td>' % (x,y)
         else:
-            retval += '<td bgcolor="white"></td>'
-    retval += '\n</tr></table>'
+            table += '<td bgcolor="white"></td>'
+    table += '\n</tr></table>'
 
-    shuffle (indices)
-    return (indices, retval)
+    shuffle (comb)
+    return (comb, table)
 
 def main ():
-    indices, muscle = table (6)
-    ordered = ['<b class="i%d">%d</b>' % (i,o) for (i,o) in enumerate (indices)]
+    comb, muscle = compile (5)
+    ordered = ['<b class="i%d">%d</b>' % (i,o) for (i,o) in enumerate (comb)]
     print '''\
 <!DOCTYPE html>
 
@@ -103,20 +115,11 @@ textarea { resize: none; }
 button { padding: 2px; margin: 2px; }
 </style>
 
+<script type="text/javascript" src="utility.js"></script>
 <script type="text/javascript">
-
-//------------------------------------------------------------------------------
-// PHP style HEREDOC
-var HERE = function (f)
-//------------------------------------------------------------------------------
-{
-	return f.
-		toString().
-		split('\\n').
-		slice(1,-1).
-		join('\\n').
-		normalize('NFC');
-}; // HERE
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 
 //-------------------------------------------------------------------------------
 function ePower (direction)
@@ -133,9 +136,7 @@ function ePower (direction)
         }
     }
     strength.innerHTML = ' ' + document.distributor.strong + ' ';
-}
-
-
+} // ePower
 
 
 //-------------------------------------------------------------------------------
@@ -151,7 +152,7 @@ function clickBuzz (frequency, length) {
     oscillatorNode.connect ( nodeGain1);
     oscillatorNode.start (audioContext.currentTime);
     oscillatorNode.stop  (audioContext.currentTime + length);
-}
+} // clickBuzz
 
 
 //-------------------------------------------------------------------------------
@@ -175,35 +176,40 @@ function eDelay (direction)
     interval.innerHTML = ' ' + \
         document.distributor.interval[document.distributor.delay] + \
         ' ';
-}
+} // eDelay
+
 
 //-------------------------------------------------------------------------------
 function eSofter (e)
 //-------------------------------------------------------------------------------
 {
     ePower (-1);
-}
+} // eSofter
+
 
 //-------------------------------------------------------------------------------
 function eHarder (e)
 //-------------------------------------------------------------------------------
 {
     ePower (+1);
-}
+} // eHarder
+
 
 //-------------------------------------------------------------------------------
 function eSlower (e)
 //-------------------------------------------------------------------------------
 {
     eDelay (-1);
-}
+} // eSlower
+
 
 //-------------------------------------------------------------------------------
 function eFaster (e)
 //-------------------------------------------------------------------------------
 {
     eDelay (+1);
-}
+} // eFaster
+
 
 //-------------------------------------------------------------------------------
 function eButton (e)
@@ -214,7 +220,8 @@ function eButton (e)
     var val = document.distributor.info[key];
     var tgt = document.getElementById ('info');
     tgt.value = val;
-}
+} // eButton
+
 
 //-------------------------------------------------------------------------------
 function eRun (e)
@@ -230,7 +237,8 @@ function eRun (e)
     }
     var button = document.getElementById ("pause");
     button.innerHTML = document.distributor.running ? "PAUSE" : "START";
-}
+} // eRun
+
 
 //-------------------------------------------------------------------------------
 function reColor (className,scheme)
@@ -244,7 +252,8 @@ function reColor (className,scheme)
         element.style.backgroundColor = colorPair[0];
         element.style.color           = colorPair[1];
     }
-}
+} // reColor
+
 
 //-------------------------------------------------------------------------------
 function makeButtons (names)
@@ -264,7 +273,8 @@ function makeButtons (names)
     }
     var element = document.getElementById ('buttons');
     element.innerHTML = text;
-}
+} // makeButtons
+
 
 //-------------------------------------------------------------------------------
 function loop ()
@@ -288,7 +298,7 @@ function loop ()
     for (var i=0; i<I; ++i)
     {
         document.distributor.index = (document.distributor.index + 1) %% \
-                document.distributor.indices;
+                document.distributor.comb;
         var classname = 'i' + document.distributor.cell[document.distributor.index];
 
         document.distributor.inverses.push (classname);
@@ -301,7 +311,8 @@ function loop ()
     } else {
         state.innerHTML = odd ? 'STRONG' : 'weak';
     }
-}
+} // loop
+
 
 //-------------------------------------------------------------------------------
 function info ()
@@ -375,7 +386,8 @@ without the burden of unnecessary calculation.
     for (key in info) keys.push (key);
     makeButtons (keys);
 
-}
+} // info
+
 
 //-------------------------------------------------------------------------------
 function main ()
@@ -389,7 +401,7 @@ function main ()
         delay   :    3,
         interval:       [3, 10, 33, 100, 333, 1000],
         index   :    0,
-        indices :   %d,
+        comb    :  %3d,
         inverses:   [],
         running : true,
         strong  :    2,
@@ -412,15 +424,19 @@ function main ()
     eSlower ();
     eSofter ();
     eRun ();
-}
+} // main
+
 
 //-------------------------------------------------------------------------------
 window.onload = function ()
 //-------------------------------------------------------------------------------
 {
     main ();
-}
+} // window.onload
 
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 </script>
 
 	</head>
@@ -436,7 +452,7 @@ window.onload = function ()
         </div>
 	</body>
 </html>
-''' % (indices, len(indices), muscle);
+''' % (comb, len(comb), muscle);
 
 if __name__ == "__main__":
     main ()
