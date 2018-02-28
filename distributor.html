@@ -49,21 +49,34 @@ h3 { font-size: 20px; }
 /////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////
 
+const tau  = Math.PI * 2;
+
 //-------------------------------------------------------------------------------
-function clickBuzz (frequency, length) {
+// use stored audio context, masterGain and nodeGain1 nodes
+function audible (frequency) {
 //-------------------------------------------------------------------------------
-    // use stored audio context, masterGain and nodeGain1 nodes
 	var the = document.distributor;
     var audioContext = the.audioContext;
     var masterGain   = the.masterGain;
     var nodeGain1    = the.nodeGain1;
+	var oscillator   = the.oscillator;
 
-    var oscillatorNode = new OscillatorNode (audioContext, {type: 'square'});
-    oscillatorNode.frequency.setValueAtTime (frequency, audioContext.currentTime);
-    oscillatorNode.connect (nodeGain1);
-    oscillatorNode.start   (audioContext.currentTime);
-    oscillatorNode.stop    (audioContext.currentTime + length);
-} // clickBuzz
+	// Keep things as they are if no frequency change
+	if (frequency == the.frequency) return;
+
+	// Otherwise, stop the current oscillator and make a new one.
+	oscillator && oscillator.stop (audioContext.currentTime);
+    oscillator = new OscillatorNode (audioContext, {type: 'square'});
+
+	// Then get the new oscillator going.
+    oscillator.frequency.setValueAtTime (frequency, audioContext.currentTime);
+    oscillator.connect (nodeGain1);
+    oscillator.start   (audioContext.currentTime);
+
+	// Remember what we did
+	the.oscillator = oscillator;
+	the.frequency  = frequency;
+} // audible
 
 
 //-------------------------------------------------------------------------------
@@ -109,35 +122,11 @@ function eDelay (direction)
 
 
 //-------------------------------------------------------------------------------
-function eSofter (e)
+function eSofter (e) { ePower (-1); } // eSofter
+function eHarder (e) { ePower (+1); } // eHarder
+function eSlower (e) { eDelay (-1); } // eSlower
+function eFaster (e) { eDelay (+1); } // eFaster
 //-------------------------------------------------------------------------------
-{
-    ePower (-1);
-} // eSofter
-
-
-//-------------------------------------------------------------------------------
-function eHarder (e)
-//-------------------------------------------------------------------------------
-{
-    ePower (+1);
-} // eHarder
-
-
-//-------------------------------------------------------------------------------
-function eSlower (e)
-//-------------------------------------------------------------------------------
-{
-    eDelay (-1);
-} // eSlower
-
-
-//-------------------------------------------------------------------------------
-function eFaster (e)
-//-------------------------------------------------------------------------------
-{
-    eDelay (+1);
-} // eFaster
 
 
 //-------------------------------------------------------------------------------
@@ -165,6 +154,8 @@ function eRun (e)
     } else {
         clearInterval (the.timer);
         the.timer = null;
+		the.oscillator && the.oscillator.stop (the.audioContext.currentTime);
+		the.oscillator = null;
     }
     var button = document.getElementById ("pause");
     button.innerHTML = the.running ? "PAUSE" : "START";
@@ -180,21 +171,6 @@ function eStep (e)
 		loop ();
 	}
 } // eStep
-
-
-//-------------------------------------------------------------------------------
-function reColor (className,scheme)
-//-------------------------------------------------------------------------------
-{
-	var the = document.distributor;
-    var colorPair = the.colors[scheme];
-    var elements = document.getElementsByClassName (className);
-    for (element of elements)
-    {
-        element.style.backgroundColor = colorPair[0];
-        element.style.color           = colorPair[1];
-    }
-} // reColor
 
 
 //-------------------------------------------------------------------------------
@@ -216,48 +192,73 @@ function makeButtons (names)
 } // makeButtons
 
 
+//------------------------------------------------------------------------------
+function box (x0,y0,x1,y1,c)
+//------------------------------------------------------------------------------
+{
+	var the = document.distributor;
+	var ctx = the.canvas.context;
+
+	ctx.beginPath ();
+	ctx.rect (x0, y0, x1, y1);
+	ctx.fillStyle = c;
+	ctx.fill ();
+} // box
+
+//------------------------------------------------------------------------------
+function disk (x,y,r,c)
+//------------------------------------------------------------------------------
+{
+	var the = document.distributor;
+	var ctx = the.canvas.context;
+
+	ctx.fillStyle = c;
+	ctx.beginPath ();
+	ctx.arc (x, y, r, 0, tau);
+	ctx.closePath ();
+	ctx.fill ();
+} // disk
+
+
 //-------------------------------------------------------------------------------
 function loop ()
 //-------------------------------------------------------------------------------
 {
-	var the = document.distributor;
-    var date = new Date ();
-    var odd = (date.getSeconds () & 1);
-    var strength = 1 + the.strong * odd;
-    var I = the.active * strength;
+	var the       = document.distributor;
+    var timestamp = new Date ();
+    var odd       = (timestamp.getSeconds () & 1);
+    var strength  = 1 + the.strong * odd;
+    var requested = the.active * strength;
+	var width     = the.canvas.width;
+	var height    = the.canvas.height;
+	var x0        = the.canvas.x0;
+	var y0        = the.canvas.y0;
+	var scale     = the.scale - 1; // -1 to keep fibers within the sarcolemma
+	var r0        = parseInt (scale / 2); // radius of visible fiber
 
-    //console.log (the.inverses);
-    clickBuzz (
-        I * 1000 /
-        the.interval[the.delay], 0.04);
-    for (classname of the.inverses)
-    {
-        reColor (classname, 0);
-    }
-    the.inverses = [];
+    audible (requested * 1000 / the.interval[the.delay]);
 
-    for (var i=0; i<I; ++i)
-    {
-        the.index =
-			(the.index + 1) %
-			the.fiber.length;
-        var classname = 'i' + the.fiber[the.index];
+	{
+		// clear the canvas back to untwitching
+		box (0, 0, width, height, "#ffffcc");
+		disk (x0,y0,x0,"#552222");
+	}
 
-        the.inverses.push (classname);
-        reColor (classname, 1);
+	// Color as many fibers as requested
+	while (requested--) {
+        the.index = (the.index + 1) % the.fiber.length;
+		var xy = the.coordinates[the.fiber[the.index]];
+		disk (x0 + xy[0] * scale, y0 + xy[1] * scale, r0, 'red');
     }
-    var state = document.getElementById ('state');
-    if (the.strong == 0)
-    {
-        state.innerHTML = 'same';
-    } else {
-        state.innerHTML = odd ? 'HARD' : 'soft';
-    }
+
+	// Show the name of the tonus state
+    document.getElementById ('state').innerHTML =
+		the.strong ? (odd ? 'HARD' : 'soft') : 'same';
 } // loop
 
 
 //-------------------------------------------------------------------------------
-function info ()
+function initializeInfo ()
 //-------------------------------------------------------------------------------
 {
 	var the = document.distributor;
@@ -360,31 +361,33 @@ function addCSSRules(sheet, selector, rules, index=0) {
 
 
 //-------------------------------------------------------------------------------
-function main ()
+function initializeDistributor ()
 //-------------------------------------------------------------------------------
 {
     var audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
     document.distributor = {
-		xylabel :   false,
-        active  :   11,
-        colors  :       [['#552222','white'], ['#bb3333','white']],
-        delay   :    3,
-        interval:       [3, 10, 33, 100, 333, 1000],
-        index   :    0,
-        inverses:   [],
-        running : true,
-        strong  :    2,
-        timer   : null,
-        audioContext: audioContext,
-        masterGain  : audioContext.createGain(),
-        nodeGain1   : audioContext.createGain(),
+		xylabel      :   false,
+        active       :   11,
+        colors       :       [['#552222','white'], ['#bb3333','white']],
+        delay        :    3,
+        interval     :       [3, 10, 33, 100, 333, 1000],
+        index        :    0,
+        running      : true,
+        strong       :    2,
+        timer        : null,
+		frequency    :    0,
+        audioContext : audioContext,
+        masterGain   : audioContext.createGain(),
+        nodeGain1    : audioContext.createGain(),
+		oscillator   : null,
     };
 	var the = document.distributor;
 	the.radius = 7;  // Must be 5 or greater (diameter - 6 is used)
+	the.scale  = 21;
 
 	the.diameter = 1 + 2 * the.radius;
-	the.coordinates = [];
+	the.coordinates = {};
 	the.fiber = [];
 
 	var sheet = document.styleSheets[0];
@@ -392,75 +395,105 @@ function main ()
 	addCSSRules (sheet,
 		".square", "height: " + px + "px; width: " + px + "px; color: white;");
 
-	// Generate the table from the coordinates
-	// Once this is done, distributor.py is no longer needed.
-	// The table id = "bundle".
-	// Generate the metadata here.
-
-	var controlCols = 6;
-
-	var table    = document.getElementById ("bundle");
-	var tbody    = document.getElementById ("tbody");
-	var animator = document.getElementById ("animator");
-
-	tbody.innerHTML = '';
-
-	animator.colSpan = the.diameter - controlCols;
-	var X = 0, Y = 0, index = 0;
-
-	for (y = -the.radius; y <= +the.radius; ++y) {
-		// Generate the table rows here
-		var row = tbody.insertRow (-1);
-		var ysign = (y<0) ? '+' : '';
-		for (x = -the.radius; x <= +the.radius; ++x) {
-			// Generate the fiber data here
-			// index is the order number for the current fiber
-			// the.fiber is an enumeration of all visible fiber indices
-			// the.fiber is shuffled and used to identify fibers by class
-			var xsign = (x>=0) ? '+' : '';
-			var within = false;
-			var r = Math.sqrt (x*x + y*y);
-			var fiber = row.insertCell (-1);
-			fiber.classList.add ('square');
-			fiber.innerHTML = '' + the.fiber.length
-			if (the.xylabel) {
-				fiber.innerHTML += '<br /><br />';
-				fiber.innerHTML += '(' + xsign + x + ',' + ysign + -y + ')';
-			}
-			if (r < (the.radius + 0.3)) {
-				within = true;
-				the.fiber.push (index);
-				the.coordinates.push ([y,-x,index]);
-				// generate visible fiber
-			} else {
-				// generate invisible cell
-			}
-			var id = (within ? 'i' : 'x') + index++;
-			fiber.classList.add (id);
-			fiber.style.backgroundColor = within ? "#552222" : "white";
-			fiber.style.color = "white";
-		}
-	}
-	shuffle (the.fiber);
-
-    var masterGain   = document.distributor.masterGain;
-    var nodeGain1    = document.distributor.nodeGain1;
-
-	masterGain.gain.setValueAtTime (0.5, audioContext.currentTime);
-    masterGain.connect(audioContext.destination);
-
-	nodeGain1.gain.setValueAtTime (0.5, audioContext.currentTime);
-    nodeGain1.connect(masterGain);
-
-    info ();
-    eSlower ();
-    eSofter ();
+	console.log (the);
+	initializeTable  ();
+	initializeAudio  ();
+	initializeCanvas ();
+    initializeInfo   ();
+	console.log (the);
 
 	document.addEventListener('keypress', (event) => {
   		//const keyName = event.key;
 		eStep (event);
 	});
+} // initializeDistributor
 
+
+//-------------------------------------------------------------------------------
+function initializeTable ()
+//-------------------------------------------------------------------------------
+{
+	var the = document.distributor;
+
+	var controlCols = 6;
+	var table    = document.getElementById ("bundle");
+	var animator = document.getElementById ("animator");
+
+	animator.colSpan = the.diameter - controlCols;
+	var X = 0, Y = 0, count = 0;
+
+	// Initialize display coordinates and indices
+	for (y = -the.radius; y <= +the.radius; ++y) {
+		var ysign = (y<0) ? '+' : '';
+		for (x = -the.radius; x <= +the.radius; ++x) {
+			// Generate the fiber data here
+			// the.fiber is an enumeration of all visible fiber indices
+			// the.fiber is shuffled and used to identify fibers to twitch
+			var r = Math.sqrt (x*x + y*y);
+			if (r < (the.radius + 0.3)) {
+				the.fiber.push (count);
+				the.coordinates[count] = [x,-y];
+				count++;
+			}
+		}
+	}
+	shuffle (the.fiber);
+	console.log (the.fiber);
+} // initializeTable
+
+
+//-------------------------------------------------------------------------------
+function initializeAudio ()
+//-------------------------------------------------------------------------------
+{
+	var the = document.distributor;
+
+	var audioContext = the.audioContext;
+	var masterGain   = the.masterGain;
+	var nodeGain1    = the.nodeGain1;
+
+	masterGain.gain.setValueAtTime (0.5, audioContext.currentTime);
+	masterGain.connect(audioContext.destination);
+
+	nodeGain1.gain.setValueAtTime (0.5, audioContext.currentTime);
+	nodeGain1.connect(masterGain);
+} // initializeAudio
+
+
+//-------------------------------------------------------------------------------
+function initializeCanvas ()
+//-------------------------------------------------------------------------------
+{
+	var the = document.distributor;
+
+	var element = document.getElementById ("canvas");
+	var ctx     = element.getContext ("2d");
+	var width   = the.scale * the.diameter;
+	var height  = the.scale * the.diameter;
+
+	element.width  = width;
+	element.height = height;
+
+	the.canvas = {
+		element : element,
+		context : ctx,
+		width   : width,
+		height  : height,
+		x0      : parseInt (width  / 2),
+		y0      : parseInt (height / 2),
+	};
+
+	box (0, 0, the.canvas.width, the.canvas.height, "#ffffcc");
+	disk (the.canvas.x0, the.canvas.y0, the.canvas.x0, "#552222");
+} // initializeCanvas
+
+//-------------------------------------------------------------------------------
+function main ()
+//-------------------------------------------------------------------------------
+{
+	initializeDistributor ();
+    eSlower ();
+    eSofter ();
     eRun ();
 } // main
 
@@ -499,11 +532,7 @@ window.onload = function ()
         Hover over the above buttons to show information in this area.
         </textarea><br />
 
- <table id="bundle">
-	<caption align="bottom">
-		<h3>Muscle Fiber Bundle</h3>
-	</caption>
-	<thead>
+ <table id="bundle" width="100%">
 <tr>
 	<td id="animator" colspan="7" bgcolor="black">
 		<button id="pause" onclick="eRun(event)">STOP</button>
@@ -525,6 +554,8 @@ window.onload = function ()
 
 	<tbody id="tbody"></tbody>
 </table>
+		<h3>Muscle Fiber Bundle</h3>
+ 		<canvas id="canvas"></canvas>
 
         </div>
 	</body>
