@@ -56,26 +56,27 @@ const tau  = Math.PI * 2;
 function audible (frequency) {
 //-------------------------------------------------------------------------------
 	var the = document.distributor;
-    var audioContext = the.audioContext;
-    var masterGain   = the.masterGain;
-    var nodeGain1    = the.nodeGain1;
-	var oscillator   = the.oscillator;
+
+    var context      = the.audio.context;
+    var masterGain   = the.audio.masterGain;
+    var nodeGain1    = the.audio.nodeGain1;
+	var oscillator   = the.audio.oscillator;
 
 	// Keep things as they are if no frequency change
-	if (frequency == the.frequency) return;
+	if (frequency == the.audio.frequency) return;
 
 	// Otherwise, stop the current oscillator and make a new one.
-	oscillator && oscillator.stop (audioContext.currentTime);
-    oscillator = new OscillatorNode (audioContext, {type: 'square'});
+	oscillator && oscillator.stop (context.currentTime);
+    oscillator = new OscillatorNode (context, {type: 'square'});
 
 	// Then get the new oscillator going.
-    oscillator.frequency.setValueAtTime (frequency, audioContext.currentTime);
+    oscillator.frequency.setValueAtTime (frequency, context.currentTime);
     oscillator.connect (nodeGain1);
-    oscillator.start   (audioContext.currentTime);
+    oscillator.start   (context.currentTime);
 
 	// Remember what we did
-	the.oscillator = oscillator;
-	the.frequency  = frequency;
+	the.audio.oscillator = oscillator;
+	the.audio.frequency  = frequency;
 } // audible
 
 
@@ -95,6 +96,7 @@ function ePower (direction)
         }
     }
     strength.innerHTML = ' ' + the.strong + ' ';
+	reRun ();
 } // ePower
 
 
@@ -118,6 +120,7 @@ function eDelay (direction)
         }
     }
     interval.innerHTML = ' ' + the.interval[the.delay] + ' ';
+	reRun ();
 } // eDelay
 
 
@@ -149,17 +152,24 @@ function eRun (e)
 	var the = document.distributor;
     the.running = !the.running;
     if (the.running) {
-        the.timer = setInterval (
-            loop, the.interval[the.delay]);
+        the.timer = setInterval (loop, the.interval[the.delay]);
+		audible (the.audio.frequency);
     } else {
         clearInterval (the.timer);
         the.timer = null;
-		the.oscillator && the.oscillator.stop (the.audioContext.currentTime);
-		the.oscillator = null;
+		if (the.audio.oscillator) {
+			the.audio.oscillator.stop (the.audio.context.currentTime);
+			the.audio.oscillator = null;
+		}
     }
     var button = document.getElementById ("pause");
     button.innerHTML = the.running ? "PAUSE" : "START";
 } // eRun
+
+
+//-------------------------------------------------------------------------------
+function reRun () { eRun (); eRun (); }
+//-------------------------------------------------------------------------------
 
 
 //-------------------------------------------------------------------------------
@@ -364,43 +374,29 @@ function addCSSRules(sheet, selector, rules, index=0) {
 function initializeDistributor ()
 //-------------------------------------------------------------------------------
 {
-    var audioContext = new (window.AudioContext || window.webkitAudioContext)();
-
     document.distributor = {
-		xylabel      :   false,
-        active       :   11,
-        colors       :       [['#552222','white'], ['#bb3333','white']],
         delay        :    5,
         interval     :       [3, 10, 33, 100, 333, 1000],
         index        :    0,
         running      : true,
         strong       :    0,
         timer        : null,
-		frequency    :    0,
-        audioContext : audioContext,
-        masterGain   : audioContext.createGain(),
-        nodeGain1    : audioContext.createGain(),
-		oscillator   : null,
     };
 	var the = document.distributor;
-	the.radius = 7;  // Must be 5 or greater (diameter - 6 is used)
-	the.scale  = 21;
+	the.radius = 7;
+	the.active = the.radius * 2;
+	the.scale  = 31;
 
 	the.diameter = 1 + 2 * the.radius;
 	the.coordinates = {};
 	the.fiber = [];
 
 	var sheet = document.styleSheets[0];
-	var px = the.xylabel ? 45 : 34;
-	addCSSRules (sheet,
-		".square", "height: " + px + "px; width: " + px + "px; color: white;");
 
-	console.log (the);
 	initializeTable  ();
 	initializeAudio  ();
 	initializeCanvas ();
     initializeInfo   ();
-	console.log (the);
 
 	document.addEventListener('keypress', (event) => {
   		//const keyName = event.key;
@@ -438,7 +434,6 @@ function initializeTable ()
 		}
 	}
 	shuffle (the.fiber);
-	console.log (the.fiber);
 } // initializeTable
 
 
@@ -448,14 +443,23 @@ function initializeAudio ()
 {
 	var the = document.distributor;
 
-	var audioContext = the.audioContext;
-	var masterGain   = the.masterGain;
-	var nodeGain1    = the.nodeGain1;
+	the.audio = {};
 
-	masterGain.gain.setValueAtTime (0.5, audioContext.currentTime);
-	masterGain.connect(audioContext.destination);
+    var context = new (window.AudioContext || window.webkitAudioContext)();
 
-	nodeGain1.gain.setValueAtTime (0.5, audioContext.currentTime);
+	the.audio.frequency    =    0;
+	the.audio.context      = context;
+	the.audio.masterGain   = context.createGain();
+	the.audio.nodeGain1    = context.createGain();
+	the.audio.oscillator   = null;
+
+	var masterGain   = the.audio.masterGain;
+	var nodeGain1    = the.audio.nodeGain1;
+
+	masterGain.gain.setValueAtTime (0.5, context.currentTime);
+	masterGain.connect(context.destination);
+
+	nodeGain1.gain.setValueAtTime (0.5, context.currentTime);
 	nodeGain1.connect(masterGain);
 } // initializeAudio
 
