@@ -29,12 +29,12 @@ table, th, td {
 td       { color: white; }
 textarea { resize: none; }
 button   { border-spacing: 0px; padding: 0px; margin: 0px; }
-h1 { font-size: 30px; }
-h2 { font-size: 25px; }
-h3 { font-size: 20px; }
+h1 { font-size: 25px; }
+h2 { font-size: 22px; }
+h3 { font-size: 16px; }
 /*.square { height: 45px; width: 45px; color: white; } */
-.title { height: 30px; font-size: 30px; color:black; background-color: white; }
-.subtitle { height: 20px; font-size: 16px; color:black; background-color: white; }
+.title { height: 25px; font-size: 30px; color:black; background-color: white; }
+.subtitle { height: 18px; font-size: 14px; color:black; background-color: white; }
 .copyright { height: 10px; font-size: 8px; color:black; background-color: white; }
 
 /*******************************************************************************/
@@ -154,6 +154,7 @@ function eRun (e)
     if (the.running) {
         the.timer = setInterval (loop, the.interval[the.delay]);
 		audible (the.audio.frequency);
+		//loop ();
     } else {
         clearInterval (the.timer);
         the.timer = null;
