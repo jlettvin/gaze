@@ -535,11 +535,11 @@ var displayCrossover = function (axys)
 	line (       0,     paney,     edge, paney+edge, '#00ff00');
 
 	// Label the fixed opposing lines
-	session.context.fillStyle = '#ff0000';
-	session.context.fillText ('S',      x0/2 - 15, paney + y0 + y0/2);
-
 	session.context.fillStyle = '#00ff00';
-	session.context.fillText ('D', x0 + x0/2 +  5, paney + y0 + y0/2);
+	session.context.fillText ('D',      x0/2 - 15, paney + y0 + y0/2);
+
+	session.context.fillStyle = '#ff0000';
+	session.context.fillText ('S', x0 + x0/2 +  5, paney + y0 + y0/2);
 
 	// Calculate display for moving lines of sight
 	// Extract eye-relative point source offsets
