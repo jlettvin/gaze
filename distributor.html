@@ -124,8 +124,8 @@ function eDelay (direction)
 //-------------------------------------------------------------------------------
 function eSofter (e) { ePower (-1); } // eSofter
 function eHarder (e) { ePower (+1); } // eHarder
-function eSlower (e) { eDelay (-1); } // eSlower
-function eFaster (e) { eDelay (+1); } // eFaster
+function eSlower (e) { eDelay (+1); } // eSlower
+function eFaster (e) { eDelay (-1); } // eFaster
 //-------------------------------------------------------------------------------
 
 
@@ -370,11 +370,11 @@ function initializeDistributor ()
 		xylabel      :   false,
         active       :   11,
         colors       :       [['#552222','white'], ['#bb3333','white']],
-        delay        :    3,
+        delay        :    5,
         interval     :       [3, 10, 33, 100, 333, 1000],
         index        :    0,
         running      : true,
-        strong       :    2,
+        strong       :    0,
         timer        : null,
 		frequency    :    0,
         audioContext : audioContext,
@@ -540,9 +540,9 @@ window.onload = function ()
 		<button id="reload" onclick="location.reload (true)">reload</button>
 	</td><td colspan="2" bgcolor="#333333" valign="top">
 		delay(ms)<br /><br /><br />
-		<button id="neg" onclick="eSlower (event)">-</button>
+		<button id="neg" onclick="eFaster (event)">-</button>
 		<b id="interval"></b>
-		<button id="pos" onclick="eFaster (event)">+</button>
+		<button id="pos" onclick="eSlower (event)">+</button>
 	</td><td colspan="2" bgcolor="#333333" valign="top">
 		harder<br /><br /><br />
 		<button id="pown" onclick="eSofter (event)">-</button>
