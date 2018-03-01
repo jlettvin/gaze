@@ -133,7 +133,7 @@ function ePower (direction)
     {
         if (
             (direction == -1 && the.strong > 0) ||
-            (direction == +1 && the.strong < 3) )
+            (direction == +1 && the.strong < the.hardest) )
         {
             the.strong += direction;
         }
@@ -231,7 +231,7 @@ function loop ()
 	var the       = document.distributor;
     var timestamp = new Date ();
     var odd       = (timestamp.getSeconds () & 1);
-    var strength  = 1 + the.strong * odd;
+    var strength  = 1 + the.strong * odd * 0.5;
     var requested = the.active * strength;
 	var width     = the.canvas.width;
 	var height    = the.canvas.height;
@@ -384,6 +384,7 @@ function initializeDistributor ()
 {
     document.distributor = {
         interval     : [10, 33, 100, 333, 1000],
+		hardest      : 10,
         index        : 0,
         running      : true,
         strong       : 0,
