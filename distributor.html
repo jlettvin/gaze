@@ -51,6 +51,48 @@ h3 { font-size: 16px; }
 
 const tau  = Math.PI * 2;
 
+
+//-------------------------------------------------------------------------------
+// https://davidwalsh.name/add-rules-stylesheets
+function addCSSRules(sheet, selector, rules, index=0) {
+//-------------------------------------------------------------------------------
+	if("insertRule" in sheet) {
+		sheet.insertRule(selector + "{" + rules + "}", index);
+	}
+	else if("addRule" in sheet) {
+		sheet.addRule(selector, rules, index);
+	}
+} // addCSSRules
+
+
+//------------------------------------------------------------------------------
+function box (x0,y0,x1,y1,c)
+//------------------------------------------------------------------------------
+{
+	var the = document.distributor;
+	var ctx = the.canvas.context;
+
+	ctx.beginPath ();
+	ctx.rect (x0, y0, x1, y1);
+	ctx.fillStyle = c;
+	ctx.fill ();
+} // box
+
+//------------------------------------------------------------------------------
+function disk (x,y,r,c)
+//------------------------------------------------------------------------------
+{
+	var the = document.distributor;
+	var ctx = the.canvas.context;
+
+	ctx.fillStyle = c;
+	ctx.beginPath ();
+	ctx.arc (x, y, r, 0, tau);
+	ctx.closePath ();
+	ctx.fill ();
+} // disk
+
+
 //-------------------------------------------------------------------------------
 // use stored audio context, masterGain and nodeGain1 nodes
 function audible (flag) {
@@ -167,11 +209,6 @@ function eRun (e)
 
 
 //-------------------------------------------------------------------------------
-function reRun () { if (document.distributor.running) { eRun (); eRun (); } }
-//-------------------------------------------------------------------------------
-
-
-//-------------------------------------------------------------------------------
 function eStep (e)
 //-------------------------------------------------------------------------------
 {
@@ -183,50 +220,8 @@ function eStep (e)
 
 
 //-------------------------------------------------------------------------------
-function makeButtons (names)
+function reRun () { if (document.distributor.running) { eRun (); eRun (); } }
 //-------------------------------------------------------------------------------
-{
-    var text = '';
-    var i = 0;
-    for (name of names)
-    {
-        var id = 'button' + i++;
-        text += '<button id="' + id +
-			'" onmouseover="eButton(event)"' +
-			'" onclick="eButton(event)"' + '>' +
-			name + '</button>';
-    }
-    var element = document.getElementById ('buttons');
-    element.innerHTML = text;
-} // makeButtons
-
-
-//------------------------------------------------------------------------------
-function box (x0,y0,x1,y1,c)
-//------------------------------------------------------------------------------
-{
-	var the = document.distributor;
-	var ctx = the.canvas.context;
-
-	ctx.beginPath ();
-	ctx.rect (x0, y0, x1, y1);
-	ctx.fillStyle = c;
-	ctx.fill ();
-} // box
-
-//------------------------------------------------------------------------------
-function disk (x,y,r,c)
-//------------------------------------------------------------------------------
-{
-	var the = document.distributor;
-	var ctx = the.canvas.context;
-
-	ctx.fillStyle = c;
-	ctx.beginPath ();
-	ctx.arc (x, y, r, 0, tau);
-	ctx.closePath ();
-	ctx.fill ();
-} // disk
 
 
 //-------------------------------------------------------------------------------
@@ -268,6 +263,25 @@ function loop ()
     document.getElementById ('state').innerHTML =
 		the.strong ? (odd ? 'HARD' : 'soft') : 'same';
 } // loop
+
+
+//-------------------------------------------------------------------------------
+function initializeButtons (names)
+//-------------------------------------------------------------------------------
+{
+    var text = '';
+    var i = 0;
+    for (name of names)
+    {
+        var id = 'button' + i++;
+        text += '<button id="' + id +
+			'" onmouseover="eButton(event)"' +
+			'" onclick="eButton(event)"' + '>' +
+			name + '</button>';
+    }
+    var element = document.getElementById ('buttons');
+    element.innerHTML = text;
+} // initializeButtons
 
 
 //-------------------------------------------------------------------------------
@@ -359,22 +373,9 @@ without the burden of unnecessary calculation.
 
     var keys = [];
     for (key in info) keys.push (key);
-    makeButtons (keys);
+    initializeButtons (keys);
 
 } // info
-
-
-//-------------------------------------------------------------------------------
-// https://davidwalsh.name/add-rules-stylesheets
-function addCSSRules(sheet, selector, rules, index=0) {
-//-------------------------------------------------------------------------------
-	if("insertRule" in sheet) {
-		sheet.insertRule(selector + "{" + rules + "}", index);
-	}
-	else if("addRule" in sheet) {
-		sheet.addRule(selector, rules, index);
-	}
-} // addCSSRules
 
 
 //-------------------------------------------------------------------------------
@@ -402,7 +403,7 @@ function initializeDistributor ()
 
 	var sheet = document.styleSheets[0];
 
-	initializeTable  (true);
+	initializeTable  ();
 	initializeAudio  ();
 	initializeCanvas ();
     initializeInfo   ();
@@ -415,7 +416,7 @@ function initializeDistributor ()
 
 
 //-------------------------------------------------------------------------------
-function initializeTable (hexagon=false)
+function initializeTable (hexagon=true)
 //-------------------------------------------------------------------------------
 {
 	var the = document.distributor;
@@ -428,6 +429,8 @@ function initializeTable (hexagon=false)
 	var count = 0, oX = 1.5, oY = 0.9;
 	var X = 1.0 * the.radius, Y = 1.0 * the.radius, R = the.radius + 0.3;
 
+	// Initialize display coordinates and indices
+	// the.fiber is an enumeration of all visible fiber indices
 	if (hexagon) {
 		// Not mathematically correct, but visual approximation
 		for (y = -Y; y <= +Y; y += oY) {
@@ -442,13 +445,10 @@ function initializeTable (hexagon=false)
 			}
 		}
 	} else {
-		// Initialize display coordinates and indices
+		// square array if you prefer
 		for (y = -the.radius; y <= +the.radius; ++y) {
 			var ysign = (y<0) ? '+' : '';
 			for (x = -the.radius; x <= +the.radius; ++x) {
-				// Generate the fiber data here
-				// the.fiber is an enumeration of all visible fiber indices
-				// the.fiber is shuffled and used to identify fibers to twitch
 				var r = Math.sqrt (x*x + y*y);
 				if (r < (the.radius + 0.3)) {
 					the.fiber.push (count);
@@ -458,6 +458,8 @@ function initializeTable (hexagon=false)
 			}
 		}
 	}
+
+	// the.fiber is shuffled and used to identify fibers to twitch
 	shuffle (the.fiber);
 } // initializeTable
 
@@ -472,7 +474,7 @@ function initializeAudio ()
 
     var context = new (window.AudioContext || window.webkitAudioContext)();
 
-	the.audio.frequency    =    0;
+	the.audio.frequency    = 0;
 	the.audio.context      = context;
 	the.audio.masterGain   = context.createGain();
 	the.audio.nodeGain1    = context.createGain();
