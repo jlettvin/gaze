@@ -12,7 +12,7 @@ const viewable = [
 		point    : {x:x0,y:-10000},
 		vergence : {x:x0,y:-10000},
 		interval : interval.maximum,
-		text     : HERE(function() {/*
+		text     : HEREDOC(function() {/*
 Scenario 1: star (RED) centered in scene at great distance.<br />
 Stationary scene.  Controls are disabled.
 		*/}),
@@ -30,7 +30,7 @@ Stationary scene.  Controls are disabled.
 		point    : {x:x0,y:x0},
 		vergence : {x:x0,y:y0},
 		interval : interval.maximum,
-		text     : HERE(function() {/*
+		text     : HEREDOC(function() {/*
 Scenario 2: point (RED) source far right, vergence in center.<br />
 Stationary vergence.  Controls are enabled.
 		*/}),
@@ -48,7 +48,7 @@ Stationary vergence.  Controls are enabled.
 		point    : {x:x0,y:y0},
 		vergence : {x:x0,y:y0},
 		interval : interval.maximum,
-		text     : HERE(function() {/*
+		text     : HEREDOC(function() {/*
 Scenario 3: point (RED) source center, vergence in center.<br />
 Active vergence.  Controls are enabled.
 		*/}),

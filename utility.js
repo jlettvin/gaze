@@ -1,17 +1,9 @@
 'use strict';
 
-//------------------------------------------------------------------------------
-function newFilledArray(len, val) {
-//------------------------------------------------------------------------------
-	var a = [];
-	while(len--) a.push(val);
-	return a;
-} // newFilledArray
-
 
 //------------------------------------------------------------------------------
-// PHP style HEREDOC
-var HERE = function (f)
+// PHP and shell style HEREDOC
+function HEREDOC (f)
 //------------------------------------------------------------------------------
 {
 	return f.
@@ -20,7 +12,87 @@ var HERE = function (f)
 		slice(1,-1).
 		join('\n').
 		normalize('NFC');
-}; // HERE
+} // HEREDOC
+
+
+//------------------------------------------------------------------------------
+String.prototype.isNumber = function ()
+//------------------------------------------------------------------------------
+{
+	return /^\d+$/.test(this);
+} // String.prototype.isNumber
+
+
+//------------------------------------------------------------------------------
+function newRandomInt (max)
+//------------------------------------------------------------------------------
+{
+	return Math.floor (Math.random () * Math.floor (max));
+} // newRandomInt
+
+
+//------------------------------------------------------------------------------
+function newArray (count, value) {
+//------------------------------------------------------------------------------
+	var a = [];
+	if (count > 0) while (--count) a.push (value);
+	return a;
+} // newRange
+
+
+//------------------------------------------------------------------------------
+function newRange (start, stop, step=1) {
+//------------------------------------------------------------------------------
+	var a = [];
+	var neg = (stop < start);
+	if (stop < start) while(start > stop) { a.push(start); start += step; }
+	else              while(start < stop) { a.push(start); start += step; }
+	return a;
+} // newRange
+
+
+//------------------------------------------------------------------------------
+// newHexagonal generates a list of coordinates for unit circle centers
+// which fit within a larger circle of specified radius without edge-bleed.
+function newHexagonal (radius)
+// radius is a whole number used to count unit circles from center to the edge.
+// Mathematically correct visual approximation of hexagonal spacing.
+// Coordinates returned are not sequentially ordered.
+//------------------------------------------------------------------------------
+{
+	var epsilon = 0.33; // fudge factor to bring elements close to the radius.
+	var X       = parseFloat (radius), Y = parseFloat (radius);
+	var R       = parseFloat (radius + epsilon);
+	var odd     = 1;
+	var thin    = 0.5;
+	var fat     = Math.sqrt (0.8);
+
+	var coordinates = [];
+	for (var y = 0; y <= +Y; y += fat) {
+		odd = (odd + 1) & 1;
+		var dx = (odd) ? thin : 0;
+		for (var x = dx; x <= X+dx; x+=1.0) {
+			var r = Math.sqrt (x*x + y*y);
+			if (r < R) {
+				if (x == 0 && y == 0) {
+					coordinates.push([+x,+y]);
+				} else if (x == 0) {
+					coordinates.push([x,-y]);
+					coordinates.push([x,+y]);
+				} else if (y == 0) {
+					coordinates.push([-x,y]);
+					coordinates.push([+x,y]);
+				} else {
+					coordinates.push([-x,-y]);
+					coordinates.push([-x,+y]);
+					coordinates.push([+x,-y]);
+					coordinates.push([+x,+y]);
+				}
+			}
+		}
+	}
+	return coordinates;
+} // newHexagons
 
 
 //------------------------------------------------------------------------------
@@ -36,12 +108,12 @@ function shuffle (array)
 		array[i] = array[j]
 		array[j] = temp
 	}
-}; // shuffle
+} // shuffle
 
 
 //------------------------------------------------------------------------------
 // https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection
-var intersection = function (x1,y1,x2,y2,x3,y3,x4,y4)
+function intersection (x1,y1,x2,y2,x3,y3,x4,y4)
 //------------------------------------------------------------------------------
 {
 	var x1m2 = x1 - x2, x3m4 = x3 - x4;
@@ -61,30 +133,11 @@ var intersection = function (x1,y1,x2,y2,x3,y3,x4,y4)
 		parseInt ((((x1y2-x2y1)*x3m4) - (x1m2*(x3y4-x4y3))) / Xdenom),
 		parseInt ((((x1y2-x2y1)*y3m4) - (y1m2*(x3y4-x4y3))) / Ydenom)
 	];
-}
+} // intersection
 
 
 //------------------------------------------------------------------------------
-String.prototype.isNumber = function ()
-//------------------------------------------------------------------------------
-{
-	return /^\d+$/.test(this);
-} // String.prototype.isNumber
-
-
-//------------------------------------------------------------------------------
-var getRandomInt = function (max)
-//------------------------------------------------------------------------------
-{
-	return Math.floor (Math.random () * Math.floor (max));
-} // getRandomInt
-
-
-//##############################################################################
-// SERVICE FUNCTIONS
-
-//------------------------------------------------------------------------------
-var bits = function (val)
+function bits (val)
 //------------------------------------------------------------------------------
 {
 	//val /= 16;
@@ -97,5 +150,3 @@ var bits = function (val)
 	}
 	return ret;
 } // bits
-
-

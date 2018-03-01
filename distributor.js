@@ -243,7 +243,7 @@ function initializeInfo ()
 	var the = document.distributor;
     var info = the.info= {};
 
-	info['Basic'] = HERE(function () {/*
+	info['Basic'] = HEREDOC(function () {/*
    When a muscle is cut across, all the individual muscle "fibers" are seen.
 Each fiber contracts/releases quickly (a twitch).  Fibers don't stay contracted.
 An idle muscle has "tonus" (persistent contraction from many twitches).
@@ -256,7 +256,7 @@ The nerve that drives twitches assigns one neuron to each fiber.
 The nervous system produces sequences of signals that do not exhaust fibers.
 */});
 
-    info['HowTo'] = HERE(function () {/*
+    info['HowTo'] = HEREDOC(function () {/*
    START/PAUSE animates the model.  Buttons control the interval and strength 
 Hovering over buttons above the info box causes text like this to be shown.
    The delay between pulses can be changed (inversely proportional to frequency).
@@ -269,7 +269,7 @@ When running, the sound frequency is in proportion to twitch activity.
 the accompanying sound is more consistent with uncoordinated activations.
 */});
 
-    info['Abstract'] = HERE(function () {/*
+    info['Abstract'] = HEREDOC(function () {/*
    A muscle fiber bundle model (large brown circle) is shown in cross section.
 Twitching muscle fibers appear as small hexagonal pack red circles.
 A muscle fiber is a twitch unit which generates a shortening force.
@@ -280,7 +280,7 @@ After twitching a fiber needs time to recover before the next twitch.
 while activations are uniformly distributed within the bundle.
 */});
 
-    info['Axon'] = HERE(function () {/*
+    info['Axon'] = HEREDOC(function () {/*
    A motor neuron attaches at many points along a single twitch unit.
 A twitch signal is sent to all neuromuscular junctions in a muscle fiber.
 A twitch unit is activated end-to-end with a single signal.
@@ -288,7 +288,7 @@ The entire length of the twitch unit contracts at the same time.
 Motor neuron axon terminal arbor shapes guarantee simultaneous activation.
 */});
 
-    info['Dendrite'] = HERE(function () {/*
+    info['Dendrite'] = HEREDOC(function () {/*
    The remote dendrite shape for a motor neuron feeding a muscle fiber
 is shaped to sample passing gradients in a transient sweeping pattern.
 Each motor neuron dendrite is shaped to detect gradients ignored by others.
@@ -297,14 +297,14 @@ As the sweeping pattern passes across the dendritic spines
 those which sample a boundary in the pattern twitch their muscle fibers.
 */});
 
-    info['Coincidences'] = HERE(function () {/*
+    info['Coincidences'] = HEREDOC(function () {/*
    The remote dendrite for each motor neuron expresses a pattern
 which makes its gradient detectors unique within sampled patterns.
 It most likely samples the pattern in multiple places and uses
 coincidence of samples to trigger the pulse that activates a muscle fiber.
 */});
 
-    info['Discussion'] = HERE(function () {/*
+    info['Discussion'] = HEREDOC(function () {/*
    As long as the pattern delivered is reliable,
 twitch unit duty cycle timing requirements are satisfied.
 This strategy guarantees maximum recovery time for all muscle fibers.
@@ -314,7 +314,7 @@ the proposed pre-randomized sampling of a regular pattern.
    Twitch is "all or none": tonus measures average twitches per unit time.
 */});
 
-    info['Conclusions'] = HERE(function () {/*
+    info['Conclusions'] = HEREDOC(function () {/*
    Muscles comprising bundles of long duty cycle twitch units
 can be run efficiently if twitches are distributed evenly and
 if the time between twitches is maximized for any given twitch unit.
@@ -376,37 +376,14 @@ function initializeTable ()
 //-------------------------------------------------------------------------------
 {
 	var the = document.distributor;
-	var fiber       = the.fiber;
-	var coordinates = the.coordinates;
-
-	var controlCols = 6;
-	var table    = document.getElementById ("bundle");
-	var animator = document.getElementById ("animator");
-
-	animator.colSpan = the.diameter - controlCols;
-	var count = 0;
-	var X = 1.0 * the.radius, Y = 1.0 * the.radius, R = the.radius + 0.3;
-	var odd = 1;
 
 	// Initialize display coordinates and indices
 	// the.fiber is an enumeration of all visible fiber indices
-	// Not mathematically correct, but visual approximation
-	for (var y = 0; y <= +Y; y += 0.89) {
-		odd = (odd + 1) & 1;
-		var dx = (odd) ? 0.5 : 0;
-		for (var x = dx; x <= X+dx; x+=1.0) {
-			var r = Math.sqrt (x*x + y*y);
-			if (r < R) {
-				fiber.push (count); coordinates[count] = [-x,-y]; count++;
-				fiber.push (count); coordinates[count] = [-x,+y]; count++;
-				fiber.push (count); coordinates[count] = [+x,-y]; count++;
-				fiber.push (count); coordinates[count] = [+x,+y]; count++;
-			}
-		}
-	}
+	the.coordinates = newHexagonal (the.radius);
+	the.fiber = newRange (0, the.coordinates.length);
 
 	// the.fiber is shuffled and used to identify fibers to twitch
-	shuffle (fiber);
+	shuffle (the.fiber);
 } // initializeTable
 
 

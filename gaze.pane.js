@@ -6,7 +6,7 @@ const pane = [
 			corner: {x:0,y:0},
 			center: {x:0,y:0},
 			axes  : ['x','z'],
-			text  : HERE(function() {/*
+			text  : HEREDOC(function() {/*
 <h3>Pane&nbsp;1 (<span id="frame1">scene</span>)</h3>
 <p>
 Two lines (CYAN) join eye optic centers to their common vergence point 
@@ -28,7 +28,7 @@ Active vergence is only default enabled for Scenario&nbsp;3.
 			corner: {x:0,y:0},
 			center: {x:0,y:0},
 			axes  : ['x','z'],
-			text  : HERE(function() {/*
+			text  : HEREDOC(function() {/*
 <h3>Pane&nbsp;2 (<span id="frame2">eyeballs</span>)</h3>
 <p>
 A pair of eyeballs is shown from above (Y axis normal)
@@ -54,7 +54,7 @@ to the scene vergence point in Pane&nbsp;1 (CYAN).
 			corner: {x:0,y:0},
 			center: {x:0,y:0},
 			axes  : ['x','y'],
-			text  : HERE(function() {/*
+			text  : HEREDOC(function() {/*
 <h3>Pane&nbsp;3 (<span id="frame3">image</span>)</h3>
 <p>
 Overlapping fake diffraction pattern incident on retina
@@ -79,7 +79,7 @@ having the optic axis at its center.
 			corner: {x:0,y:0},
 			center: {x:0,y:0},
 			axes  : ['x','y'],
-			text  : HERE(function() {/*
+			text  : HEREDOC(function() {/*
 <h3>Pane&nbsp;4 (<span id="frame4">hyperacute</span>)</h3>
 <p>
 Airy diffraction patterns of point sources have "zeros"
@@ -108,7 +108,7 @@ otherwise you will see the RED point off center to the CYAN vergence point.
 			corner: {x:0,y:0},
 			center: {x:0,y:0},
 			axes  : ['x','z'],
-			text  : HERE(function() {/*
+			text  : HEREDOC(function() {/*
 <h3>Pane&nbsp;5 (<span id="frame5">crossover</span>)</h3>
 <p>
 Signals from the optic nerve are delivered to the midbrain as a map.
@@ -148,11 +148,11 @@ The 3D position information is sufficient to adjust lens focal distance.
 			// The 1st number is decremented to 0 then
 			// reset to standard + 2nd number.
 			// When the 1st number hits 0, a pulse is displayed
-			SL    : {data:newFilledArray (edge, 0),pulse:[0,0]},
-			SM    : {data:newFilledArray (edge, 0),pulse:[0,0]},
-			DM    : {data:newFilledArray (edge, 0),pulse:[0,0]},
-			DL    : {data:newFilledArray (edge, 0),pulse:[0,0]},
-			text  : HERE(function() {/*
+			SL    : {data:newArray (edge, 0),pulse:[0,0]},
+			SM    : {data:newArray (edge, 0),pulse:[0,0]},
+			DM    : {data:newArray (edge, 0),pulse:[0,0]},
+			DL    : {data:newArray (edge, 0),pulse:[0,0]},
+			text  : HEREDOC(function() {/*
 <h3>Pane&nbsp;6 (<span id="frame6">motor</span>)</h3>
 <p>
 Midbrain delivers signals to rectus muscles.
@@ -184,11 +184,11 @@ The vertical graph lines in orange illustrate signals delivered to
 			center: {x:0,y:0},
 			axes  : ['x','z'],
 			start : 0,
-			SL    : {data:newFilledArray (edge, 0)},
-			SM    : {data:newFilledArray (edge, 0)},
-			DM    : {data:newFilledArray (edge, 0)},
-			DL    : {data:newFilledArray (edge, 0)},
-			text  : HERE(function() {/*
+			SL    : {data:newArray (edge, 0)},
+			SM    : {data:newArray (edge, 0)},
+			DM    : {data:newArray (edge, 0)},
+			DL    : {data:newArray (edge, 0)},
+			text  : HEREDOC(function() {/*
 <h3>Pane&nbsp;7 (<span id="frame7">muscle cross section</span>)</h3>
 <p>
 Pulses must be delivered to rectus muscle twitch units in a sequence

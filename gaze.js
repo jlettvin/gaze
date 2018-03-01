@@ -498,7 +498,7 @@ var displayCanvas = function ()
 		for (var i=0, h1=0, h2=session.pane.y ; i<panes ; ++i)
 		{
 			ipane (i,h1,h2);
- 						h1 += session.pane.y;
+ 			h1 += session.pane.y;
 			h2 += session.pane.y;
 			//var frame = 'frame' + (i+1);
 			//var element = document.getElementById (frame);
@@ -1001,8 +1001,8 @@ var displayVerge = function ()
 		var ry = 0;
 		if (scenario.saccade)
 		{
-			rx = getRandomInt (5) - getRandomInt (5);
-			ry = getRandomInt (5) - getRandomInt (5);
+			rx = newRandomInt (5) - newRandomInt (5);
+			ry = newRandomInt (5) - newRandomInt (5);
 		}
 		var dx = session.mouse.x - scenario.vergence.x + x0 + rx;
 		var dy = session.mouse.y - scenario.vergence.y + y0 + ry;
