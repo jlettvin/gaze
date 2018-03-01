@@ -291,23 +291,27 @@ The nervous system produces sequences of signals that do not exhaust fibers.
 */});
 
     info['Abstract'] = HERE(function () {/*
-   A muscle fiber bundle model is shown in cross section (each fiber a square).
+   A muscle fiber bundle model (large brown circle) is shown in cross section.
+Twitching muscle fibers appear as small hexagonal pack red circles.
 A muscle fiber is a twitch unit which generates a shortening force.
-A muscle fiber runs end-to-end and is excited by a single motor neuron.
+A muscle fiber extends the length of the muscle.
+A muscle fiber is excited by a single motor neuron.
 After twitching a fiber needs time to recover before the next twitch.
    This model shows that the time between fiber activations can be maximized
 while activations are uniformly distributed within the bundle.
 */});
 
-    info['Running'] = HERE(function () {/*
+    info['HOWTO'] = HERE(function () {/*
    START/PAUSE animates the model.  Buttons control the interval and strength 
 Hovering over buttons above the info box causes text like this to be shown.
+   The delay between pulses can be changed (inversely proportional to frequency).
+   The difference count of twitching units between soft/HARD can be changed.
    When running, the model shows twitching/resting muscle fibers as red/brown.
 Twitch patterns show a repeating soft/HARD tonus for 1 second each.
-   Squares are identified by sequence numbers and center-based coordinates.
-Note the (0,0) coordinates at the center of the bundle.
    Muscles make sounds as fibers twitch, and the model is representative.
 When running, the sound frequency is in proportion to twitch activity.
+   To aid in visualizing groups of twitching fibers are shown all at once while
+the accompanying sound is more consistent with uncoordinated activations.
 */});
 
     info['Axon'] = HERE(function () {/*
