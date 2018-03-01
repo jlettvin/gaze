@@ -256,18 +256,7 @@ The nerve that drives twitches assigns one neuron to each fiber.
 The nervous system produces sequences of signals that do not exhaust fibers.
 */});
 
-    info['Abstract'] = HERE(function () {/*
-   A muscle fiber bundle model (large brown circle) is shown in cross section.
-Twitching muscle fibers appear as small hexagonal pack red circles.
-A muscle fiber is a twitch unit which generates a shortening force.
-A muscle fiber extends the length of the muscle.
-A muscle fiber is excited by a single motor neuron.
-After twitching a fiber needs time to recover before the next twitch.
-   This model shows that the time between fiber activations can be maximized
-while activations are uniformly distributed within the bundle.
-*/});
-
-    info['HOWTO'] = HERE(function () {/*
+    info['HowTo'] = HERE(function () {/*
    START/PAUSE animates the model.  Buttons control the interval and strength 
 Hovering over buttons above the info box causes text like this to be shown.
    The delay between pulses can be changed (inversely proportional to frequency).
@@ -278,6 +267,17 @@ Twitch patterns show a repeating soft/HARD tonus for 1 second each.
 When running, the sound frequency is in proportion to twitch activity.
    To aid in visualizing groups of twitching fibers are shown all at once while
 the accompanying sound is more consistent with uncoordinated activations.
+*/});
+
+    info['Abstract'] = HERE(function () {/*
+   A muscle fiber bundle model (large brown circle) is shown in cross section.
+Twitching muscle fibers appear as small hexagonal pack red circles.
+A muscle fiber is a twitch unit which generates a shortening force.
+A muscle fiber extends the length of the muscle.
+A muscle fiber is excited by a single motor neuron.
+After twitching a fiber needs time to recover before the next twitch.
+   This model shows that the time between fiber activations can be maximized
+while activations are uniformly distributed within the bundle.
 */});
 
     info['Axon'] = HERE(function () {/*
@@ -315,7 +315,10 @@ the proposed pre-randomized sampling of a regular pattern.
 */});
 
     info['Conclusions'] = HERE(function () {/*
-   This simple demonstration illustrates a logical economy
+   Muscles comprising bundles of long duty cycle twitch units
+can be run efficiently if twitches are distributed evenly and
+if the time between twitches is maximized for any given twitch unit.
+   This simple demonstration illustrates the logical economy
 enabling implementations to ignore parallelism and simply
 act concurrently on all actual delivered pulses,
 whether they are dense or sparse,
