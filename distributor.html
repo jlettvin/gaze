@@ -428,18 +428,17 @@ function initializeTable ()
 	var animator = document.getElementById ("animator");
 
 	animator.colSpan = the.diameter - controlCols;
-	var count = 0, oX = 1.5, oY = 0.89;
+	var count = 0;
 	var X = 1.0 * the.radius, Y = 1.0 * the.radius, R = the.radius + 0.3;
 	var odd = 1;
 
 	// Initialize display coordinates and indices
 	// the.fiber is an enumeration of all visible fiber indices
 	// Not mathematically correct, but visual approximation
-	for (y = 0; y <= +Y; y += oY) {
+	for (y = 0; y <= +Y; y += 0.89) {
 		odd = (odd + 1) & 1;
-		var dx = (odd) ? oX : 0;
-		for (x = -dx; x <= X+dx; x+=1.0) {
-			// TODO Why initial -dx rather than +dx
+		var dx = (odd) ? 0.5 : 0;
+		for (x = dx; x <= X+dx; x+=1.0) {
 			var r = Math.sqrt (x*x + y*y);
 			if (r < R) {
 				fiber.push (count); coordinates[count] = [-x,-y]; count++;
