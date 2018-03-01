@@ -53,7 +53,7 @@ const tau  = Math.PI * 2;
 
 //-------------------------------------------------------------------------------
 // use stored audio context, masterGain and nodeGain1 nodes
-function audible (frequency) {
+function audible (flag) {
 //-------------------------------------------------------------------------------
 	var the = document.distributor;
 
@@ -61,22 +61,23 @@ function audible (frequency) {
     var masterGain   = the.audio.masterGain;
     var nodeGain1    = the.audio.nodeGain1;
 	var oscillator   = the.audio.oscillator;
+	var frequency    = the.audio.frequency;
 
-	// Keep things as they are if no frequency change
-	if (frequency == the.audio.frequency) return;
-
-	// Otherwise, stop the current oscillator and make a new one.
+	// Otherwise, stop the current oscillator
 	oscillator && oscillator.stop (context.currentTime);
+	oscillator = null;
+
+	// If frequency requested is 0, do NOT make a new oscillator
+	if (!flag) return;
+
+	// Otherwise, make a new oscillator
     oscillator = new OscillatorNode (context, {type: 'square'});
+	the.audio.oscillator = oscillator;
 
 	// Then get the new oscillator going.
     oscillator.frequency.setValueAtTime (frequency, context.currentTime);
     oscillator.connect (nodeGain1);
     oscillator.start   (context.currentTime);
-
-	// Remember what we did
-	the.audio.oscillator = oscillator;
-	the.audio.frequency  = frequency;
 } // audible
 
 
@@ -152,16 +153,13 @@ function eRun (e)
 	var the = document.distributor;
     the.running = !the.running;
     if (the.running) {
+		loop ();
         the.timer = setInterval (loop, the.interval[the.delay]);
-		audible (the.audio.frequency);
-		//loop ();
+		audible (true);
     } else {
         clearInterval (the.timer);
         the.timer = null;
-		if (the.audio.oscillator) {
-			the.audio.oscillator.stop (the.audio.context.currentTime);
-			the.audio.oscillator = null;
-		}
+		audible (false);
     }
     var button = document.getElementById ("pause");
     button.innerHTML = the.running ? "PAUSE" : "START";
@@ -169,7 +167,7 @@ function eRun (e)
 
 
 //-------------------------------------------------------------------------------
-function reRun () { eRun (); eRun (); }
+function reRun () { if (document.distributor.running) { eRun (); eRun (); } }
 //-------------------------------------------------------------------------------
 
 
@@ -246,8 +244,12 @@ function loop ()
 	var y0        = the.canvas.y0;
 	var scale     = the.scale - 1; // -1 to keep fibers within the sarcolemma
 	var r0        = parseInt (scale / 2); // radius of visible fiber
+	var frequency = requested * 1000 / the.interval[the.delay];
 
-    audible (requested * 1000 / the.interval[the.delay]);
+	if (the.audio.frequency != frequency) {
+		the.audio.frequency = frequency;
+    	audible (true);
+	}
 
 	{
 		// clear the canvas back to untwitching
@@ -301,7 +303,7 @@ while activations are uniformly distributed within the bundle.
    START/PAUSE animates the model.  Buttons control the interval and strength 
 Hovering over buttons above the info box causes text like this to be shown.
    When running, the model shows twitching/resting muscle fibers as red/brown.
-Twitch patterns show a repeating weak/STRONG tonus for 1 second each.
+Twitch patterns show a repeating soft/HARD tonus for 1 second each.
    Squares are identified by sequence numbers and center-based coordinates.
 Note the (0,0) coordinates at the center of the bundle.
    Muscles make sounds as fibers twitch, and the model is representative.
@@ -376,14 +378,16 @@ function initializeDistributor ()
 //-------------------------------------------------------------------------------
 {
     document.distributor = {
-        delay        :    5,
-        interval     :       [3, 10, 33, 100, 333, 1000],
-        index        :    0,
+        interval     : [10, 33, 100, 333, 1000],
+        index        : 0,
         running      : true,
-        strong       :    0,
+        strong       : 0,
         timer        : null,
+		oscillator   : null,
     };
 	var the = document.distributor;
+
+	the.delay  = the.interval.length - 1;
 	the.radius = 7;
 	the.active = the.radius * 2;
 	the.scale  = 31;
@@ -394,7 +398,7 @@ function initializeDistributor ()
 
 	var sheet = document.styleSheets[0];
 
-	initializeTable  ();
+	initializeTable  (true);
 	initializeAudio  ();
 	initializeCanvas ();
     initializeInfo   ();
@@ -407,7 +411,7 @@ function initializeDistributor ()
 
 
 //-------------------------------------------------------------------------------
-function initializeTable ()
+function initializeTable (hexagon=false)
 //-------------------------------------------------------------------------------
 {
 	var the = document.distributor;
@@ -417,20 +421,36 @@ function initializeTable ()
 	var animator = document.getElementById ("animator");
 
 	animator.colSpan = the.diameter - controlCols;
-	var X = 0, Y = 0, count = 0;
+	var count = 0, oX = 1.5, oY = 0.9;
+	var X = 1.0 * the.radius, Y = 1.0 * the.radius, R = the.radius + 0.3;
 
-	// Initialize display coordinates and indices
-	for (y = -the.radius; y <= +the.radius; ++y) {
-		var ysign = (y<0) ? '+' : '';
-		for (x = -the.radius; x <= +the.radius; ++x) {
-			// Generate the fiber data here
-			// the.fiber is an enumeration of all visible fiber indices
-			// the.fiber is shuffled and used to identify fibers to twitch
-			var r = Math.sqrt (x*x + y*y);
-			if (r < (the.radius + 0.3)) {
-				the.fiber.push (count);
-				the.coordinates[count] = [x,-y];
-				count++;
+	if (hexagon) {
+		// Not mathematically correct, but visual approximation
+		for (y = -Y; y <= +Y; y += oY) {
+			var dx = (y&1) ? oX : 0;
+			for (x = -X-dx; x <= X+dx; x+=1.0) {
+				var r = Math.sqrt (x*x + y*y);
+				if (r < R) {
+					the.fiber.push (count);
+					the.coordinates[count] = [x,-y];
+					count++;
+				}
+			}
+		}
+	} else {
+		// Initialize display coordinates and indices
+		for (y = -the.radius; y <= +the.radius; ++y) {
+			var ysign = (y<0) ? '+' : '';
+			for (x = -the.radius; x <= +the.radius; ++x) {
+				// Generate the fiber data here
+				// the.fiber is an enumeration of all visible fiber indices
+				// the.fiber is shuffled and used to identify fibers to twitch
+				var r = Math.sqrt (x*x + y*y);
+				if (r < (the.radius + 0.3)) {
+					the.fiber.push (count);
+					the.coordinates[count] = [x,-y];
+					count++;
+				}
 			}
 		}
 	}
