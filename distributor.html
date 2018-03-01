@@ -416,51 +416,42 @@ function initializeDistributor ()
 
 
 //-------------------------------------------------------------------------------
-function initializeTable (hexagon=true)
+function initializeTable ()
 //-------------------------------------------------------------------------------
 {
 	var the = document.distributor;
+	var fiber       = the.fiber;
+	var coordinates = the.coordinates;
 
 	var controlCols = 6;
 	var table    = document.getElementById ("bundle");
 	var animator = document.getElementById ("animator");
 
 	animator.colSpan = the.diameter - controlCols;
-	var count = 0, oX = 1.5, oY = 0.9;
+	var count = 0, oX = 1.5, oY = 0.89;
 	var X = 1.0 * the.radius, Y = 1.0 * the.radius, R = the.radius + 0.3;
+	var odd = 1;
 
 	// Initialize display coordinates and indices
 	// the.fiber is an enumeration of all visible fiber indices
-	if (hexagon) {
-		// Not mathematically correct, but visual approximation
-		for (y = -Y; y <= +Y; y += oY) {
-			var dx = (y&1) ? oX : 0;
-			for (x = -X-dx; x <= X+dx; x+=1.0) {
-				var r = Math.sqrt (x*x + y*y);
-				if (r < R) {
-					the.fiber.push (count);
-					the.coordinates[count] = [x,-y];
-					count++;
-				}
-			}
-		}
-	} else {
-		// square array if you prefer
-		for (y = -the.radius; y <= +the.radius; ++y) {
-			var ysign = (y<0) ? '+' : '';
-			for (x = -the.radius; x <= +the.radius; ++x) {
-				var r = Math.sqrt (x*x + y*y);
-				if (r < (the.radius + 0.3)) {
-					the.fiber.push (count);
-					the.coordinates[count] = [x,-y];
-					count++;
-				}
+	// Not mathematically correct, but visual approximation
+	for (y = 0; y <= +Y; y += oY) {
+		odd = (odd + 1) & 1;
+		var dx = (odd) ? oX : 0;
+		for (x = -dx; x <= X+dx; x+=1.0) {
+			// TODO Why initial -dx rather than +dx
+			var r = Math.sqrt (x*x + y*y);
+			if (r < R) {
+				fiber.push (count); coordinates[count] = [-x,-y]; count++;
+				fiber.push (count); coordinates[count] = [-x,+y]; count++;
+				fiber.push (count); coordinates[count] = [+x,-y]; count++;
+				fiber.push (count); coordinates[count] = [+x,+y]; count++;
 			}
 		}
 	}
 
 	// the.fiber is shuffled and used to identify fibers to twitch
-	shuffle (the.fiber);
+	shuffle (fiber);
 } // initializeTable
 
 
