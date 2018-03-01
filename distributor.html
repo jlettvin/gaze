@@ -12,6 +12,7 @@
 	<body>
         <div align="center">
 
+<!-- title/subtitle/copyright -->
 <table width="100%">
 	<tr><td class="title">
 		<u>Twitch Distributor Visualization</u>
@@ -25,33 +26,40 @@
 	</td></tr>
 </table>
 
+<!-- info buttons/textarea -->
         <br /><span id="buttons"></span>
         <br /><textarea id="info" rows="10" cols="84" readonly>
         Hover over the above buttons to show information in this area.
         </textarea><br />
 
- <table id="bundle" width="100%">
+<!-- animation controls/dispays -->
+<table id="bundle" bgcolor="gray">
+	<caption>Animation Controls</caption>
 <tr>
 	<td id="animator" colspan="7" bgcolor="black">
+		run<br /><br /><br />
 		<button id="pause" onclick="eRun(event)">STOP</button>
-		action, or
+		or
 		<button id="reload" onclick="location.reload (true)">reload</button>
-	</td><td colspan="2" bgcolor="#333333" valign="top">
+	</td><td width="10px">
+	</td><td colspan="2" bgcolor="black" valign="top">
 		delay(ms)<br /><br /><br />
 		<button id="neg" onclick="eFaster (event)">-</button>
 		<b id="interval"></b>
 		<button id="pos" onclick="eSlower (event)">+</button>
-	</td><td colspan="2" bgcolor="#333333" valign="top">
-		harder<br /><br /><br />
+	</td><td width="10px">
+	</td><td colspan="2" bgcolor="black" valign="top">
+		tonus<br /><b id="state">None</b><br /><br />
 		<button id="pown" onclick="eSofter (event)">-</button>
 		<b id="strength">2</b>
 		<button id="powp" onclick="eHarder (event)">+</button>
-	</td><td colspan="2" bgcolor="#333333">tonus<h3 id="state">None</h3></td>
 </tr>
 	</thead>
 
 	<tbody id="tbody"></tbody>
 </table>
+
+<!-- visualization title/canvas -->
 		<h3>Muscle Fiber Bundle</h3>
  		<canvas id="canvas"></canvas>
 
