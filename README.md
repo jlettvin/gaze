@@ -1,10 +1,5 @@
 # Model for gaze reflex
 
-Visit http://rawgit.com/jlettvin/gaze/master/gaze.html to run model.
-
-This visual model illustrates the full reflex arc needed to describe
-how attention is drawn to tiny moving features.
-
 Models are self-documenting so this README.md is very sparse.
 Visit models and experiment.
 
@@ -20,14 +15,18 @@ Home for new implementation.
 Gaze Tracking Reflex
 </a></dt><dd>
 A preliminary demonstration of a complete reflex arc.
+<br /><br />
+This visual model illustrates the full reflex arc needed to describe
+how attention is drawn to tiny moving features.
 </dd>
 
 <li><a href="https://rawgit.com/jlettvin/gaze/master/distributor.html">
 Twitch Distributor Visualization
 </a></dt><dd>
-A finished demonstration for how muscles are driven
-with evenly distributed twitch signals and variable tonus
-and without exhausting individual twitch units.
+A finished demonstration for how muscles are driven.
+<br /><br />
+Evenly distributed twitch signals and variable tonus
+while avoiding exhausting individual twitch units.
 <dd>
 
 </dl>
