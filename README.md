@@ -20,7 +20,7 @@ This visual model illustrates the full reflex arc needed to describe
 how attention is drawn to tiny moving features.
 </dd>
 
-<li><a href="https://rawgit.com/jlettvin/gaze/master/distributor.html">
+<dt><a href="https://rawgit.com/jlettvin/gaze/master/distributor.html">
 Twitch Distributor Visualization
 </a></dt><dd>
 A finished demonstration for how muscles are driven.
