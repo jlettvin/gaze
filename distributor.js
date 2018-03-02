@@ -128,11 +128,11 @@ function eFaster (e) { eDelay (-1); } // eFaster
 
 
 //-------------------------------------------------------------------------------
-function eReload (e)
+function eFresh (e)
 //-------------------------------------------------------------------------------
 {
 	location.reload (true);
-} // eReload
+} // eFresh
 
 
 //-------------------------------------------------------------------------------
@@ -164,7 +164,7 @@ function eRun (e)
 		audible (false);
     }
     var button = document.getElementById ("pause");
-    button.innerHTML = the.running ? "Pause" : "Play";
+    button.innerHTML = the.running ? "<u>P</u>ause" : "<u>P</u>lay";
 } // eRun
 
 
@@ -234,10 +234,14 @@ function initializeButtons (names)
     for (name of names)
     {
         var id = 'button' + i++;
+		var n0 = name[0];
+		var nN = name.substr (1);
+		console.log (n0);
         text += '<button id="' + id +
 			'" onmouseover="eButton(event)"' +
 			'" onclick="eButton(event)"' + '>' +
-			name + '</button>';
+			'<u>' + n0 + '</u>' + nN +
+			'</button>';
     }
     var element = document.getElementById ('buttons');
     element.innerHTML = text;
@@ -251,7 +255,7 @@ function initializeInfo ()
 	var the = document.distributor;
     var info = the.info= {};
 
-	info['Basic'] = HEREDOC(function () {/*
+	info['1. Basic'] = HEREDOC(function () {/*
    When a muscle is cut across, all the individual muscle "fibers" are visible.
 Each fiber contracts/releases quickly (a twitch).  Fibers don't stay contracted.
 An idle muscle has "tonus" (persistent contraction from many twitches).
@@ -264,7 +268,7 @@ The nerve that drives twitches assigns one neuron to each fiber.
 The nervous system distributes signals so that fibers do not become exhausted.
 */});
 
-    info['HowTo'] = HEREDOC(function () {/*
+    info['2. HowTo'] = HEREDOC(function () {/*
    START/PAUSE animates the model.  Buttons control the interval and strength 
 Hovering over buttons above the info box causes text like this to be shown.
    The delay between pulses can be changed (inversely proportional to frequency).
@@ -277,7 +281,7 @@ When running, the sound frequency is in proportion to twitch activity.
 the accompanying sound is more consistent with uncoordinated activations.
 */});
 
-    info['Abstract'] = HEREDOC(function () {/*
+    info['3. Abstract'] = HEREDOC(function () {/*
    A muscle fiber bundle model (large brown circle) is shown in cross section.
 Twitching muscle fibers appear as small hexagonal pack red circles.
 A muscle fiber is a twitch unit which generates a shortening force.
@@ -288,7 +292,7 @@ After twitching a fiber needs time to recover before the next twitch.
 while activations are uniformly distributed within the bundle.
 */});
 
-    info['Axon'] = HEREDOC(function () {/*
+    info['4. Axon'] = HEREDOC(function () {/*
    A motor neuron attaches at many points along a single twitch unit.
 A twitch signal is sent to all neuromuscular junctions in a muscle fiber.
 A twitch unit is activated end-to-end with a single signal.
@@ -296,7 +300,7 @@ The entire length of the twitch unit contracts at the same time.
 Motor neuron axon terminal arbor shapes guarantee simultaneous activation.
 */});
 
-    info['Dendrite'] = HEREDOC(function () {/*
+    info['5. Dendrite'] = HEREDOC(function () {/*
    The remote dendrite shape for a motor neuron feeding a muscle fiber
 is shaped to sample passing gradients in a transient sweeping pattern.
 Each motor neuron dendrite is shaped to detect gradients ignored by others.
@@ -305,14 +309,14 @@ As the sweeping pattern passes across the dendritic spines
 those which sample a boundary in the pattern twitch their muscle fibers.
 */});
 
-    info['Coincidences'] = HEREDOC(function () {/*
+    info['6. Coincidences'] = HEREDOC(function () {/*
    The remote dendrite for each motor neuron expresses a pattern
 which makes its gradient detectors unique within sampled patterns.
 It most likely samples the pattern in multiple places and uses
 coincidence of samples to trigger the pulse that activates a muscle fiber.
 */});
 
-    info['Discussion'] = HEREDOC(function () {/*
+    info['7. Discussion'] = HEREDOC(function () {/*
    As long as the pattern delivered is reliable,
 twitch unit duty cycle timing requirements are satisfied.
 This strategy guarantees maximum recovery time for all muscle fibers.
@@ -322,7 +326,7 @@ the proposed pre-randomized sampling of a regular pattern.
    Twitch is "all or none": tonus measures average twitches per unit time.
 */});
 
-    info['Conclusions'] = HEREDOC(function () {/*
+    info['8. Conclusions'] = HEREDOC(function () {/*
    Muscles comprising bundles of long duty cycle twitch units
 can be run efficiently if twitches are distributed evenly and
 if the time between twitches is maximized for any given twitch unit.
@@ -375,12 +379,19 @@ function initializeDistributor ()
 	document.addEventListener('keypress', (event) => {
   		const key = event.key;
 		switch (event.key) {
-			case 'F': case 'f': eReload (); break;
-			case 'H': case 'h': eHarder (); break;
-			case 'S': case 's': eSofter (); break;
-			case 'L': case 'l': eFaster (); break;
-			case 'M': case 'm': eSlower (); break;
-			case 'P': case 'p': eRun (); break;
+			case 'F': case 'f': eFresh  (); return;
+			case 'H': case 'h': eHarder (); return;
+			case 'S': case 's': eSofter (); return;
+			case 'L': case 'l': eFaster (); return;
+			case 'M': case 'm': eSlower (); return;
+			case 'P': case 'p': eRun    (); return;
+		}
+		for (var label in the.info) {
+			var chr = label[0];
+			if (chr == key) {
+    			var tgt = document.getElementById ('info');
+				tgt.value = the.info[label];
+			}
 		}
 	});
 } // initializeDistributor
