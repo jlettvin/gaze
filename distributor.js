@@ -379,7 +379,7 @@ function initializeDistributor ()
 	document.addEventListener('keypress', (event) => {
   		const key = event.key;
 		switch (event.key) {
-			case 'F': case 'f': eFresh  (); return;
+			case 'R': case 'r': eFresh  (); return;
 			case 'H': case 'h': eHarder (); return;
 			case 'S': case 's': eSofter (); return;
 			case 'L': case 'l': eFaster (); return;
