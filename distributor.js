@@ -240,7 +240,7 @@ function initializeButtons (names)
         var id = 'button' + ++i;
 		var n0 = name[0];
 		var nN = name.substr (1);
-		console.log (n0);
+		//console.log (n0);
         text += '<button id="' + id +
 			'" onmouseover="eButton(event)"' +
 			'" onclick="eButton(event)"' + '>' +
