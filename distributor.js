@@ -164,7 +164,7 @@ function eRun (e)
 		audible (false);
     }
     var button = document.getElementById ("pause");
-    button.innerHTML = the.running ? "PAUSE" : "START";
+    button.innerHTML = the.running ? "Pause" : "Play";
 } // eRun
 
 
@@ -252,16 +252,16 @@ function initializeInfo ()
     var info = the.info= {};
 
 	info['Basic'] = HEREDOC(function () {/*
-   When a muscle is cut across, all the individual muscle "fibers" are seen.
+   When a muscle is cut across, all the individual muscle "fibers" are visible.
 Each fiber contracts/releases quickly (a twitch).  Fibers don't stay contracted.
 An idle muscle has "tonus" (persistent contraction from many twitches).
 Twitching exhausts a fiber.  It must sit idle for a time before twitching again.
-   Tonus is when twitches are distributed evenly over fibers in a pattern
-that keeps the number of twitching fibers the same and
-maximizes time between twitches for any single fiber.
-   More twitches at the same time leads to stronger contraction.
+   Constant tonus is when twitches are distributed evenly over fibers in
+a pattern that keeps the count of twitching fibers the same and maximizes
+the time between twitches for any single fiber.
+   More twitches at the same time is stronger tonus is stronger contraction.
 The nerve that drives twitches assigns one neuron to each fiber.
-The nervous system produces sequences of signals that do not exhaust fibers.
+The nervous system distributes signals so that fibers do not become exhausted.
 */});
 
     info['HowTo'] = HEREDOC(function () {/*
@@ -373,8 +373,15 @@ function initializeDistributor ()
     initializeInfo   ();
 
 	document.addEventListener('keypress', (event) => {
-  		//const keyName = event.key;
-		eStep (event);
+  		const key = event.key;
+		switch (event.key) {
+			case 'F': case 'f': eReload (); break;
+			case 'H': case 'h': eHarder (); break;
+			case 'S': case 's': eSofter (); break;
+			case 'L': case 'l': eFaster (); break;
+			case 'M': case 'm': eSlower (); break;
+			case 'P': case 'p': eRun (); break;
+		}
 	});
 } // initializeDistributor
 
