@@ -142,7 +142,10 @@ function eButton (e)
 	var the = document.distributor;
     var id = e.target.id;
     var key = document.getElementById (id).innerHTML;
-    var val = the.info[key];
+	var no = key[3];          // the "1"       in "<u>1</u>. title"
+	var to = key.substr (8);  // the ". title" in "<u>1</u>. title"
+	var rekey = no + to;
+    var val = the.info[rekey];
     var tgt = document.getElementById ('info');
     tgt.value = val;
 } // eButton
@@ -256,6 +259,8 @@ function initializeInfo ()
     var info = the.info= {};
 
 	info['1. Basic'] = HEREDOC(function () {/*
+   Muscles make sounds as fibers twitch, and the model is representative.
+When running, the sound frequency is in proportion to twitch activity.
    When a muscle is cut across, all the individual muscle "fibers" are visible.
 Each fiber contracts/releases quickly (a twitch).  Fibers don't stay contracted.
 An idle muscle has "tonus" (persistent contraction from many twitches).
@@ -269,14 +274,15 @@ The nervous system distributes signals so that fibers do not become exhausted.
 */});
 
     info['2. HowTo'] = HEREDOC(function () {/*
-   START/PAUSE animates the model.  Buttons control the interval and strength 
-Hovering over buttons above the info box causes text like this to be shown.
-   The delay between pulses can be changed (inversely proportional to frequency).
-   The difference count of twitching units between soft/HARD can be changed.
+   P    Play/Pause (<SPACE>) animates the model.
+   R    Refresh    reloads the web page from the server.
+   L|M  Less/More  changes the delay between displays (and pulse generations).
+   S|H  Soft/Hard  changes the difference in tonus every other second.
+   1-8  Shows information labelled in the buttons above the info box.
+
+Hovering over the buttons shows the same information.
+Clicking on the other buttons does the same as typing underlined letters/digits.
    When running, the model shows twitching/resting muscle fibers as red/brown.
-Twitch patterns show a repeating soft/HARD tonus for 1 second each.
-   Muscles make sounds as fibers twitch, and the model is representative.
-When running, the sound frequency is in proportion to twitch activity.
    To aid in visualizing groups of twitching fibers are shown all at once while
 the accompanying sound is more consistent with uncoordinated activations.
 */});
