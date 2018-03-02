@@ -17,6 +17,9 @@ FILES:
 
 * Airy.js unused but will generate better data for modeling diffraction patterns.
 * bessel.js unused except by Airy.js
+* distributor.css style for twitch distributor visualizer
+* distributor.html markup for twitch distributor visualizer
+* distributor.js javascript for twitch distributor visualizer
 * gaze.const.js contains needed constant values
 * gaze.css styling for gaze.html
 * gaze.html the model
