@@ -34,6 +34,12 @@ while avoiding exhausting individual twitch units.
 <hr />
 It is a work in progress and future directions are shown below:
 
+TODO:
+
+* Replace completely fake diffraction with mathematically correct diffraction.
+* Cause pulses to drive muscle contraction.
+* Cause muscle contraction to drive eyeball rotation.
+
 FILES:
 
 * Airy.js unused but will generate better data for modeling diffraction patterns.
@@ -49,9 +55,3 @@ FILES:
 * gaze.scenarios.js is data for different model operational modes
 * index.html is a list of additional related pages
 * utility.js are functions not specific to the gaze model
-
-TODO:
-
-* Replace completely fake diffraction with mathematically correct diffraction.
-* Cause pulses to drive muscle contraction.
-* Cause muscle contraction to drive eyeball rotation.
