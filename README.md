@@ -8,21 +8,29 @@ how attention is drawn to tiny moving features.
 Models are self-documenting so this README.md is very sparse.
 Visit models and experiment.
 
-<ul>
+<dl>
 
-<li><a href="https://rawgit.com/jlettvin/gaze/master/index.html">
-Brain Building Kit&trade; (new home)
-</a></li>
+<dt><a href="https://rawgit.com/jlettvin/gaze/master/index.html">
+Brain Building Kit&trade;
+</a></dt><dd>
+Home for new implementation.
+</dd>
 
-<li><a href="https://rawgit.com/jlettvin/gaze/master/gaze.html">
+<dt><a href="https://rawgit.com/jlettvin/gaze/master/gaze.html">
 Gaze Tracking Reflex
-</a></li>
+</a></dt><dd>
+A preliminary demonstration of a complete reflex arc.
+</dd>
 
 <li><a href="https://rawgit.com/jlettvin/gaze/master/distributor.html">
 Twitch Distributor Visualization
-</a></li>
+</a></dt><dd>
+A finished demonstration for how muscles are driven
+with evenly distributed twitch signals and variable tonus
+and without exhausting individual twitch units.
+<dd>
 
-</ul>
+</dl>
 
 <hr />
 It is a work in progress and future directions are shown below:
