@@ -9,12 +9,19 @@ Models are self-documenting so this README.md is very sparse.
 Visit models and experiment.
 
 <ul>
+
 <li><a href="https://rawgit.com/jlettvin/gaze/master/index.html">
+Brain Building Kit&trade; (new home)
+</a></li>
+
+<li><a href="https://rawgit.com/jlettvin/gaze/master/gaze.html">
 Gaze Tracking Reflex
 </a></li>
+
 <li><a href="https://rawgit.com/jlettvin/gaze/master/distributor.html">
 Twitch Distributor Visualization
 </a></li>
+
 </ul>
 
 <hr />
