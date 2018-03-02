@@ -398,7 +398,7 @@ function initializeDistributor ()
 			var chr = label[0];
 			if (chr == key) {
     			var tgt = document.getElementById ('info');
-				tgt.value = the.info[label];
+				tgt.value = label + ':\n' + the.info[label];
 			}
 		}
 	});
