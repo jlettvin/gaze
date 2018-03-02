@@ -1,19 +1,23 @@
 <!DOCTYPE html>
 
 <html>
+	<!-- 0000000000000000000000000000000000000000000000000000000000000000000 -->
 
-	<head>
-        <meta charset="UTF-8">
-		<script type="text/javascript"  src="utility.js"></script>
-		<script type="text/javascript"  src="distributor.js"></script>
-		<link   type="text/css"        href="distributor.css" rel="stylesheet">
-	</head>
+<head><!-- resources -->
+	<!-- 1111111111111111111111111111111111111111111111111111111111111111111 -->
+	<meta charset="UTF-8">
+	<script type="text/javascript"  src="utility.js"></script>
+	<script type="text/javascript"  src="distributor.js"></script>
+	<link   type="text/css"        href="distributor.css" rel="stylesheet">
+	<!-- 1111111111111111111111111111111111111111111111111111111111111111111 -->
+</head>
 
-	<body>
-        <div align="center">
+<body>
+	<!-- 2222222222222222222222222222222222222222222222222222222222222222222 -->
+	<div align="center">
 
-<!-- title/subtitle/copyright -->
-<table width="100%">
+<table width="100%"><!-- title/subtitle/copyright -->
+	<!-- 3333333333333333333333333333333333333333333333333333333333333333333 -->
 	<tr><td class="title">
 		<u>Twitch Distributor Visualization</u>
 		</td></tr><tr><td class="subtitle">
@@ -22,48 +26,58 @@
 			<i>Brain Building Kit&trade;</i>
 		</a>
 	</td></tr><tr><td class="copyright">
-        <i>Copyright&copy; 2018 Jonathan D. Lettvin, All Rights Reserved.</i>
+		<i>Copyright&copy; 2018 Jonathan D. Lettvin, All Rights Reserved.</i>
 	</td></tr>
+	<!-- 3333333333333333333333333333333333333333333333333333333333333333333 -->
 </table>
 
-<!-- info buttons/textarea -->
-        <br /><span id="buttons"></span>
-        <br /><textarea id="info" rows="10" cols="84" readonly>
-        Hover over the above buttons to show information in this area.
-        </textarea><br />
+<span><!-- info buttons/textarea -->
+	<!-- 4444444444444444444444444444444444444444444444444444444444444444444 -->
+	<br /><span id="buttons"></span>
+	<br /><textarea id="info" rows="10" cols="84" readonly>
+	Hover over the above buttons to show information in this area.
+	</textarea><br />
+	<!-- 4444444444444444444444444444444444444444444444444444444444444444444 -->
+</span>
 
-<!-- animation controls/dispays -->
-<table id="bundle" bgcolor="gray">
+<table id="bundle" bgcolor="gray"><!-- animation controls/dispays -->
+	<!-- 5555555555555555555555555555555555555555555555555555555555555555555 -->
 	<caption>Animation Controls</caption>
-<tr>
-	<td id="animator" width="40%" bgcolor="black">
-		run<br /><br /><br />
-		<button id="pause" onclick="eRun(event)">STOP</button>
-		or
-		<button id="reload" onclick="location.reload (true)">reload</button>
-	</td><td width="10px">
-	</td><td width="20%" bgcolor="black" valign="top">
-		delay(ms)<br /><br /><br />
-		<button id="neg" onclick="eFaster (event)">-</button>
-		<b id="interval"></b>
-		<button id="pos" onclick="eSlower (event)">+</button>
-	</td><td width="10px">
-	</td><td width="20%" bgcolor="black" valign="top">
-		tonus<br /><b id="state">None</b><br /><br />
-		<button id="pown" onclick="eSofter (event)">-</button>
-		<b id="strength">2</b>
-		<button id="powp" onclick="eHarder (event)">+</button>
-</tr>
+	<thead>
+		<tr>
+			<td id="animator" width="40%" bgcolor="black">
+				run<br /><br /><br />
+				<button id="pause" onclick="eRun(event)">STOP</button>
+				or
+				<button id="reload" onclick="eReload(event)">reload</button>
+			</td><td width="10%">
+			</td><td width="20%" bgcolor="black" valign="top">
+				delay(ms)<br /><br /><br />
+				<button id="neg" onclick="eFaster (event)">-</button>
+				<b id="interval"></b>
+				<button id="pos" onclick="eSlower (event)">+</button>
+			</td><td width="10%">
+			</td><td width="20%" bgcolor="black" valign="top">
+				tonus<br /><b id="state">None</b><br /><br />
+				<button id="pown" onclick="eSofter (event)">-</button>
+				<b id="strength">2</b>
+				<button id="powp" onclick="eHarder (event)">+</button>
+		</tr>
 	</thead>
-
 	<tbody id="tbody"></tbody>
+	<!-- 5555555555555555555555555555555555555555555555555555555555555555555 -->
 </table>
 
-<!-- visualization title/canvas -->
-		<h3>Muscle Fiber Bundle</h3>
- 		<canvas id="canvas"></canvas>
+<span><!-- visualization title/canvas -->
+	<!-- 6666666666666666666666666666666666666666666666666666666666666666666 -->
+	<h3>Muscle Fiber Bundle</h3>
+	<canvas id="canvas"></canvas>
+	<!-- 6666666666666666666666666666666666666666666666666666666666666666666 -->
+</span>
 
-        </div>
-	</body>
+	</div>
+	<!-- 2222222222222222222222222222222222222222222222222222222222222222222 -->
+</body>
+
+	<!-- 0000000000000000000000000000000000000000000000000000000000000000000 -->
 </html>
-

@@ -58,19 +58,24 @@ function newHexagonal (radius)
 // radius is a whole number used to count unit circles from center to the edge.
 // Mathematically correct visual approximation of hexagonal spacing.
 // Coordinates returned are not sequentially ordered.
+// Packed unit circles a unit equilateral triangle.
+// With one edge horizontal, a dropped vertical cuts the base in half (0.5).
+// This makes a right triangle of hypotenuse == 1.0 and short leg == 0.5.
+//   sqrt(1.0**2 - 0.5**2) == sqrt(0.75)
 //------------------------------------------------------------------------------
 {
-	var epsilon = 0.33; // fudge factor to bring elements close to the radius.
+	var epsilon = 0.35; // fudge factor to bring fibers close to the sarcolemma.
 	var X       = parseFloat (radius), Y = parseFloat (radius);
 	var R       = parseFloat (radius + epsilon);
 	var odd     = 1;
-	var thin    = 0.5;
-	var fat     = Math.sqrt (0.8);
+	var Hyp     = 1.0;
+	var Sin     = 0.5;
+	var Cos     = Math.sqrt (Hyp**2 - Sin**2);
 
 	var coordinates = [];
-	for (var y = 0; y <= +Y; y += fat) {
+	for (var y = 0; y <= +Y; y += Cos) {
 		odd = (odd + 1) & 1;
-		var dx = (odd) ? thin : 0;
+		var dx = (odd) ? Sin : 0;
 		for (var x = dx; x <= X+dx; x+=1.0) {
 			var r = Math.sqrt (x*x + y*y);
 			if (r < R) {
