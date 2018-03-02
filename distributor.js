@@ -142,12 +142,13 @@ function eButton (e)
 	var the = document.distributor;
     var id = e.target.id;
     var key = document.getElementById (id).innerHTML;
+	//console.log(id, key);
 	var no = key[3];          // the "1"       in "<u>1</u>. title"
 	var to = key.substr (8);  // the ". title" in "<u>1</u>. title"
 	var rekey = no + to;
     var val = the.info[rekey];
     var tgt = document.getElementById ('info');
-    tgt.value = val;
+    tgt.value = rekey + ':\n' + val;
 } // eButton
 
 
@@ -236,7 +237,7 @@ function initializeButtons (names)
     var i = 0;
     for (name of names)
     {
-        var id = 'button' + i++;
+        var id = 'button' + ++i;
 		var n0 = name[0];
 		var nN = name.substr (1);
 		console.log (n0);
