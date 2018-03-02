@@ -384,6 +384,7 @@ function initializeDistributor ()
 			case 'S': case 's': eSofter (); return;
 			case 'L': case 'l': eFaster (); return;
 			case 'M': case 'm': eSlower (); return;
+			case ' ':  // <SPACE> also Play/Pauses
 			case 'P': case 'p': eRun    (); return;
 		}
 		for (var label in the.info) {
