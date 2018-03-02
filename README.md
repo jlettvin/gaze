@@ -5,10 +5,17 @@ Visit http://rawgit.com/jlettvin/gaze/master/gaze.html to run model.
 This visual model illustrates the full reflex arc needed to describe
 how attention is drawn to tiny moving features.
 
-The model is self-documenting so this README.md is very sparse.
-Visit the model and experiment with it.
+Models are self-documenting so this README.md is very sparse.
+Visit models and experiment.
 
-<a href="https://rawgit.com/jlettvin/gaze/master/index.html">Hosted Home</a>
+<ul>
+<li><a href="https://rawgit.com/jlettvin/gaze/master/index.html">
+Gaze Tracking Reflex
+</a></li>
+<li><a href="https://rawgit.com/jlettvin/gaze/master/distributor.html">
+Twitch Distributor Visualization
+</a></li>
+</ul>
 
 <hr />
 It is a work in progress and future directions are shown below:
