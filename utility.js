@@ -1,6 +1,10 @@
 'use strict';
 
 
+// TODO
+// document.querySelector("link[rel*='icon']").href = "favicon.ico";
+
+
 //------------------------------------------------------------------------------
 // PHP and shell style HEREDOC
 function HEREDOC (f)
@@ -155,3 +159,70 @@ function bits (val)
 	}
 	return ret;
 } // bits
+
+//------------------------------------------------------------------------------
+function header (id, items)
+//------------------------------------------------------------------------------
+{
+	var element = document.getElementById (id);
+	if (element) {
+	}
+	/*
+		<header>
+			<table width="100%" bgcolor="white" align="center">
+				<tr><td align="left">
+				<big><big><big><b><i>
+					Brain Building Kit&trade;
+				</i></b></big></big></big>
+			<br />
+			<big><big><big><b>BBK&trade;</b></big></big></big>
+			<br />
+				</td><td align="right">
+					<big><b><u><i>Mathematics of the Brain </i></u></b></big>
+<br />
+artificial brain assembly tools 
+<br />
+with sample neuron and brain libraries
+
+				</td></tr>
+			</table>
+		</header>
+	*/
+}
+
+//------------------------------------------------------------------------------
+function doWiki ()
+//------------------------------------------------------------------------------
+{
+	console.log ("doWiki");
+	var elements = document.getElementsByClassName ("wiki");
+	var key = elements.length;
+
+	while (key--) {
+		var markdown = elements[key];
+		var wikisrc = markdown.getElementsByClassName ("wiki.src");
+		var wikitgt = markdown.getElementsByClassName ("wiki.tgt");
+
+		if (wikitgt.length === 0) {
+			console.log("make");
+			wikitgt = document.createElement ("div");
+			wikitgt.setAttribute ("class", "wiki.tgt");
+			markdown.appendChild (wikitgt);
+		} else {
+			console.log("prep");
+			wikitgt = wikitgt[0];
+		}
+
+		console.log ("wiki.tgt",wikitgt);
+
+		if (wikisrc.length == 1 && wikitgt) {
+			wikisrc = wikisrc[0];
+			var src = wikisrc.innerHTML;
+			var tgt = wikitgt.innerHTML;
+			wikitgt.innerHTML = wikisrc.innerHTML;
+			var dbg = [];
+			var tgt = document.jlettvin.wiki.markdown (src, dbg);
+			wikitgt.innerHTML = tgt;
+		}
+	}
+}
