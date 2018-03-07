@@ -191,6 +191,38 @@ with sample neuron and brain libraries
 }
 
 //------------------------------------------------------------------------------
+function includeHTML() {
+	// NONFUNCTIONAL
+//------------------------------------------------------------------------------
+  console.log ("includeHTML");
+  var z, i, elmnt, file, xhttp;
+  /*loop through a collection of all HTML elements:*/
+  z = document.getElementsByTagName("*");
+  for (i = 0; i < z.length; i++) {
+    elmnt = z[i];
+    /*search for elements with a certain atrribute:*/
+    file = elmnt.getAttribute("w3-include-html");
+    if (file) {
+      /*make an HTTP request using the attribute value as the file name:*/
+      xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4) {
+          if (this.status == 200) {elmnt.innerHTML = this.responseText;}
+          if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
+          /*remove the attribute, and call this function once more:*/
+          elmnt.removeAttribute("w3-include-html");
+          includeHTML();
+        }
+      } 
+      xhttp.open("GET", file, true);
+      xhttp.send();
+      /*exit the function:*/
+      return;
+    }
+  }
+}
+
+//------------------------------------------------------------------------------
 function doWiki ()
 //------------------------------------------------------------------------------
 {
@@ -226,3 +258,70 @@ function doWiki ()
 		}
 	}
 }
+
+//------------------------------------------------------------------------------
+function doHeader (title, subtitle='')
+//------------------------------------------------------------------------------
+{
+	var body = document.getElementsByTagName ('body')[0];
+	var content = HEREDOC (function () {/*
+<header>
+	<table width="100%" bgcolor="white" align="center">
+		<tr><td align="left">
+		<big><big><big><b><i>
+			Brain Building Kit&trade;
+		</i></b></big></big></big>
+	<br />
+	<big><big><big><b>BBK&trade;</b></big></big></big>
+	<br />
+		</td><td align="center">
+			<h3>{title}<h3>
+			{subtitle}
+		</td><td align="right">
+			<big><b><u><i>Mathematics of the Brain </i></u></b></big>
+			<br />artificial brain assembly tools 
+			<br />with sample neuron and brain libraries
+		</td></tr>
+	</table>
+</header>
+	*/});
+
+	var header = body.getElementsByTagName ('header');
+	if (header.length) {
+		header = header[0];
+	} else {
+		header = document.createElement ('header');
+		body.appendChild (header);
+	}
+	content = content.replace ("{title}", title);
+	content = content.replace ("{subtitle}", subtitle);
+	header.innerHTML = content;
+}
+
+//------------------------------------------------------------------------------
+function doFooter ()
+//------------------------------------------------------------------------------
+{
+	console.log ("doFooter");
+	var content = HEREDOC (function () {/*
+		<footer>
+			<hr />
+			<small><b bgcolor="white" class="copyright">
+				Copyright&copy; 2018 Jonathan D. Lettvin, All Rights Reserved
+			</b></small>
+		</footer>
+	*/});
+
+	var body = document.getElementsByTagName ('body')[0];
+	var footer = body.getElementsByTagName ('footer');
+	if (footer.length) {
+		footer = footer[0];
+	} else {
+		footer = document.createElement ('footer');
+		body.appendChild (footer);
+	}
+	footer.innerHTML = content;
+}
+
+//includeHTML ();
+doWiki ();

@@ -201,7 +201,7 @@ document.onload = (function () {
           'Break^^^line',
           'Break<br clear="all" />line']
 
-    // ^^^newline
+    // ^^newline
     ,15 : ['newline',
           /\^\^/gim,
           '<br \/>',

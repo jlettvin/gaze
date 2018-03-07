@@ -3,32 +3,22 @@
 	<head>
 		<meta   charset="utf-8" />
 		<link   type   ="image/x-icon"    href="BBKtm.png" rel="icon" />
-		<script type   = "text/javascript" src="utility.js"></script>
+		<script type   ="text/javascript" src="utility.js"></script>
 		<script type   ="text/javascript" src ="wiki.js"></script>
 <style>
 table, td { border: 1px solid black; border-collapse: collapse; padding: 3px; }
+.copyright { height: 10px; font-size: 8px; color:black; background-color: white; }
 </style>
 	</head>
 	<body bgcolor="#ffffcc">
-		<header>
-			<table width="100%" bgcolor="white" align="center">
-				<tr><td align="left">
-				<big><big><big><b><i>
-					Brain Building Kit&trade;
-				</i></b></big></big></big>
-			<br />
-			<big><big><big><b>BBK&trade;</b></big></big></big>
-			<br />
-				</td><td align="right">
-					<big><b><u><i>Mathematics of the Brain </i></u></b></big>
-<br />
-artificial brain assembly tools 
-<br />
-with sample neuron and brain libraries
+	<script type="text/javascript">
+		doHeader ("Why not put brains in your devices?");
+	</script>
 
-				</td></tr>
-			</table>
-		</header>
+		<!--
+		<iframe src="header.html" width="100%"></iframe>
+		<div w3-include-html="header.html"></div>
+		-->
 
 		<table>
 			<tr><td>
@@ -67,13 +57,11 @@ while avoiding exhausting individual twitch units.
 			<tr><td></td><td></td></tr>
 		</table>
 		-->
-				</td><td bgcolor="white" width="80%">
+				</td><td bgcolor="white" width="80%" valign="top">
 
 			<span align="left" bgcolor="white">
 				<div class="wiki">
 				<div class="wiki.src" hidden>
-== Why not put brains in your devices? ==
-^^^^
 ___Computers and dedicated signal processors currently don't solve problems that brains do. Brain processing paradoxes remain unsolved by the neurosciences and current disciplines such as neuromorphic engineering, neural nets, and AI; even for simple organisms like C. Elegans (302 neurons).
 ^^^^
 ___Computers can solve problems that brains do. Devices can have fine economical sensorimotor reflexes, like animals do. However, a new mathematical foundation must be established to accomplish this. Brain Building Kit™ is in the process of establishing this.
@@ -92,14 +80,9 @@ ___With brains, your devices will work better than they ever have before.
 			</td></tr>
 		</table>
 		</span>
-		<footer>
-			<hr />
-			<small><b bgcolor="white">
-				Copyright&copy; 2018 Jonathan D. Lettvin, All Rights Reserved
-			</b></small>
-		</footer>
 	</body>
 	<script type="text/javascript">
 		doWiki ();
+		doFooter ();
 	</script>
 </html>
