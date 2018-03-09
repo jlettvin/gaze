@@ -323,5 +323,15 @@ function doFooter ()
 	footer.innerHTML = content;
 }
 
+//------------------------------------------------------------------------------
+function doInfo ()
+//------------------------------------------------------------------------------
+{
+	var ids = document.querySelectorAll('*[id]')
+	for (var id of ids) {
+		console.log (id);
+	}
+}
+
 //includeHTML ();
 doWiki ();
