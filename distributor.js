@@ -368,7 +368,7 @@ function initializeDistributor ()
 	var the = document.distributor;
 
 	the.delay  = the.interval.length - 1;
-	the.radius = 7;
+	the.radius = 4;
 	the.active = the.radius * 2;
 	the.scale  = 31;
 
