@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta   charset="utf-8" />
+		<link   type   ="image/x-icon"    href="BBKtm.png" rel="icon" />
+		<script type   ="text/javascript" src="utility.js"></script>
+		<script type   ="text/javascript" src ="wiki.js"></script>
+<style>
+table, td { border: 1px solid black; border-collapse: collapse; padding: 3px; }
+.copyright { height: 10px; font-size: 8px; color:black; background-color: white; }
+</style>
+	</head>
+	<body bgcolor="#ffffcc">
+	<script type="text/javascript">
+		doHeader ("Why not put brains in your devices?");
+	</script>
+
+		<h3>The Heilmeier questions:</h3>
+<ul>
+<li><a href="#Problem">What is the problem, why is it hard?</a>
+<li><a href="#Old">How is it solved today?</a>
+<li><a href="#new">What is the new technical idea; Why can we succeed now?</a>
+<li><a href="#Impact">What is the impact if successful?</a>
+<li><a href="#Organize">How will the program be organized?</a>
+<li><a href="#Results">How will intermediate results be generated?</a>
+<li><a href="#Measure">How will you measure progress?</a>
+<li><a href="#Cost">What will it cost?</a>
+</ul>
+
+</p><p>
+</p>
+<hr>
+<h3>Responses to the Heilmeier catechism:</h3>
+<dl>
+<dt><a name="Problem"_>What is the problem, why is it hard? <a href="#">[top]</a><dd><p>
+Useful synthetic neurons, neuropils, and brains cannot be built from currently available computer resources and theories.
+
+
+</p><p>
+Paraphrasing Santiago Ram&oacute;n y Cajal (Nobel Medicine 1906), three basic questions must be answered:
+<ol>
+<li>What advantages do neuron shapes confer?
+<li>How are signals formed, sent, and used?
+<li>What rules are used to grow shapes?
+</ol>
+</p><p>
+The literature on nervous systems is large, fragmented, and contentious.
+Neurologists say one thing while neuroscientists say another.
+There is no consensus on answers to any of Cajal's questions.
+A simple brain exhibiting published paradoxical perception could be evidence of success,
+but one cannot build simple brains from available theoretical models,
+and no such simple brain has been sustained against its critics.
+Even the C. Elegans nervous system, with 302 neurons, has not been modelled successfully
+despite plentiful computer memory and speed.
+</p><p>
+I am inclined to believe clinical neurologist observations.
+These are more often in conflict with scientific theory than is generally known.
+Neurologists use words like "aura" and "premonition" within their community.
+not as mysticism, but as code words for observations that cannot be explained
+and for which there are no more comfortable words.
+Specifically, the nervous system will respond to events that have not yet happened.
+</p><p>
+The degree of disparity in neuroscientist discussions makes it difficult to conceive of a single clean model
+that is consistent with the physics, chemistry, and histology of an entire neuron,
+that can be combined as many neurons in aggregates to solve specific problems.
+It is difficult to decide that a specific proposed abstraction deviates from the real brain
+in an insignificant way, or rather in a manner that fundamentally breaks the model.
+</p><p>
+The continuing lack of consensus indicates that
+the only valid test one can make of a model is to ask; "does the structure look like the histology,
+are internal signals consistent with the nanoscale chemistry,
+and do signal outputs resemble those known from observations of a living brain or part being modelled?"
+</p><p>
+A <b><i>Brain&nbsp;Building&nbsp;Kit&trade;</i></b> must be constructed such that
+a competent engineer could sketch out the known connections in a real brain,
+drive signals into it, generate output more useful than the input, and
+cause reflex actuation suited to the context of the signal.
+To make such a kit, one would have to have a single clean baseline model of a neuron
+from which specialized neurons can inherit,
+rules for aggregating neurons into neuropils,
+rules for adapting neurons and neuropils,
+and examples of applying signals to neuropils and their expected output.
+</p><p>
+That is the chief problem.
+From that point on, the problem degenerates to choosing best practices and interfaces,
+and decoding higher brain structures based on what is learned by decoding sensory/motor neuropils.
+
+
+</p>
+<hr>
+<dt><a name="Old"_>How is it solved today? <a href="#">[top]</a><dd><p>
+Much research has been funded to identify "interesting" features in a scene.
+"Mathematical Physiology (Keener and Sneyd, Springer 2001)"
+documents the state of the art in understanding living systems.
+"Introduction to the Mathematics of Medical Imaging (Epstein, Prentice Hall 2003)"
+documents one branch of image processing.
+Too numerous books and papers have been written on "machine vision".
+Standard methods of image processing bank heavily on spatial frequency transforms,
+wavelet transforms, or heuristics like the "Sombrero" convolution.
+</p><p>
+A variety of technologies exists for imitating various scales of neural processing.
+Jeff Hawkins and his team do some notable work on cortical functions.
+Carver Meade and his several teams produce useful engineering.
+Teams like irobot develop ever-improving decision and actuation technologies.
+Michael F. Deering examines the engineering limitations of vision.
+Teams at a variety of universities develop neural nets, neuromimetics.
+John Moore and his team at Duke have detailed conventional membrane models of neurons.
+There are a number of odd-ball theories that respond to unanswered paradoxes.
+</p><p>
+The key thing to note is that, although problems are partially solved and models work to some limited degree,
+no clearly winning general basis for constructing brains is found in any of these.
+Yet, it is clear that neurons are simply ordinary cells with some useful adaptations.
+</p>
+<hr>
+<dt><a name="new"_>What is the new technical idea; Why can we succeed now? <a href="#">[top]</a><dd><p>
+All my solutions use simple math on discrete arrays (highly parallelizable).
+Spatial frequency transforms are absent in these solutions.
+Neurons are modeled as simple bundled signal carriers.
+Dendrites organize coincidences of received signals.
+Neurons have local cytoskeletal states depending on historical signals.
+To start a dendritic signal, a specific condition must occur.
+Axon pulses are formed from integrated dendritic signals.
+Axons project and dendrites collect using simple clear rules.
+Transduction into and out of neurons solve some paradoxes.
+Topological transfer functions solve some paradoxes.
+Layered transfer functions solve some paradoxes.
+</p><p>
+The brain can be viewed as having layers within structures.
+The dense interdigitation of axons with dendrites in a layer is called a neuropil.
+Some example structures and neuropils, imitating visual pathways, have been tested, and work.
+The rules I use for producing neurons, neuropils, and structures seem consistent with natural brains.
+</p><p>
+These are <b><i>Brain&nbsp;Building&nbsp;Kit&trade;</i></b> goals in the proposal for DARPA-BAA-09-865
+<ul>
+<li>10X sub-pixel resolution for 20X or higher diffractive blur radius
+<li>Color correction in color-cast images
+<li>Contrast improvement
+<li>Simultaneous noise reduction with feature enhancement
+<li>Simple object recognition through rotation, translation, scale, tilt, and warp
+</ul>
+</p><p>
+I conclude that a general basis for constructing brains is possible.
+Preliminary experimental results have proven fruitful.
+A number of perceptual paradoxes are completely solved.
+A number of deviations from convention are necessary to enable these solutions.
+These solutions seem to arise out of sheer mathematical necessity
+and do not depend critically on the specifics of the underlying materials
+so much as on an average range of behaviors of one material upon another.
+It has been unnecessary to invent unrealistic scenarios.
+
+
+
+</p><p>
+</p>
+<hr>
+<dt><a name="Impact"_>What is the impact if successful? <a href="#">[top]</a><dd><p>
+A general BBK (<b><i>Brain&nbsp;Building&nbsp;Kit&trade;</i></b>) has enormous consequences.
+Where electronic spreadsheets revolutionized the financial world,
+a BBK enables engineers to capture and employ many other economies.
+Simple example neuropils with explanations of input and output signals
+can be used to train novice BBK engineers to identify opportunites.
+</p><p>
+In a similar manner to electronic spreadsheets
+the community of BBK support can be layered with
+core engineers working on improving the BBK engine including growth rules,
+interface engineers working on improving the BBK usability,
+internal application engineers developing a library of "known" neuron topologies,
+external expert engineers developing libraries of industry specific brains,
+external application engineers refining brains to their specific devices,
+and end users whose responses to the brain-enabled device cause it to regrow.
+</p><p>
+Sir Charles Sherrington (Nobel Medicine 1932) once said
+"The brain is the crowning achievement of the reflex system."
+By this, I believe he meant that there is nothing but reflex in a brain's structure and function.
+As such, it is important to consider the reflex arc as the primary goal of all brain building.
+Devices can be built with reflexes more appropriate to the user
+than the cleverest engineer can ever hard-code in a program.
+</p><p>
+The world of smart devices could be deeply affected by
+substituting appropriate-to-use topological reflex primitives for expert system code.
+
+
+
+</p>
+<hr>
+<dt><a name="Organize"_>How will the program be organized? <a href="#">[top]</a><dd><dl>
+<dt style="color:brown">Personnel (Rough Draft)<dd>
+<dl>
+<dt>Mathematicians<dd>Preference for those familiar with discrete manifolds and APL or J
+<dt>Project management<dd>Preference for familiarity with XP ("Extreme Programming")
+<dt>Documentation<dd>Preference for established expert in Science/Technology/User integration
+<dt>Developers/Testers<dd>Preference for XP experienced math-adept physics-adept people with interest in neural signal processing
+<dt>Integrators<dd>Preference for experience in military technologies, processes, and projects
+<dt>Architect<dd>Preference for gifted polymath
+<dt>Chief Scientist/Team Lead<dd>My role
+<dt><dd>
+</dl>
+<dt style="color:brown">Milestones (Rough Draft)<dd>
+<dl>
+<dt>Transduction/Topology Prototyping<dd>
+<dt>BBK Visualization/Construction<dd>
+<dt>Test Suite<dd>
+<dt>Invariant/Resolution/Registration<dd>
+<dt>Translate/Rotate/Scale/Tilt/Warp<dd>
+<dt>Growth/Memory/Training<dd>
+<dt><dd>
+<dt><dd>
+<dt><dd>
+</dl>
+<dt style="color:brown">Tasks (Rough Draft)<dd>
+<dl>
+<dt>Team Recruitment<dd>
+<dt>Training/Documentation<dd>
+<dt>Unit-Tested Primitives Resource Development<dd>
+<dt>Visualization/Construction Tools Development<dd>
+<dt>Test Suite Assembly/Development<dd>
+<dt>System Design Documentation<dd>
+<dt>Consolidate Methods into a generic BBK<dd>
+<dt>Specialization to Device<dd>
+<dt>Test Device<dd>
+<dt>Presentation Development<dd>
+<dt><dd>
+</dl>
+<dt style="color:brown">Schedule (Rough Draft)<dd>
+<dl>
+<dt><dd>
+</dl>
+</dl>
+
+
+
+
+<hr>
+<dt><a name="Results"_>How will intermediate results be generated? <a href="#">[top]</a><dd><p>
+The first stage of development will focus on visual processing.
+This is convenient due to the great volume of histological literature on visual brain.
+Within this stage, there are many intermediate goals.
+The final product will be a processor to perform reliable object identification including IFF.
+</p><p>
+My approach to this is so-called "bottom-up".
+First perform transductions properly (new material), then early perceptual transforms,
+and finally, using a new form of memory, predictive modeling to confirm identification.
+Each intermediate goal is an autonomous sub-project subject to integration.
+Each sub-project will be managed under Extreme Programming rules.
+Nevertheless, a "top-down" architecture will guide all sub-projects towards integration.
+
+</p><p>
+The Extreme Programming  methodology is particularly suited to this project
+due to the large number of innovations to be managed and
+the unmanageably large scale of documentation required were more traditional design methods used.
+</p><p>
+Using the disciplined software development practices of
+<a href="http://en.wikipedia.org/wiki/Extreme_Programming">Extreme Programming</a>,
+the team will generate new "iterations" each month.
+This process will include training and discussion time for the new methods.
+Every month, a report will be generated documenting
+what the final status of the current iteration is and
+what specific goals are to be met in the next.
+</p><p>
+Amongst the goals to be met by early development are:
+<dl>
+<dt>Contrast Invariance<dd>
+<dt>Color Constancy<dd>
+<dt>Hyperacute (sub-pixel) imaging<dd>
+<dt>Feature recovery in noise-reduced image<dd>
+<dt>Feature prediction<dd>
+<dt>Shape discrimination<dd>
+<dt><dd>
+<dt><dd>
+
+</dl>
+</p><p>
+
+</p>
+<hr>
+<dt><a name="Measure"_>How will you measure progress? <a href="#">[top]</a><dd><p>
+Extreme Programming practices address this.
+For each iteration, specific goals are written as "User Stories".
+Probability of success within the iteration is evaluated.
+Developers commit to the level of effort required.
+Programming pairs implement unit tests, code for the user stories, and document.
+This material is assembled into a monthly progress report.
+In this report will be lists and charts for:
+<ul>
+<li>unit test results documentation
+<li>code coverage
+<li>performance
+<li>code internal documentation completeness
+<li>system documentation
+<li>operational capabilities
+<li>signal input/output test suites compliance test results
+<li>project status
+</ul>
+</p><p>
+
+
+
+
+</p>
+<hr>
+<dt><a name="Cost"_>What will it cost? <a href="#">[top]</a><dd><p>
+
+With exceptionally talented contributors, a full staff could be as small as 5 people.
+Fully loaded, and with equipment purchases, my rough estimate is
+approximately $2M in the first year.
+</p><p>
+
+</p>
+<hr>
+</dl>
+</td></tr></table>
+</td>
+</tr>
+</table>
+<hr>
+<div align="center">
+<table width="100%" bgcolor="#FFFFFF"><tr><td align="left">
+<small><small>
+Copyright(c)2009-2018 Jonathan D. Lettvin, All Rights Reserved
+</small></small>
+</td><td align="center">
+<small><small>
+March 10, 2018, 12:23 am</small></small>
+</td><td align="right">
+<small><small>
+Contact: (617) 600-4499 <a href="mailto:jdl@alum.mit.edu">email</a>
+</small></small>
+</td></tr></table>
+</div>
+</body>
+	<script type="text/javascript">
+		doWiki ();
+		doInfo ();
+		doFooter ();
+	</script>
+</html>
