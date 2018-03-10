@@ -327,11 +327,64 @@ function doFooter ()
 function doInfo ()
 //------------------------------------------------------------------------------
 {
+	console.log ("doInfo");
 	var ids = document.querySelectorAll('*[id]')
 	for (var id of ids) {
 		console.log (id);
 	}
 }
 
+//------------------------------------------------------------------------------
+function ulButtons (buttons)
+//------------------------------------------------------------------------------
+{
+	var ul = document.getElementById("ulButtons");
+	if (ul) {
+		for (var candidate of buttons) {
+			if (candidate.URL && candidate.title && candidate.text) {
+				console.log ("button title:", candidate.title);
+
+				var a       = document.createElement ('a');
+				a.href      = candidate.URL;
+				a.innerHTML = candidate.title;
+
+				var span          = document.createElement ('span');
+				span.setAttribute ("class", "tooltiptext");
+				span.innerHTML    = candidate.text;
+
+				var li = document.createElement ('li');
+
+				var button          = document.createElement ('button');
+				button.setAttribute ("class", "tooltip");
+
+
+				button.appendChild (a);
+				button.appendChild (span);
+				li.appendChild (button);
+				ul.appendChild (li);
+			}
+		}
+
+		var b       = document.createElement ('b');
+		b.innerHTML = "refresh";
+
+		var span          = document.createElement ('span');
+		span.setAttribute ("class", "tooltiptext");
+		span.innerHTML    = "reload this page";
+
+		var button          = document.createElement ('button');
+		button.setAttribute ("class", "tooltip");
+		button.setAttribute ("id", "reload");
+		button.setAttribute ("onclick", "location.reload (true)");
+
+		var li = document.createElement ('li');
+
+		button.appendChild (b);
+		button.appendChild (span);
+		li.appendChild (button);
+		ul.appendChild (li);
+	}
+}
+
 //includeHTML ();
-doWiki ();
+doWiki ();  // TODO remove this

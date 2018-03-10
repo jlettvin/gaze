@@ -5,6 +5,7 @@
 		<link   type   ="image/x-icon"    href="BBKtm.png" rel="icon" />
 		<script type   ="text/javascript" src="utility.js"></script>
 		<script type   ="text/javascript" src ="wiki.js"></script>
+		<link   type   ="text/css"        href="tooltip.css" rel="stylesheet">
 <style>
 table, td { border: 1px solid black; border-collapse: collapse; padding: 3px; }
 .copyright { height: 10px; font-size: 8px; color:black; background-color: white; }
@@ -22,7 +23,6 @@ table, td { border: 1px solid black; border-collapse: collapse; padding: 3px; }
 
 		<table>
 			<tr><td valign="top">
-		<button id="reload" onclick="location.reload (true)">reload</button>
 
 <!--
 <br /><br />
@@ -30,32 +30,8 @@ This visual model illustrates the full reflex arc needed to describe
 how attention is drawn to tiny moving features.
 -->
 
-<dl>
-
-<dt><a href="Heilmeier.html">Overview</a></dt><dd>Heilmeier catechism</dd>
-<dt><a href="gaze.html">Tracking</a></dt><dd>First full reflex arc.</dd>
-<dt><a href="">Future</a></dt><dd>Incomplete new code.</dd>
-<dt><a href="distributor.html">Distributor</a></dt><dd>Muscle control</dd>
-<dt><a href="https://rawgit.com/jdl-mit-alum/rod/master/rod.html">
-Rod</a></dt><dd>Photoreceptor adaptation</dd>
-<dt><a href="https://github.com/jlettvin/Airy">
-Airy</a></dt><dd>Generating diffraction</dd>
-<dt><a href="https://rawgit.com/jlettvin/JYL/master/seen.movement.html">
-Seen Movement</a></dt><dd>Key frog experiment</dd>
-<dt><a href="https://rawgit.com/jlettvin/Tubulin/master/bipolar.shared.path.html">
-Shared tubulin</a></dt>
-<dt><a href="https://rawgit.com/jlettvin/Tubulin/master/bipolar.unique.path.html">
-Unique tubulin</a></dt><dd>Tubulin trees (detailed).</dd>
-<dt><a href="https://github.com/jlettvin/NoisyGrayStep">
-Gray step</a></dt><dd>Contrast boundaries</dd>
-<dt><a href="https://github.com/jlettvin/HexTile">
-Hexagon pack</a></dt><dd>Labeling positions</dd>
-<dt><a href="https://github.com/jlettvin/JYL">
-Jerry Lettvin</a></dt><dd>Significant papers</dd>
-
-
-
-		</dl>
+		<h3>Directory</h3>
+		<ul id="ulButtons"></ul>
 
 		<!--
 		<table>
@@ -89,8 +65,53 @@ ___With brains, your devices will work better than they ever have before.
 		</span>
 	</body>
 	<script type="text/javascript">
-		doWiki ();
-		doInfo ();
-		doFooter ();
+		{
+			var buttons = [
+				{	URL: "Heilmeier.html",
+					title: "Proposal",
+					text: "Q&amp;A",
+					tool: "Heilmeier catechism"},
+				{	URL: "gaze.html",
+					title: "Tracking",
+					text: "First full reflex arc"},
+				{	URL: "",
+					title: "Future",
+					text: "Incomplete new code"},
+				{	URL: "distributor.html",
+					title: "Distributor",
+					text: "Muscle control"},
+				{	URL: "distributor.html",
+					title: "Distributor",
+					text: "Muscle control"},
+				{	URL: "https://rawgit.com/jdl-mit-alum/rod/master/rod.html",
+					title: "Rod",
+					text: "Photoreceptor adaptation"},
+				{	URL: "https://rawgit.com/jlettvin/Airy",
+					title: "Airy",
+					text: "Generating diffraction"},
+				{	URL: "https://rawgit.com/jlettvin/JYL/master/seen.movement.html",
+					title: "Seen Movement",
+					text: "Key frog experiment"},
+				{	URL: "https://rawgit.com/jlettvin/Tubulin/master/bipolar.shared.path.html",
+					title: "Shared paths",
+					text: ""},
+				{	URL: "https://rawgit.com/jlettvin/Tubulin/master/bipolar.unique.path.html",
+					title: "Unique paths",
+					text: "Tubulin trees"},
+				{	URL: "https://github.com/jlettvin/NoisyGrayStep",
+					title: "Gray step",
+					text: "Contrast boundaries"},
+				{	URL: "https://github.com/jlettvin/HexTile",
+					title: "Hexagon pack",
+					text: "Labeling positions"},
+				{	URL: "https://github.com/jlettvin/JYL",
+					title: "Jerry Lettvin",
+					text: "Significant papers"},
+			];
+			ulButtons (buttons);
+			doWiki ();
+			doInfo ();
+			doFooter ();
+		}
 	</script>
 </html>
