@@ -66,49 +66,51 @@ ___With brains, your devices will work better than they ever have before.
 	</body>
 	<script type="text/javascript">
 		{
-			var buttons = [
+			var specification = {
+				metadata: { type: "buttons" },
+				items: [
 				{	URL: "Heilmeier.html",
 					title: "Proposal",
-					text: "Q&amp;A",
-					tool: "Heilmeier catechism"},
+					tooltip: "Q&amp;A"},
 				{	URL: "gaze.html",
 					title: "Tracking",
-					text: "First full reflex arc"},
+					tooltip: "First full reflex arc"},
 				{	URL: "",
 					title: "Future",
-					text: "Incomplete new code"},
+					tooltip: "Incomplete new code"},
 				{	URL: "distributor.html",
 					title: "Distributor",
-					text: "Muscle control"},
+					tooltip: "Muscle control"},
 				{	URL: "distributor.html",
 					title: "Distributor",
-					text: "Muscle control"},
+					tooltip: "Muscle control"},
 				{	URL: "https://rawgit.com/jdl-mit-alum/rod/master/rod.html",
 					title: "Rod",
-					text: "Photoreceptor adaptation"},
+					tooltip: "Photoreceptor adaptation"},
 				{	URL: "https://rawgit.com/jlettvin/Airy",
 					title: "Airy",
-					text: "Generating diffraction"},
+					tooltip: "Generating diffraction"},
 				{	URL: "https://rawgit.com/jlettvin/JYL/master/seen.movement.html",
 					title: "Seen Movement",
-					text: "Key frog experiment"},
+					tooltip: "Key frog experiment"},
 				{	URL: "https://rawgit.com/jlettvin/Tubulin/master/bipolar.shared.path.html",
 					title: "Shared paths",
-					text: ""},
+					tooltip: ""},
 				{	URL: "https://rawgit.com/jlettvin/Tubulin/master/bipolar.unique.path.html",
 					title: "Unique paths",
-					text: "Tubulin trees"},
+					tooltip: "Tubulin trees"},
 				{	URL: "https://github.com/jlettvin/NoisyGrayStep",
 					title: "Gray step",
-					text: "Contrast boundaries"},
+					tooltip: "Contrast boundaries"},
 				{	URL: "https://github.com/jlettvin/HexTile",
 					title: "Hexagon pack",
-					text: "Labeling positions"},
+					tooltip: "Labeling positions"},
 				{	URL: "https://github.com/jlettvin/JYL",
 					title: "Jerry Lettvin",
-					text: "Significant papers"},
-			];
-			ulButtons (buttons);
+					tooltip: "Significant papers"},
+				]
+			};
+			ulButtons (specification);
 			doWiki ();
 			doInfo ();
 			doFooter ();

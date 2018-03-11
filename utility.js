@@ -335,13 +335,14 @@ function doInfo ()
 }
 
 //------------------------------------------------------------------------------
-function ulButtons (buttons)
+function ulButtons (specification)
 //------------------------------------------------------------------------------
 {
+	var buttons = specification.items;
 	var ul = document.getElementById("ulButtons");
 	if (ul) {
 		for (var candidate of buttons) {
-			if (candidate.URL && candidate.title && candidate.text) {
+			if (candidate.URL && candidate.title && candidate.tooltip) {
 				console.log ("button title:", candidate.title);
 
 				var a       = document.createElement ('a');
@@ -350,7 +351,7 @@ function ulButtons (buttons)
 
 				var span          = document.createElement ('span');
 				span.setAttribute ("class", "tooltiptext");
-				span.innerHTML    = candidate.text;
+				span.innerHTML    = candidate.tooltip;
 
 				var li = document.createElement ('li');
 
@@ -365,24 +366,27 @@ function ulButtons (buttons)
 			}
 		}
 
-		var b       = document.createElement ('b');
-		b.innerHTML = "refresh";
+		{
+			// The refresh button
+			var b       = document.createElement ('b');
+			b.innerHTML = "refresh";
 
-		var span          = document.createElement ('span');
-		span.setAttribute ("class", "tooltiptext");
-		span.innerHTML    = "reload this page";
+			var span          = document.createElement ('span');
+			span.setAttribute ("class", "tooltiptext");
+			span.innerHTML    = "reload this page";
 
-		var button          = document.createElement ('button');
-		button.setAttribute ("class", "tooltip");
-		button.setAttribute ("id", "reload");
-		button.setAttribute ("onclick", "location.reload (true)");
+			var button          = document.createElement ('button');
+			button.setAttribute ("class", "tooltip");
+			button.setAttribute ("id", "reload");
+			button.setAttribute ("onclick", "location.reload (true)");
 
-		var li = document.createElement ('li');
+			var li = document.createElement ('li');
 
-		button.appendChild (b);
-		button.appendChild (span);
-		li.appendChild (button);
-		ul.appendChild (li);
+			button.appendChild (b);
+			button.appendChild (span);
+			li.appendChild (button);
+			ul.appendChild (li);
+		}
 	}
 }
 
