@@ -335,12 +335,14 @@ function doInfo ()
 }
 
 //------------------------------------------------------------------------------
-function ulButtons (specification)
+function someButtons (specification)
 //------------------------------------------------------------------------------
 {
 	var buttons = specification.items;
-	var ul = document.getElementById("ulButtons");
-	if (ul) {
+	var md      = specification.has;
+	var sub     = (md && md.tag) || 'li';
+	var tag = document.getElementById("someButtons");
+	if (tag) {
 		for (var candidate of buttons) {
 			if (candidate.URL && candidate.title && candidate.tooltip) {
 				console.log ("button title:", candidate.title);
@@ -353,7 +355,7 @@ function ulButtons (specification)
 				span.setAttribute ("class", "tooltiptext");
 				span.innerHTML    = candidate.tooltip;
 
-				var li = document.createElement ('li');
+				var li = document.createElement (sub);
 
 				var button          = document.createElement ('button');
 				button.setAttribute ("class", "tooltip");
@@ -362,7 +364,7 @@ function ulButtons (specification)
 				button.appendChild (a);
 				button.appendChild (span);
 				li.appendChild (button);
-				ul.appendChild (li);
+				tag.appendChild (li);
 			}
 		}
 
@@ -380,12 +382,12 @@ function ulButtons (specification)
 			button.setAttribute ("id", "reload");
 			button.setAttribute ("onclick", "location.reload (true)");
 
-			var li = document.createElement ('li');
+			var li = document.createElement (sub);
 
 			button.appendChild (b);
 			button.appendChild (span);
 			li.appendChild (button);
-			ul.appendChild (li);
+			tag.appendChild (li);
 		}
 	}
 }

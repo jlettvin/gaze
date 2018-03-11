@@ -31,7 +31,7 @@ how attention is drawn to tiny moving features.
 -->
 
 		<h3>Directory</h3>
-		<ul id="ulButtons"></ul>
+		<ul id="someButtons"></ul>
 
 		<!--
 		<table>
@@ -67,7 +67,7 @@ ___With brains, your devices will work better than they ever have before.
 	<script type="text/javascript">
 		{
 			var specification = {
-				metadata: { type: "buttons" },
+				has: { type: "buttons", tag: 'li', place: "right" },
 				items: [
 				{	URL: "Heilmeier.html",
 					title: "Proposal",
@@ -110,7 +110,7 @@ ___With brains, your devices will work better than they ever have before.
 					tooltip: "Significant papers"},
 				]
 			};
-			ulButtons (specification);
+			someButtons (specification);
 			doWiki ();
 			doInfo ();
 			doFooter ();
