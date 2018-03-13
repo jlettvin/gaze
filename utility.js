@@ -338,6 +338,7 @@ function doInfo ()
 function someButtons (specification)
 //------------------------------------------------------------------------------
 {
+	var prefix  = "tooltip";
 	var buttons = specification.items;
 	var md      = specification.has;
 	var sub     = (md && md.tag) || 'li';
@@ -352,13 +353,13 @@ function someButtons (specification)
 				a.innerHTML = candidate.title;
 
 				var span          = document.createElement ('span');
-				span.setAttribute ("class", "tooltiptext");
+				span.setAttribute ("class", prefix + "text");
 				span.innerHTML    = candidate.tooltip;
 
 				var li = document.createElement (sub);
 
 				var button          = document.createElement ('button');
-				button.setAttribute ("class", "tooltip");
+				button.setAttribute ("class", prefix);
 
 
 				button.appendChild (a);
@@ -374,11 +375,11 @@ function someButtons (specification)
 			b.innerHTML = "refresh";
 
 			var span          = document.createElement ('span');
-			span.setAttribute ("class", "tooltiptext");
+			span.setAttribute ("class", prefix + "text");
 			span.innerHTML    = "reload this page";
 
 			var button          = document.createElement ('button');
-			button.setAttribute ("class", "tooltip");
+			button.setAttribute ("class", prefix);
 			button.setAttribute ("id", "reload");
 			button.setAttribute ("onclick", "location.reload (true)");
 
