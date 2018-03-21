@@ -345,16 +345,16 @@ function someButtons (specification)
 	var tag = document.getElementById("someButtons");
 	if (tag) {
 		for (var candidate of buttons) {
-			if (candidate.URL && candidate.title && candidate.tooltip) {
-				console.log ("button title:", candidate.title);
+			if (candidate.href && candidate.text && candidate.help) {
+				console.log ("button title:", candidate.text);
 
 				var a       = document.createElement ('a');
-				a.href      = candidate.URL;
-				a.innerHTML = candidate.title;
+				a.href      = candidate.href;
+				a.innerHTML = candidate.text;
 
 				var span          = document.createElement ('span');
 				span.setAttribute ("class", prefix + "text");
-				span.innerHTML    = candidate.tooltip;
+				span.innerHTML    = candidate.help;
 
 				var li = document.createElement (sub);
 

@@ -4,6 +4,88 @@
 
 const tau  = Math.PI * 2;
 
+
+//-------------------------------------------------------------------------------
+// http://www.javascripter.net/faq/browsern.htm
+function detectBrowser ()
+//-------------------------------------------------------------------------------
+{
+	var nVer = navigator.appVersion;
+	var nAgt = navigator.userAgent;
+	var browserName  = navigator.appName;
+	var fullVersion  = ''+parseFloat(navigator.appVersion); 
+	var majorVersion = parseInt(navigator.appVersion,10);
+	var nameOffset,verOffset,ix;
+
+	// In Opera 15+, the true version is after "OPR/" 
+	if ((verOffset=nAgt.indexOf("OPR/"))!=-1) {
+		browserName = "Opera";
+		fullVersion = nAgt.substring(verOffset+4);
+	}
+	// In older Opera, the true version is after "Opera" or after "Version"
+	else if ((verOffset=nAgt.indexOf("Opera"))!=-1) {
+		browserName = "Opera";
+		fullVersion = nAgt.substring(verOffset+6);
+		if ((verOffset=nAgt.indexOf("Version"))!=-1) 
+			fullVersion = nAgt.substring(verOffset+8);
+	}
+	// In MSIE, the true version is after "MSIE" in userAgent
+	else if ((verOffset=nAgt.indexOf("MSIE"))!=-1) {
+		browserName = "Microsoft Internet Explorer";
+		fullVersion = nAgt.substring(verOffset+5);
+	}
+	// In Chrome, the true version is after "Chrome" 
+	else if ((verOffset=nAgt.indexOf("Chrome"))!=-1) {
+		browserName = "Chrome";
+		fullVersion = nAgt.substring(verOffset+7);
+	}
+	// In Safari, the true version is after "Safari" or after "Version" 
+	else if ((verOffset=nAgt.indexOf("Safari"))!=-1) {
+		browserName = "Safari";
+		fullVersion = nAgt.substring(verOffset+7);
+		if ((verOffset=nAgt.indexOf("Version"))!=-1) 
+			fullVersion = nAgt.substring(verOffset+8);
+	}
+	// In Firefox, the true version is after "Firefox" 
+	else if ((verOffset=nAgt.indexOf("Firefox"))!=-1) {
+		browserName = "Firefox";
+		fullVersion = nAgt.substring(verOffset+8);
+	}
+	// In most other browsers, "name/version" is at the end of userAgent 
+	else if ( (nameOffset=nAgt.lastIndexOf(' ')+1) < 
+		(verOffset=nAgt.lastIndexOf('/')) ) 
+	{
+		browserName = nAgt.substring(nameOffset,verOffset);
+		fullVersion = nAgt.substring(verOffset+1);
+		if (browserName.toLowerCase()==browserName.toUpperCase()) {
+			browserName = navigator.appName;
+		}
+	}
+	// trim the fullVersion string at semicolon/space if present
+	if ((ix=fullVersion.indexOf(";"))!=-1)
+		fullVersion=fullVersion.substring(0,ix);
+	if ((ix=fullVersion.indexOf(" "))!=-1)
+		fullVersion=fullVersion.substring(0,ix);
+
+	majorVersion = parseInt(''+fullVersion,10);
+	if (isNaN(majorVersion)) {
+		fullVersion  = ''+parseFloat(navigator.appVersion); 
+		majorVersion = parseInt(navigator.appVersion,10);
+	}
+
+	return browserName + ':' + fullVersion;
+
+	/*
+document.write(''
+ +'Browser name  = '+browserName+'<br>'
+ +'Full version  = '+fullVersion+'<br>'
+ +'Major version = '+majorVersion+'<br>'
+ +'navigator.appName = '+navigator.appName+'<br>'
+ +'navigator.userAgent = '+navigator.userAgent+'<br>'
+)
+*/
+}
+
 //-------------------------------------------------------------------------------
 // https://davidwalsh.name/add-rules-stylesheets
 function addCSSRules(sheet, selector, rules, index=0) {
@@ -141,15 +223,46 @@ function eButton (e)
 {
 	var the = document.distributor;
     var id = e.target.id;
+	console.log ('id', id, e)
+	var element = document.getElementById (id);
+	if (element) {
+		var key = element.innerHTML;
+		//console.log(id, key);
+		var no = key[3];          // the "1"       in "<u>1</u>. title"
+		var to = key.substr (8);  // the ". title" in "<u>1</u>. title"
+		var rekey = no + to;
+		var val = the.info[rekey];
+		var tgt = document.getElementById ('info');
+		tgt.value = rekey + ':\n' + val;
+	}
+} // eButton
+
+
+//-------------------------------------------------------------------------------
+function eVoice (e)
+//-------------------------------------------------------------------------------
+{
+	var the = document.distributor;
+    var id = e.target.id;
     var key = document.getElementById (id).innerHTML;
-	//console.log(id, key);
 	var no = key[3];          // the "1"       in "<u>1</u>. title"
 	var to = key.substr (8);  // the ". title" in "<u>1</u>. title"
 	var rekey = no + to;
-    var val = the.info[rekey];
-    var tgt = document.getElementById ('info');
-    tgt.value = rekey + ':\n' + val;
-} // eButton
+	if (the.voice) {
+		var utterance = new the.utterance (the.info[rekey]);
+		utterance.rate = 1.1;
+		speechSynthesis.cancel ();
+ 		speechSynthesis.speak(utterance);
+	}
+}
+
+
+//-------------------------------------------------------------------------------
+function eSilence (e)
+//-------------------------------------------------------------------------------
+{
+	speechSynthesis.cancel ();
+}
 
 
 //-------------------------------------------------------------------------------
@@ -233,19 +346,25 @@ function loop ()
 function initializeButtons (names)
 //-------------------------------------------------------------------------------
 {
+	var the       = document.distributor;
     var text = '';
     var i = 0;
+	var title = the.voice ? ' title="mousedown for text-to-speech"' : '';
     for (name of names)
     {
+		if ((i % 5) == 0) text += '<br /><br />';
         var id = 'button' + ++i;
 		var n0 = name[0];
 		var nN = name.substr (1);
-		//console.log (n0);
-        text += '<button id="' + id +
+		//var title = 
+        text += '&nbsp;<big><big><b><abbr' + title +  ' id="' +
+			id +
 			'" onmouseover="eButton(event)"' +
+			'" onmousedown="eVoice(event)"' +
+			'" onmouseup="eSilence(event)"' +
 			'" onclick="eButton(event)"' + '>' +
 			'<u>' + n0 + '</u>' + nN +
-			'</button>';
+			'</abbr></b></big></big>&nbsp;';
     }
     var element = document.getElementById ('buttons');
     element.innerHTML = text;
@@ -257,9 +376,18 @@ function initializeInfo ()
 //-------------------------------------------------------------------------------
 {
 	var the = document.distributor;
+	var speech = the.speech = {};
     var info = the.info= {};
 
-	info['1. Basic'] = HEREDOC(function () {/*
+	info['0. About'] = HEREDOC(function () {/*
+This is the motor signal distributor module.
+Skeletal muscles require delays between twitches for
+individual twitch units in bundles.
+The average number of twitches per unit time
+determines the tonus of the muscle.
+*/});
+
+	info['1. Observations'] = HEREDOC(function () {/*
    Muscles make sounds as fibers twitch, and the model is representative.
 When running, the sound frequency is in proportion to twitch activity.
    When a muscle is cut across, all the individual muscle "fibers" are visible.
@@ -316,14 +444,14 @@ As the sweeping pattern passes across the dendritic spines
 those which sample a boundary in the pattern twitch their muscle fibers.
 */});
 
-    info['6. Coincidences'] = HEREDOC(function () {/*
+    info['6. Coincide'] = HEREDOC(function () {/*
    The remote dendrite for each motor neuron expresses a pattern
 which makes its gradient detectors unique within sampled patterns.
 It most likely samples the pattern in multiple places and uses
 coincidence of samples to trigger the pulse that activates a muscle fiber.
 */});
 
-    info['7. Discussion'] = HEREDOC(function () {/*
+    info['7. Discuss'] = HEREDOC(function () {/*
    As long as the pattern delivered is reliable,
 twitch unit duty cycle timing requirements are satisfied.
 This strategy guarantees maximum recovery time for all muscle fibers.
@@ -333,7 +461,7 @@ the proposed pre-randomized sampling of a regular pattern.
    Twitch is "all or none": tonus measures average twitches per unit time.
 */});
 
-    info['8. Conclusions'] = HEREDOC(function () {/*
+    info['8. Conclude'] = HEREDOC(function () {/*
    Muscles comprising bundles of long duty cycle twitch units
 can be run efficiently if twitches are distributed evenly and
 if the time between twitches is maximized for any given twitch unit.
@@ -346,11 +474,27 @@ without the burden of unnecessary calculation.
 */});
 
     var keys = [];
-    for (var key in info) keys.push (key);
+    for (var key in info) {
+		keys.push (key);
+	}
     initializeButtons (keys);
 
 } // info
 
+
+//-------------------------------------------------------------------------------
+function initializeSpeech ()
+//-------------------------------------------------------------------------------
+{
+	var the = document.distributor;
+	the.utterance = window.webkitSpeechSynthesisUtterance ||
+                    window.mozSpeechSynthesisUtterance ||
+                    window.msSpeechSynthesisUtterance ||
+                    window.oSpeechSynthesisUtterance ||
+                    window.SpeechSynthesisUtterance;
+	the.voice = (the.utterance !== undefined);
+	console.log ('utterance', the.utterance);
+}
 
 //-------------------------------------------------------------------------------
 function initializeDistributor ()
@@ -366,6 +510,8 @@ function initializeDistributor ()
 		oscillator   : null,
     };
 	var the = document.distributor;
+	the.browser = detectBrowser ();
+
 
 	the.delay  = the.interval.length - 1;
 	the.radius = 4;
@@ -381,7 +527,7 @@ function initializeDistributor ()
 	initializeTable  ();
 	initializeAudio  ();
 	initializeCanvas ();
-    initializeInfo   ();
+    initializeInfo   ();  // Must be after initializeAudio to link speech
 
 	document.addEventListener('keypress', (event) => {
   		const key = event.key;
@@ -427,7 +573,19 @@ function initializeAudio ()
 {
 	var the = document.distributor;
 
+	initializeSpeech ();
+
 	the.audio = {};
+	if (!the.utterance)
+	{
+		var voice = document.getElementById ('voice');
+		var support = '<hr /><small><small>';
+		support += the.browser;
+		support += ' does not support text to speech.';
+		support += ' (chrome and firefox do if needed)';
+		support += '</small></small>';
+		voice.innerHTML = support;
+	}
 
     var context = new (window.AudioContext || window.webkitAudioContext)();
 
