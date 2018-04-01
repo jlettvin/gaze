@@ -161,6 +161,7 @@ function audible (flag) {
 function ePower (direction)
 //-------------------------------------------------------------------------------
 {
+	/*
 	var the = document.distributor;
     var strength = document.getElementById ("strength");
     if (the.running)
@@ -174,6 +175,7 @@ function ePower (direction)
     }
     strength.innerHTML = ' ' + the.strong + ' ';
 	reRun ();
+	*/
 } // ePower
 
 
@@ -181,6 +183,7 @@ function ePower (direction)
 function eDelay (direction)
 //-------------------------------------------------------------------------------
 {
+	/*
 	var the = document.distributor;
     var interval = document.getElementById ("interval");
     if (the.running)
@@ -198,6 +201,7 @@ function eDelay (direction)
     }
     interval.innerHTML = ' ' + the.interval[the.delay] + ' ';
 	reRun ();
+	*/
 } // eDelay
 
 
@@ -269,6 +273,7 @@ function eSilence (e)
 function eRun (e)
 //-------------------------------------------------------------------------------
 {
+	/*
 	var the = document.distributor;
     the.running = !the.running;
     if (the.running) {
@@ -282,6 +287,7 @@ function eRun (e)
     }
     var button = document.getElementById ("pause");
     button.innerHTML = the.running ? "<u>P</u>ause" : "<u>P</u>lay";
+	*/
 } // eRun
 
 
@@ -379,97 +385,41 @@ function initializeInfo ()
     var info = the.info= {};
 
 	info['0. About'] = HEREDOC(function () {/*
-This is the motor signal distributor module.
-Skeletal muscles require delays between twitches for
-individual twitch units in bundles.
-The average number of twitches per unit time
-determines the tonus of the muscle.
+   This is the skeletal muscle module.
+Skeletal muscles have end-points, tendons,
+an efferent nerve, at least two afferent nerves, and
+bundles of twitch units.
+
 */});
 
-	info['1. Observations'] = HEREDOC(function () {/*
-   Muscles make sounds as fibers twitch, and the model is representative.
-When running, the sound frequency is in proportion to twitch activity.
-   When a muscle is cut across, all the individual muscle "fibers" are visible.
-Each fiber contracts/releases quickly (a twitch).  Fibers don't stay contracted.
-An idle muscle has "tonus" (persistent contraction from many twitches).
-Twitching exhausts a fiber.  It must sit idle for a time before twitching again.
-   Constant tonus is when twitches are distributed evenly over fibers in
-a pattern that keeps the count of twitching fibers the same and maximizes
-the time between twitches for any single fiber.
-   More twitches at the same time is stronger tonus is stronger contraction.
-The nerve that drives twitches assigns one neuron to each fiber.
-The nervous system distributes signals so that fibers do not become exhausted.
+	info['1. Origin'] = HEREDOC(function () {/*
+   Skeletal muscles have an origin anchor point at one end.
+Typically, this is attached to bone closer to the spinal cord.
+When a muscle contracts, it exerts a force to draw
+the insertion closer to the origin.
+When an external force is applied that is greater than
+the contraction force, the muscle lengthens.
 */});
 
-    info['2. HowTo'] = HEREDOC(function () {/*
-   P    Play/Pause (<SPACE>) animates the model.
-   R    Refresh    reloads the web page from the server.
-   L|M  Less/More  changes the delay between displays (and pulse generations).
-   S|H  Soft/Hard  changes the difference in tonus every other second.
-   1-8  Shows information labelled in the buttons above the info box.
-
-Hovering over the buttons shows the same information.
-Clicking on the other buttons does the same as typing underlined letters/digits.
-   When running, the model shows twitching/resting muscle fibers as red/brown.
-   To aid in visualizing groups of twitching fibers are shown all at once while
-the accompanying sound is more consistent with uncoordinated activations.
+    info['2. Insertion'] = HEREDOC(function () {/*
 */});
 
-    info['3. Abstract'] = HEREDOC(function () {/*
-   A muscle fiber bundle model (large brown circle) is shown in cross section.
-Twitching muscle fibers appear as small hexagonal pack red circles.
-A muscle fiber is a twitch unit which generates a shortening force.
-A muscle fiber extends the length of the muscle.
-A muscle fiber is excited by a single motor neuron.
-After twitching a fiber needs time to recover before the next twitch.
-   This model shows that the time between fiber activations can be maximized
-while activations are uniformly distributed within the bundle.
+    info['3. Overlap'] = HEREDOC(function () {/*
 */});
 
-    info['4. Axon'] = HEREDOC(function () {/*
-   A motor neuron attaches at many points along a single twitch unit.
-A twitch signal is sent to all neuromuscular junctions in a muscle fiber.
-A twitch unit is activated end-to-end with a single signal.
-The entire length of the twitch unit contracts at the same time.
-Motor neuron axon terminal arbor shapes guarantee simultaneous activation.
+    info['4. Tendon'] = HEREDOC(function () {/*
 */});
 
-    info['5. Dendrite'] = HEREDOC(function () {/*
-   The remote dendrite shape for a motor neuron feeding a muscle fiber
-is shaped to sample passing gradients in a transient sweeping pattern.
-Each motor neuron dendrite is shaped to detect gradients ignored by others.
-   The dendrite hosts a fixed set of pre-randomized dendritic spines.
-As the sweeping pattern passes across the dendritic spines
-those which sample a boundary in the pattern twitch their muscle fibers.
+    info['5. Strain Gauges'] = HEREDOC(function () {/*
 */});
 
-    info['6. Coincide'] = HEREDOC(function () {/*
-   The remote dendrite for each motor neuron expresses a pattern
-which makes its gradient detectors unique within sampled patterns.
-It most likely samples the pattern in multiple places and uses
-coincidence of samples to trigger the pulse that activates a muscle fiber.
+    info['6. Nerves'] = HEREDOC(function () {/*
 */});
 
-    info['7. Discuss'] = HEREDOC(function () {/*
-   As long as the pattern delivered is reliable,
-twitch unit duty cycle timing requirements are satisfied.
-This strategy guarantees maximum recovery time for all muscle fibers.
-   The animated model below illustrates this behavior.
-The code driving this image is logically equivalent to
-the proposed pre-randomized sampling of a regular pattern.
-   Twitch is "all or none": tonus measures average twitches per unit time.
+    info['7. Circuit'] = HEREDOC(function () {/*
 */});
 
-    info['8. Conclude'] = HEREDOC(function () {/*
-   Muscles comprising bundles of long duty cycle twitch units
-can be run efficiently if twitches are distributed evenly and
-if the time between twitches is maximized for any given twitch unit.
-   This simple demonstration illustrates the logical economy
-enabling implementations to ignore parallelism and simply
-act concurrently on all actual delivered pulses,
-whether they are dense or sparse,
-without the burden of unnecessary calculation.
-   This is one of the economies expected in vivo.
+    info['8. Pulse Distributor'] = HEREDOC(function () {/*
 */});
 
     var keys = [];
@@ -609,6 +559,7 @@ function initializeAudio ()
 function initializeCanvas ()
 //-------------------------------------------------------------------------------
 {
+	/*
 	var the = document.distributor;
 
 	var element = document.getElementById ("canvas");
@@ -630,6 +581,7 @@ function initializeCanvas ()
 
 	box (0, 0, the.canvas.width, the.canvas.height, "#ffffcc");
 	disk (the.canvas.x0, the.canvas.y0, the.canvas.x0, "#552222");
+	*/
 } // initializeCanvas
 
 //-------------------------------------------------------------------------------

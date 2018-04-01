@@ -1,0 +1,28 @@
+/* Copyright&copy; 2018 Jonathan D. Lettvin, All Rights Reserved. */
+body {
+	font-family:
+            Courier New, Courier,
+            Lucida Sans Typewriter, Lucida Typewriter,
+            monospace;
+	font-size: 10px;
+	font-variant: normal;
+	font-weight: 200;
+	line-height: 10px;
+        background-color: #ffffcc;
+} /* body */
+table, th, td {
+	vertical-align: middle;
+	text-align: center;
+	padding: 5px;
+	border-spacing: 0px;
+} /* table */
+td       { color: white; }
+textarea { resize: none; }
+button   { border-spacing: 0px; padding: 3px; margin: 0px; }
+h1 { font-size: 25px; }
+h2 { font-size: 22px; }
+h3 { font-size: 16px; }
+/*.square { height: 45px; width: 45px; color: white; } */
+.title { height: 25px; font-size: 30px; color:black; background-color: white; }
+.subtitle { height: 18px; font-size: 14px; color:black; background-color: white; }
+.copyright { height: 10px; font-size: 8px; color:black; background-color: white; }

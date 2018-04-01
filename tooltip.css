@@ -1,4 +1,88 @@
 /* https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_tooltip */
+
+
+
+.htooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.htooltip .htooltiptext {
+    visibility: hidden;
+    width: 250px;
+    background-color: #000;
+    color: #ff0;
+    padding: 1px 0 1px 0;
+    position: absolute;
+	bottom: 1px;
+    z-index: 1;
+    text-align: left;
+    margin-left: 10px;
+	/*
+    bottom: -300%;
+    left: 70%;
+	*/
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.htooltip .htooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+}
+
+.htooltip:hover .htooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+
+
+.vtooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.vtooltip .vtooltiptext {
+    visibility: hidden;
+    width: 250px;
+    background-color: #000;
+    color: #ff0;
+    padding: 1px 0 1px 0;
+    position: absolute;
+	bottom: 1px;
+    z-index: 1;
+    text-align: left;
+    margin-left: 10px;
+	/*
+    bottom: -300%;
+    left: 70%;
+	*/
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.vtooltip .vtooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+}
+
+.vtooltip:hover .vtooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+
+
+
+
+
 .tooltip {
     position: relative;
     display: inline-block;

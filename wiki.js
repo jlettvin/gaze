@@ -174,35 +174,43 @@ document.onload = (function () {
         '![http://lettvin.com]!',
         '<a href="http://lettvin.com"></a>']
 
+    // horizontal line
+    // _______________
+    ,11 : ['horizontal rule',
+          /^\s*____+\s*$/gim,
+          '\n<hr />\n',
+          'above\n____\nbelow',
+          'above\n<hr />\nbelow']
+
     // ___Indent 3 spaces.
-    ,11 : ['indent 3',
+    ,12 : ['indent 3',
           /^___/gim,
           '&nbsp;&nbsp;&nbsp;',
           '___Indent paragraph.',
           '&nbsp;&nbsp;&nbsp;Indent paragraph.']
 
     // ___Indent 2 spaces.
-    ,12 : ['indent 2',
+    ,13 : ['indent 2',
           /^__/gim,
           '&nbsp;&nbsp;',
           '__Indent paragraph.',
           '&nbsp;&nbsp;Indent paragraph.']
 
-    ,13 : ['paragraph',
+    ,14 : ['paragraph',
           /\^\^\^\^+/gim,
-          '<p></p>\n',
+          '</p><p class="tts">\n',
           'hello^^^^world',
-          'hello<p></p>\nworld']
+          'hello</p><p>\nworld']
 
     // ^^^newline past object
-    ,14 : ['newline past',
+    ,15 : ['newline past',
           /\^\^\^/gim,
           '<br clear="all" \/>',
           'Break^^^line',
           'Break<br clear="all" />line']
 
     // ^^newline
-    ,15 : ['newline',
+    ,16 : ['newline',
           /\^\^/gim,
           '<br \/>',
           'Break^^line',
@@ -210,7 +218,7 @@ document.onload = (function () {
 
     // image with reference URL and caption
     // ![http://localhost:8000/background.png+An icon]!  (FIX)
-    ,16 : ['image(url+caption)',
+    ,17 : ['image(url+caption)',
           /!\{\s*(http[s]?:\/\/)(\S+)\s+\s*(http[s]?:\/\/)(\S+)\s+(.*)\s*\}!/gim,
           '<a href="$3$4"><figure>' +
           '<img src="$1$2" width="90" height="90"><\/img>' +
@@ -221,7 +229,7 @@ document.onload = (function () {
 
     // image with caption
     // ![http://localhost:8000/background.png+An icon]!  (FIX)
-    ,17 : ['image(caption)',
+    ,18 : ['image(caption)',
           /!\{\s*(http[s]?:\/\/)?(\S+)\s*(.*)\s*\}!/gim,
           '<figure>' +
           '<img src="$1$2" width="90" height="90"><\/img>' +
@@ -229,14 +237,6 @@ document.onload = (function () {
           '<\/figure>',
           'TODO',
           'TODO']
-
-    // horizontal line
-    // ---------------
-    ,18 : ['horizontal rule',
-          /^\s*---+\s*$/gim,
-          '\n<hr />\n',
-          'above\n---\nbelow',
-          'above\n<hr />\nbelow']
 
     // ; comment
     ,19 : ['comment',
@@ -337,14 +337,40 @@ document.onload = (function () {
    * other characters are simply used as is in the checkbox.
    */
   var checkBoxes = function (line) {
-        var c = line.substr(1,1);
+        var c = line[1];
+        var s = line.substr(2).trim();
+		var p = s.split (';');
+		var ra = '', rz = '';
+		if (c == '?') {
+			ra = '<b><u><i>';
+			rz = '</i></u></b>';
+		}
+		if (p.length > 1 && p[1].trim ().length > 0) {
+			s = ra + p[0].trim () + rz;
+			var q = '';
+			for (var T = p.length, t=1; t < T; ++t) {
+				q += '<td>|'+ra+'&nbsp;&nbsp;' + p[t].trim () + rz + '</td>';
+			}
+			console.log ('q', q);
+			p = q;
+		} else {
+			p = '';
+		}
         var d;
-        if(     c >= '0' && c <= '9') d = c; //$digit[$c];
+		if (    c == '@') {
+			return '<tr><td colspan="2"><big><b>' + s + '</b></big></td></tr>';
+		}
+		else if(c >= '0' && c <= '9') d = c; //$digit[$c];
+	    else if(c=='_') d = "&#x2610;";
         else if(c=='+') d = '<b style="background-color:white; color:#00AA00;">&#x2714;</b>';
         else if(c=='-') d = '<b style="background-color:white; color:red;">&#x2718;</b>';
+	    //else if(c==' ') d = "&#x20de;";
         else            d = c; //""; //"&#x20de;";
-        var s = line.substr(2).trim();
-        return '<tr><td>'+d+'</td><td style="background-color:white">'+s+'</td></tr>';
+        return '<tr><td>'+d+'</td><td style="background-color:white">'+
+		  s+
+		  '</td>'+
+		  p+
+		  '</tr>';
   };
 
   //___________________________________________________________________________
@@ -566,6 +592,27 @@ function animate() { clear(); for (var y in fns) draw(fns[y], y); }
 
   var entities = {};
 
+	var speechify = function () {
+		// This is not working yet.
+		if (SpeechSynthesisUtterance !== undefined) {
+			// var tts    = document.getElementsByClassName ('tts');
+			// var TTS    = document.getElementsByClassName ('TTS');
+			// var speech = document.getElementsByClassName ('speech');
+			// var speakables = Array.concat (tts[0], TTS[0], speech[0]);
+			var speakables = document.getElementsByClassName ('tts');
+			console.log ('speakables', speakables, speakables.length);
+			Array.prototype.filter.call (speakables, function (speakable) {
+				console.log ('speakable', speakable);
+				speakable.addEventListener ('click', function () {
+					var text = speakable.innerHTML;
+					text = text.replace (/<[^>]*>/gim, '');
+					var utterance = new SpeechSynthesisUtterance (text);
+					speechSynthesis.speak (utterance);
+				});
+			});
+		}
+	}
+
   //___________________________________________________________________________
   /**
    * @var {function} markdown - method to perform conversions.
@@ -657,6 +704,7 @@ function animate() { clear(); for (var y in fns) draw(fns[y], y); }
   document.jlettvin.wiki = document.jlettvin.wiki || {};
 
   document.jlettvin.wiki.markdown = markdown;
+  document.jlettvin.wiki.speechify = speechify;
 
   //MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
   //if (typeof module !== 'undefined' && !module.parent)
@@ -818,5 +866,8 @@ Svaetichin reference@Svaetichin.
     //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
     //main();
   }
+
+
+
 
 })();
