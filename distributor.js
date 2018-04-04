@@ -356,7 +356,7 @@ function loop ()
         the.fast = (the.fast + 1) % the.fiber.fast.length;
 		var xy = the.coordinates[the.fiber.fast[the.fast]];
 		var x = parseInt (x0 + xy[0] * scale), y = parseInt (y0 + xy[1] * scale);
-		disk (x, y, rb, 'blue');
+		disk (x, y, rb, '#4d99c8');
 		disk (x, y, rb3, 'black');
     }
 
