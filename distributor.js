@@ -106,10 +106,8 @@ function box (x0,y0,x1,y1,c)
 	var the = document.distributor;
 	var ctx = the.canvas.context;
 
-	ctx.beginPath ();
-	ctx.rect (x0, y0, x1, y1);
 	ctx.fillStyle = c;
-	ctx.fill ();
+	ctx.fillRect (x0, y0, x1, y1);
 } // box
 
 //------------------------------------------------------------------------------
@@ -316,6 +314,10 @@ function loop ()
 	var y0        = the.canvas.y0;
 	var scale     = the.scale - 1; // -1 to keep fibers within the sarcolemma
 	var r0        = parseInt (scale / 2); // radius of visible fiber
+	var rr        = parseInt (r0 * 0.65);
+	var rb        = parseInt (r0 * 0.95);
+	var rb3       = parseInt (rb / 3);
+	var r2        = parseInt (r0 / 2);
 	var frequency = requested * 1000 / the.interval[the.delay];
 
 	if (the.audio.frequency != frequency) {
@@ -330,10 +332,32 @@ function loop ()
 	}
 
 	// Color as many fibers as requested
-	while (requested--) {
-        the.index = (the.index + 1) % the.fiber.length;
-		var xy = the.coordinates[the.fiber[the.index]];
-		disk (x0 + xy[0] * scale, y0 + xy[1] * scale, r0, 'red');
+	var halfSlow = parseInt (the.fiber.slow.length / 2) - 1;
+	var halfFast = parseInt (the.fiber.fast.length / 2) - 1;
+	var slow = requested <= halfSlow ? requested : halfSlow;
+	requested -= slow;
+	var fast = requested <= halfFast ? requested : halfFast;
+	//if (slow > halfSlow) {
+		//slow = halfSlow;
+		//fast = requested - slow;
+		////if (fast > halfFast) {
+			////slow += fast - halfFast;
+		////}
+	//}
+	// Note active fibers can never exceed 1/2 (slow + fast).
+	while (slow--) {
+        the.slow = (the.slow + 1) % the.fiber.slow.length;
+		var xy = the.coordinates[the.fiber.slow[the.slow]];
+		var x = x0 + xy[0] * scale, y = y0 + xy[1] * scale;
+		disk (x, y, rr, 'red');
+		disk (x, y, rb3, 'black');
+    }
+	while (fast--) {
+        the.fast = (the.fast + 1) % the.fiber.fast.length;
+		var xy = the.coordinates[the.fiber.fast[the.fast]];
+		var x = parseInt (x0 + xy[0] * scale), y = parseInt (y0 + xy[1] * scale);
+		disk (x, y, rb, 'blue');
+		disk (x, y, rb3, 'black');
     }
 
 	// Show the name of the tonus state
@@ -410,20 +434,24 @@ The nervous system distributes signals so that fibers do not become exhausted.
 
 Hovering over the buttons shows the same information.
 Clicking on the other buttons does the same as typing underlined letters/digits.
-   When running, the model shows twitching/resting muscle fibers as red/brown.
+   When running, the model shows twitching/resting muscle fibers as red/brown
+for fast twitch fibers and blue/brown for fast twitch fibers.
    To aid in visualizing groups of twitching fibers are shown all at once while
 the accompanying sound is more consistent with uncoordinated activations.
 */});
 
     info['3. Abstract'] = HEREDOC(function () {/*
-   A muscle fiber bundle model (large brown circle) is shown in cross section.
-Twitching muscle fibers appear as small hexagonal pack red circles.
+   A muscle fiber bundle model (outer brown circle) is shown in cross section.
+Twitching muscle fibers appear as small hexagonal pack
+small red or large blue circles.
 A muscle fiber is a twitch unit which generates a shortening force.
 A muscle fiber extends the length of the muscle.
 A muscle fiber is excited by a single motor neuron.
 After twitching a fiber needs time to recover before the next twitch.
    This model shows that the time between fiber activations can be maximized
 while activations are uniformly distributed within the bundle.
+Fast twitch fibers are activated only when the muscle is heavily used
+(specifically when harder contractions are requested).
 */});
 
     info['4. Axon'] = HEREDOC(function () {/*
@@ -502,7 +530,9 @@ function initializeDistributor ()
     document.distributor = {
         interval     : [10, 33, 100, 333, 1000],
 		hardest      : 10,
-        index        : 0,
+		slow         : 0,
+        fast         : 0,
+		ratio        : 0.66,  // slow/fast fiber counts
         running      : true,
         strong       : 0,
         timer        : null,
@@ -519,7 +549,7 @@ function initializeDistributor ()
 
 	the.diameter = 1 + 2 * the.radius;
 	the.coordinates = {};
-	the.fiber = [];
+	the.fiber = { slow: [], fast: [] };
 
 	var sheet = document.styleSheets[0];
 
@@ -559,10 +589,15 @@ function initializeTable ()
 	// Initialize display coordinates and indices
 	// the.fiber is an enumeration of all visible fiber indices
 	the.coordinates = newHexagonal (the.radius);
-	the.fiber = newRange (0, the.coordinates.length);
+	var all  = the.coordinates.length;
+	var slow = parseInt (all * the.ratio);
+	var fast = all - slow;
 
-	// the.fiber is shuffled and used to identify fibers to twitch
-	shuffle (the.fiber);
+	var fibers = newRange (0, all);
+	// fibers are shuffled and used to identify fibers to twitch
+	shuffle (fibers);
+	the.fiber.slow = fibers.slice (0   , slow);
+	the.fiber.fast = fibers.slice (slow, all )
 } // initializeTable
 
 
