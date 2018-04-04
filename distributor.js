@@ -332,18 +332,11 @@ function loop ()
 	}
 
 	// Color as many fibers as requested
-	var halfSlow = parseInt (the.fiber.slow.length / 2) - 1;
-	var halfFast = parseInt (the.fiber.fast.length / 2) - 1;
+	var halfSlow = parseInt (the.fiber.slow.length / 2) - 1;  // slightly less
+	var halfFast = parseInt (the.fiber.fast.length / 2) - 1;  // slightly less
 	var slow = requested <= halfSlow ? requested : halfSlow;
 	requested -= slow;
 	var fast = requested <= halfFast ? requested : halfFast;
-	//if (slow > halfSlow) {
-		//slow = halfSlow;
-		//fast = requested - slow;
-		////if (fast > halfFast) {
-			////slow += fast - halfFast;
-		////}
-	//}
 	// Note active fibers can never exceed 1/2 (slow + fast).
 	while (slow--) {
         the.slow = (the.slow + 1) % the.fiber.slow.length;
@@ -529,7 +522,7 @@ function initializeDistributor ()
 {
     document.distributor = {
         interval     : [10, 33, 100, 333, 1000],
-		hardest      : 10,
+		hardest      : 50,
 		slow         : 0,
         fast         : 0,
 		ratio        : 0.66,  // slow/fast fiber counts
@@ -543,9 +536,9 @@ function initializeDistributor ()
 
 
 	the.delay  = the.interval.length - 1;
-	the.radius = 4;
+	the.radius = 10;
 	the.active = the.radius * 2;
-	the.scale  = 31;
+	the.scale  = 17;
 
 	the.diameter = 1 + 2 * the.radius;
 	the.coordinates = {};
