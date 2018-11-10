@@ -29,8 +29,8 @@ table, td { border: 1px solid black; border-collapse: collapse; padding: 3px; }
 		<div w3-include-html="header.html"></div>
 		-->
 
-		<table>
-			<tr><td valign="top">
+		<table width="100%">
+			<tr><td valign="top" width="20%">
 
 <!--
 <br /><br />
@@ -48,9 +48,10 @@ how attention is drawn to tiny moving features.
 			<tr><td></td><td></td></tr>
 		</table>
 		-->
-				</td><td bgcolor="white" width="80%" valign="top">
+				</td><td bgcolor="white" width="80%" valign="bottom">
 
 			<span align="left" bgcolor="white">
+				<!--
 				<div class="wiki">
 				<div class="wiki.src" hidden>
 ___Computers and dedicated signal processors currently don't solve problems that brains do. Brain processing paradoxes remain unsolved by the neurosciences and current disciplines such as neuromorphic engineering, neural nets, and AI; even for simple organisms like C. Elegans (302 neurons).
@@ -69,10 +70,214 @@ ___With brains, your devices will work better than they ever have before.
 				</div>
 				</div>
 			</span>
+				-->
+			<span
+					id="biteDisplay"
+					style="background-color: white"
+					height="200"
+					valign="top">
+			</span>
+			<hr />
+			<span
+					id="biteButtons"
+					style="text-align: center;background-color: black; color: white;">
+					HOVER:
+			</span>
 			</td></tr>
 		</table>
 	</body>
 	<script type="text/javascript">
+
+		/////////////////////////////////////////////////////////////////////////
+		// Make a hover dictionary with buttons to fill in a display
+		document.jlettvin = document.jlettvin || {};
+		document.jlettvin.biteDictionary = {
+			biteNone:
+				HEREDOC(function(){/*
+Synthetic Reflexes help Processes, Robots, and Avatars behave
+in a style familiar to humans interacting with devices using them.
+<hr />
+Fine sensorimotor reflexes have a unique character
+which are universally recognized by humans and animals.
+Interactions with animals rely on this common quality.
+The BBK&trade; produces processes endowed with this quality.
+These qualities arise directly from "drill down" emulation
+of neuron shapes, organizations, and operations.
+<hr />
+The BBK&trade; is a tool for creating and hosting
+animal-like reflexes where
+full comprehension of why it works is possible.
+				*/})
+		};
+
+		// A function to document key words with abbrevs and short descriptions
+		function bitesize(key, abbr, description, target=null) {
+
+			document.jlettvin.biteDictionary[key] = description;
+
+			var buttons = document.getElementById('biteButtons');
+			if (!buttons) {
+				// If a button table and display do not exist, create them.
+
+				var table = document.createElement('table');
+				table.setAttribute('id', 'biteTable');
+				table.setAttribute('width', '100%');
+				table.setAttribute('border', '1');
+				table.setAttribute('style', 'background-color: white;');
+
+				var tr1   = document.createElement('tr');
+				var td1   = document.createElement('td');
+				td1.setAttribute('id', 'biteDisplay');
+				td1.setAttribute('height', '200');
+				td1.setAttribute('valign', 'top');
+				td1.innerHTML = document.jlettvin.biteDictionary.biteNone;
+				tr1.appendChild(td1);
+
+				var tr2   = document.createElement('tr');
+				var td2   = document.createElement('td');
+				td2.setAttribute('id', 'biteButtons');
+				td2.setAttribute('style',
+					'text-align: center; background-color: black; color: white;'
+				);
+				td2.innerHTML = "HOVER:";
+				tr2.appendChild(td2);
+
+				table.appendChild(tr1);
+				table.appendChild(tr2);
+
+				document.getElementsByTagName('body')[0].appendChild(table);
+
+				buttons = document.getElementById('biteButtons');
+			} else {
+				var cell       = document.getElementById('biteDisplay');
+				cell.innerHTML = document.jlettvin.biteDictionary.biteNone;
+			}
+
+			var button  = document.createElement("button");
+
+			button.addEventListener("mouseenter",
+				function(event) {
+					var cell        = document.getElementById('biteDisplay');
+					var id          = event.target.id;
+					var description = document.jlettvin.biteDictionary[id];
+					cell.innerHTML  = description;
+				});
+			button.addEventListener("mouseleave",
+				function(event) {
+					var cell        = document.getElementById('biteDisplay');
+					var description = document.jlettvin.biteDictionary['biteNone'];
+					cell.innerHTML  = description;
+				});
+
+			var aInit = '', aFini = '';
+			if (target) {
+				aInit = '<a href="' + target + '">';
+				aFini = '</a>';
+			}
+
+			button.innerHTML = '' +
+				'<abbr title="' + abbr + '">' + aInit + key + aFini + '</abbr>';
+			button.setAttribute('id', key);
+
+			buttons.appendChild(button);
+		}
+
+		// Actual button contents
+		bitesize(
+			"product",
+			"Heilmeier 'What are we trying to do?  (Objectives without jargon.)'",
+			HEREDOC(function(){/*
+The BBK&trade; is a tool for designing and hosting synthetic reflex systems
+to improve reliability and economy for Processes, Robots, and Avatars.
+Computers can solve problems that brains do. Devices can have fine economical
+sensorimotor reflexes like animals do. We offer a new mathematical foundation
+to accomplish this.
+<hr />
+With the patent pending Brain Building Kit,
+artificial brains are built that compete well with organic brains.
+		*/}));
+
+		bitesize(
+			"competitors",
+			"Heilmeier: 'How is it done today, and " +
+			"what are the limits of current practice?'",
+			HEREDOC(function(){/*
+Computers and dedicated signal processors currently
+don't solve problems that brains do
+Computers have more than sufficient power for simple organisms
+like C. Elegans (302 neurons) and even much larger nervous systems
+Yet brain processing paradoxes remain unsolved by neuroscience, and basic building blocks and rules for construction seem to remain unknown.
+		*/}),
+			'http://www.google.com'
+		);
+
+		bitesize(
+			"innovation",
+			"Heilmeier: 'What is new in our approach and " +
+			"why do we think it will be successful?'",
+			HEREDOC(function(){/*
+The shapes and operations of neurons provide de-facto process control.
+Emulating neurons eliminates human-written decision-making software.
+Teaching a BBK instance self-awareness and posture transitions is enough.
+Variations from prior experience drive actuators to re-establish posture.
+<hr />
+Brains consume far less power to transduce, model, and transform;
+effecting distributed processing and predictive feedback to achieve results
+superior to modern devices. Also, they are relatively insensitive to defects
+and damage, rapidly redeploying neural pathways to achieve similar goals
+when injured.
+		*/}));
+
+		bitesize(
+			"opportunity",
+			"Heilmeier: 'Who cares?  " +
+			"If we are successful, what difference will it make'",
+			HEREDOC(function(){/*
+Developers of products used to execute and control processes
+can spend less money and time, and require less computer expertise
+to discover new cost reductions and quality improvements.
+<hr />
+Unlike how animals with brains do it, many modern devices compensate low
+performance by using more sensors, actuators, processing, and power. These
+compensations add unwanted weight and waste much power. In addition,
+manufacturing defects and damage render these machines useless,
+driving up Quality Control costs and decreasing lifespan.
+<hr />
+The promise of brains in devices includes greater economies, lower energy
+consumption, reliability under stress, and better assessment and control of
+situations. The Brain Building Kit™ produces functioning artificial brains that
+exhibit these paradoxical efficiencies.
+		*/}));
+
+		bitesize(
+			"risks",
+			"Heilmeier: 'What are the risks?'",
+			HEREDOC(function(){/*
+This technology is without precedent in the neurosciences.
+However, all the mathematics, engineering, and materials needed
+are COTS (Common Off The Shelf).
+The main risk is engineering surprise during realization.
+		*/}));
+
+		bitesize(
+			"cost",
+			"Heilmeier: 'How much will it cost?'",
+			HEREDOC(function(){/*
+		*/}));
+
+		bitesize(
+			"schedule",
+			"Heilmeier: 'How long will it take?'",
+			HEREDOC(function(){/*
+		*/}));
+
+		bitesize(
+			"milestones",
+			"Heilmeier: 'How is progress towards launch measured?'",
+			HEREDOC(function(){/*
+		*/}));
+
+		/////////////////////////////////////////////////////////////////////////
 		{
 			var GrayStep = "https://github.com/jlettvin/NoisyGrayStep/";
 			var HexTile  = "https://github.com/jlettvin/HexTile/";
