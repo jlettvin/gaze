@@ -180,9 +180,9 @@ function header (id, items)
 				</td><td align="right">
 					<big><b><u><i>Mathematics of the Brain </i></u></b></big>
 <br />
-artificial brain assembly tools 
+synthetic reflex assembly tools with
 <br />
-with sample neuron and brain libraries
+sample neuron and neuropil libraries
 
 				</td></tr>
 			</table>
