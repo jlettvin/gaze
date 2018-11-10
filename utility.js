@@ -272,7 +272,7 @@ function doHeader (title, subtitle='')
 			Brain Building Kit&trade;
 		</i></b></big></big></big>
 	<br />
-	<big><big><big><b>BBK&trade;</b></big></big></big>
+	<big><big><big><b>the BBK&trade;</b></big></big></big>
 	<br />
 		</td><td align="center">
 			<h3>{title}<h3>
